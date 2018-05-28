@@ -18,7 +18,14 @@ const makeRequest = (z, bundle) => {
     .then(preWriteResult => z.request(preWriteResult))
     .then(response => {
       response.throwForStatus();
-      return z.JSON.parse(response.content);
+
+      // Do a _post_write() from scripting.
+      const postWriteEvent = {
+        name: 'create.post',
+        key: 'voice_text',
+        response
+      };
+      return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
     });
 };
 
@@ -28,7 +35,8 @@ module.exports = {
 
   display: {
     label: 'Send Voice Text to Speech Notification',
-    description: 'Send a new voice text to speech notification.',
+    description:
+      'Your zap will call a phone number, a speech engine will tell the message based on your text input. Text to speech is available in many different languages, several dialects and genders.',
     hidden: false,
     important: true
   },
@@ -46,41 +54,30 @@ module.exports = {
         key: 'Caller',
         label: 'From',
         helpText: "Please specify the sender's number (caller).",
-        type: 'string',
+        type: 'integer',
         required: true
       },
       {
         key: 'Language',
         label: 'Language',
-        helpText: 'Please select the language of the voice text.',
+        helpText:
+          "Please select the language of the voice text. There are 46 languages and dialects available. In case you can't find your prefered language in the drop-down, use Custom Value and try [any other available language] (https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech) in a similar format in your Zap.",
         type: 'string',
         required: true,
         choices: {
-          'en-AU;Male;1': 'en-AU;Male',
-          'en-AU;Female;1': 'en-AU;Female',
-          'en-US;Male;2': 'en-US;Male',
-          'es-US;Female;5': 'es-US;Female',
-          'en-IN;Female;1': 'en-IN;Female'
+          'en-US;Male;1': 'en-US;Male;1',
+          'en-US;Female;3': 'en-US;Female;3',
+          'en-GB;Female;1': 'en-GB;Female;1',
+          'en-GB;Male;2': 'en-GB;Male;2',
+          'es-ES;Female;1': 'es-ES;Female;1',
+          'fr-FR;Male;1': 'fr-FR;Male;1',
+          'nl-NL;Male;1': 'nl-NL;Male;1'
         }
-      },
-      {
-        key: 'SharedKey',
-        label: 'Shared Key',
-        helpText: 'Please provide the shared key or secret key that will be given to you by the administrator.',
-        type: 'string',
-        required: true
       },
       {
         key: 'Text',
         label: 'Text',
         helpText: 'Please type the text that you want to convert into the appropriate speech.',
-        type: 'string',
-        required: true
-      },
-      {
-        key: 'Username',
-        label: 'Username',
-        helpText: 'Please provide your username.',
         type: 'string',
         required: true
       }

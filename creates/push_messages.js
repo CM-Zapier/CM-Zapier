@@ -18,7 +18,14 @@ const makeRequest = (z, bundle) => {
     .then(preWriteResult => z.request(preWriteResult))
     .then(response => {
       response.throwForStatus();
-      return z.JSON.parse(response.content);
+
+      // Do a _post_write() from scripting.
+      const postWriteEvent = {
+        name: 'create.post',
+        key: 'push_messages',
+        response
+      };
+      return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
     });
 };
 
@@ -27,10 +34,10 @@ module.exports = {
   noun: 'Message',
 
   display: {
-    label: 'Send Push Message',
-    description: 'Send a new push message.',
+    label: 'Send Push Messages',
+    description: 'Send a new push message to an app user.',
     hidden: false,
-    important: true
+    important: false
   },
 
   operation: {
@@ -50,20 +57,12 @@ module.exports = {
         required: true
       },
       {
-        key: 'ProductToken',
-        label: 'Product Token',
-        helpText:
-          'Please provide the product token that was emailed to you after registration.You can also get the product token inside cm telecom in "Messaging Gateway" option.',
-        type: 'string',
-        required: true
-      },
-      {
         key: 'Reference',
         label: 'Reference',
         helpText: 'Please set the reference.',
         type: 'string',
         required: false,
-        default: 'none'
+        default: 'None'
       },
       {
         key: 'To',
@@ -71,14 +70,6 @@ module.exports = {
         helpText: 'Please provide the recipient number(with country code) to whom you want to send the message.',
         type: 'string',
         required: true
-      },
-      {
-        key: 'allowedChannels',
-        label: 'Allowed Channels',
-        helpText: 'Please select the appropriate channel by which you want to send the message.',
-        type: 'string',
-        required: true,
-        choices: { sms: 'SMS', push: 'Push' }
       },
       {
         key: 'appkey',
@@ -89,8 +80,13 @@ module.exports = {
         required: true
       }
     ],
-    outputFields: [],
+    outputFields: [
+      {
+        key: 'Status',
+        type: 'string'
+      }
+    ],
     perform: makeRequest,
-    sample: null
+    sample: { Status: 'Success' }
   }
 };

@@ -18,7 +18,14 @@ const makeRequest = (z, bundle) => {
     .then(preWriteResult => z.request(preWriteResult))
     .then(response => {
       response.throwForStatus();
-      return z.JSON.parse(response.content);
+
+      // Do a _post_write() from scripting.
+      const postWriteEvent = {
+        name: 'create.post',
+        key: 'hybrid_messages',
+        response
+      };
+      return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
     });
 };
 
@@ -28,7 +35,8 @@ module.exports = {
 
   display: {
     label: 'Send Hybrid Message',
-    description: 'Send a new hybrid message.',
+    description:
+      'Send a hybrid message, which means a Push notification or an SMS when the user cannot be reached via push. The zap uses the channels that you allow.',
     hidden: false,
     important: true
   },
@@ -50,20 +58,12 @@ module.exports = {
         required: true
       },
       {
-        key: 'ProductToken',
-        label: 'Product Token',
-        helpText:
-          'Please provide the product token that was emailed to you after registration.You can also get the product token inside cm telecom in "Messaging Gateway" option.',
-        type: 'string',
-        required: true
-      },
-      {
         key: 'Reference',
         label: 'Reference',
         helpText: 'Please set the reference.',
         type: 'string',
         required: false,
-        default: 'None'
+        default: 'none'
       },
       {
         key: 'To',
@@ -71,6 +71,14 @@ module.exports = {
         helpText: 'Please provide the recipient number(with country code) to whom you want to send the message.',
         type: 'string',
         required: true
+      },
+      {
+        key: 'allowedChannels',
+        label: 'Allowed Channels',
+        helpText: 'Please select the appropriate channel by which you want to send the message.',
+        type: 'string',
+        required: false,
+        choices: { push_sms: 'Push or SMS', push: 'Push only', sms: 'SMS only' }
       },
       {
         key: 'appkey',

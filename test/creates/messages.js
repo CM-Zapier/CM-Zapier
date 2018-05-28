@@ -11,14 +11,15 @@ describe('Creates - Send SMS', () => {
   it('should create an object', done => {
     const bundle = {
       authData: {
-        // TODO: Put your custom auth data here
+        productKey: process.env.PRODUCT_KEY,
+        shrdKey: process.env.SHRD_KEY,
+        userN: process.env.USER_N
       },
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
         Body: null,
         From: null,
-        ProductToken: null,
         Reference: 'None',
         To: null
       }

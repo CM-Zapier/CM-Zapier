@@ -1,34 +1,51 @@
 // Created by 'zapier convert'. This is just a stub - you will need to edit!
 
+const authentication = require('./authentication');
+const NewaccountTrigger = require('./triggers/new_account');
+const NumlookupSearch = require('./searches/num_look_up');
+const NumvalidationSearch = require('./searches/num_validation');
 const BulkmessagesCreate = require('./creates/bulk_messages');
 const HybridmessagesCreate = require('./creates/hybrid_messages');
-const LookupCreate = require('./creates/look_up');
 const MessagesCreate = require('./creates/messages');
 const PushmessagesCreate = require('./creates/push_messages');
-const ValidatephonenumberCreate = require('./creates/validate_phone_number');
 const VoicetextCreate = require('./creates/voice_text');
+
+const maybeIncludeAuth = (request, z, bundle) => {
+  request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
+
+  request.headers['Username'] = `${bundle.authData['userN']}`;
+
+  request.headers['x-cm-producttoken'] = `${bundle.authData['productKey']}`;
+
+  return request;
+};
 
 const App = {
   version: require('./package.json').version,
   platformVersion: require('zapier-platform-core').version,
 
-  beforeRequest: [],
+  authentication,
+
+  beforeRequest: [maybeIncludeAuth],
 
   afterResponse: [],
 
   resources: {},
 
-  triggers: {},
+  triggers: {
+    [NewaccountTrigger.key]: NewaccountTrigger
+  },
 
-  searches: {},
+  searches: {
+    [NumlookupSearch.key]: NumlookupSearch,
+    [NumvalidationSearch.key]: NumvalidationSearch
+  },
 
   creates: {
     [BulkmessagesCreate.key]: BulkmessagesCreate,
     [HybridmessagesCreate.key]: HybridmessagesCreate,
-    [LookupCreate.key]: LookupCreate,
     [MessagesCreate.key]: MessagesCreate,
     [PushmessagesCreate.key]: PushmessagesCreate,
-    [ValidatephonenumberCreate.key]: ValidatephonenumberCreate,
     [VoicetextCreate.key]: VoicetextCreate
   }
 };

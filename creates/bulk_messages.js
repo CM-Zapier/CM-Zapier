@@ -18,7 +18,14 @@ const makeRequest = (z, bundle) => {
     .then(preWriteResult => z.request(preWriteResult))
     .then(response => {
       response.throwForStatus();
-      return z.JSON.parse(response.content);
+
+      // Do a _post_write() from scripting.
+      const postWriteEvent = {
+        name: 'create.post',
+        key: 'bulk_messages',
+        response
+      };
+      return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
     });
 };
 
@@ -28,9 +35,9 @@ module.exports = {
 
   display: {
     label: 'Send Bulk SMS',
-    description: 'Send a new SMS to as many people as you want.',
+    description: 'Send SMS to multiple people, optionally with different senders and different content.',
     hidden: false,
-    important: true
+    important: false
   },
 
   operation: {
@@ -52,14 +59,6 @@ module.exports = {
         type: 'string',
         required: true,
         placeholder: 'Name1 || Name2 || Name3 and so on ...'
-      },
-      {
-        key: 'BulkProductToken',
-        label: 'Product Token',
-        helpText:
-          '**Please provide the product token that was emailed to you after registration.You can also get the product token inside cm telecom in "Messaging Gateway" option**.',
-        type: 'string',
-        required: true
       },
       {
         key: 'BulkReference',

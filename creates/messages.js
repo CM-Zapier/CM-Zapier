@@ -18,7 +18,14 @@ const makeRequest = (z, bundle) => {
     .then(preWriteResult => z.request(preWriteResult))
     .then(response => {
       response.throwForStatus();
-      return z.JSON.parse(response.content);
+
+      // Do a _post_write() from scripting.
+      const postWriteEvent = {
+        name: 'create.post',
+        key: 'messages',
+        response
+      };
+      return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
     });
 };
 
@@ -28,7 +35,7 @@ module.exports = {
 
   display: {
     label: 'Send SMS',
-    description: 'Send a new SMS.',
+    description: 'Send an SMS to one number.',
     hidden: false,
     important: true
   },
@@ -46,14 +53,6 @@ module.exports = {
         key: 'From',
         label: 'From',
         helpText: "Please provide sender's name.",
-        type: 'string',
-        required: true
-      },
-      {
-        key: 'ProductToken',
-        label: 'Product Token',
-        helpText:
-          'Please provide the product token that was emailed to you after registration.You can also get the product token inside cm telecom in "Messaging Gateway" option.',
         type: 'string',
         required: true
       },

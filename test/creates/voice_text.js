@@ -11,7 +11,9 @@ describe('Creates - Send Voice Text to Speech Notification', () => {
   it('should create an object', done => {
     const bundle = {
       authData: {
-        // TODO: Put your custom auth data here
+        productKey: process.env.PRODUCT_KEY,
+        shrdKey: process.env.SHRD_KEY,
+        userN: process.env.USER_N
       },
 
       inputData: {
@@ -19,9 +21,7 @@ describe('Creates - Send Voice Text to Speech Notification', () => {
         Callee: null,
         Caller: null,
         Language: null,
-        SharedKey: null,
-        Text: null,
-        Username: null
+        Text: null
       }
     };
 
