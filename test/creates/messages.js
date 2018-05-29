@@ -5,6 +5,8 @@ const zapier = require('zapier-platform-core');
 const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
+const MessagesCreate = require('../../creates/messages');
+
 describe('Creates - Send SMS', () => {
   zapier.tools.env.inject();
 
@@ -18,18 +20,16 @@ describe('Creates - Send SMS', () => {
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        Body: null,
-        From: null,
-        Reference: 'None',
-        To: null
+        BulkBody: process.env.TEST_BODY,
+        BulkFrom: process.env.TEST_FROM,
+        BulkReference: 'None',
+        BulkTo: process.env.TEST_TO
       }
     };
 
-    appTester(App.creates['Messages'].operation.perform, bundle)
-      .then(result => {
-        result.should.not.be.an.Array();
-        done();
-      })
-      .catch(done);
+    appTester(App.creates[MessagesCreate.key].operation.perform, bundle).then(result => {
+      result.should.not.be.an.Array();
+      done();
+    }).catch(done);
   });
 });

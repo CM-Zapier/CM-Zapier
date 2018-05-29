@@ -27,58 +27,6 @@ var Zap = {
     
     Messages_pre_write: function(bundle) {
         var authentication = createAuthentication(bundle);
-        /* var authentication = {
-            ProductToken: bundle.auth_fields.productKey
-        }; */
-        
-        var requestHeaders = {
-            'Content-Type': 'application/json'
-        };
-        
-        var message = {
-            Body: {
-                type: "AUTO",
-                Content: bundle.action_fields_full.Body
-            },
-            From: bundle.action_fields_full.From,
-            To: [{
-                Number: bundle.action_fields_full.To
-            }],
-            customGrouping3: "Zapier",
-            Reference: bundle.action_fields_full.Reference,
-			minimumNumberOfMessageParts: 1,
-			maximumNumberOfMessageParts: 8
-        };
-
-        var messageList = [ message ];
-        
-        /* var requestData = {
-            Messages: {
-                Authentication: authentication,
-                Msg: messageList
-            }
-        }; */
-        var requestData = createMessagesRequestData(authentication, messageList);
-        console.log(requestData);
-        
-        /* return {
-            headers: requestHeaders,
-            data: JSON.stringify(requestData)
-        }; */
-        return createRequest(requestHeaders, requestData);
-    },
-    
-    Messages_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
-        }
-    },
-   
-    BulkMessages_pre_write: function(bundle) {
-        var authentication = createAuthentication(bundle); 
-        /* var authentication = {
-            ProductToken: bundle.auth_fields.productKey
-        }; */
         
         var requestHeaders = {
             'Content-Type': 'application/json'
@@ -139,20 +87,85 @@ var Zap = {
             });
         }
         console.log(JSON.stringify(messageList), null, 4);
-       
-       /* var requestData = {
-            Messages: {
-                Authentication: authentication,
-                Msg: messageList
-            }
-        }; */
+        
         var requestData = createMessagesRequestData(authentication, messageList);
         console.log(requestData);
         
-        /* return {
-            headers: requestHeaders,
-            data: JSON.stringify(requestData)
-        }; */
+        return createRequest(requestHeaders, requestData);
+    },
+    
+    Messages_post_write: function(bundle) {
+        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
+            throw new ErrorException(bundle.response.content);
+        }
+    },
+   
+    /*BulkMessages_pre_write: function(bundle) {
+        var authentication = createAuthentication(bundle);
+        
+        var requestHeaders = {
+            'Content-Type': 'application/json'
+        };
+        
+        var splitter = "||";
+        
+        // Field with numbers where to send message to
+        var toNumbersText = bundle.action_fields_full.BulkTo;
+        var toNumbersArray = toNumbersText.split(splitter);
+        
+        // Field with numbers where to send message from
+        var fromNumbersText = bundle.action_fields_full.BulkFrom;
+        var fromNumbersArray = fromNumbersText.split(splitter);
+        
+        // Body field
+        var smsBodyText = bundle.action_fields_full.BulkBody;
+        smsBodyText = smsBodyText.replace(/\r/g, "").replace(/\n/g, ""); // This removes all newlines/line breaks in the body
+        console.log(smsBodyText);
+        var smsBodyArray = smsBodyText.split(splitter);
+        
+        // Reference field
+        var smsReferenceText = bundle.action_fields_full.BulkReference;
+        var smsReferenceArray = smsReferenceText.split(splitter);
+        
+        // Create a list of messages
+        var messageList = [];
+        for (var j = 0; j < fromNumbersArray.length; j++) {
+            // Each message can be sent to multiple numbers
+            / * 
+            Example: 
+            Field 'To' as "number1||number2,number3||number4":
+            The first message will be sent to number1,
+            The second message will be sent to both number2 and number3,
+            The last message will be sent to number 4.
+            * /
+            var numberListText = toNumbersArray[j];
+            var numberList = numberListText.split(',');
+            
+            var toNumbersList = [];
+            for(var k = 0; k < numberList.length; k++) {
+                toNumbersList.push({
+                    Number: numberList[k]
+                });
+            }
+            
+            messageList.push({
+                From: fromNumbersArray[j],
+                To: toNumbersList,
+                customGrouping3: "zapier",
+                Body: {
+                    type: "AUTO",
+                    Content: smsBodyArray[j]
+                },
+                Reference: smsReferenceArray[j],
+                minimumNumberOfMessageParts: 1,
+                maximumNumberOfMessageParts: 8
+            });
+        }
+        console.log(JSON.stringify(messageList), null, 4);
+        
+        var requestData = createMessagesRequestData(authentication, messageList);
+        console.log(requestData);
+        
         return createRequest(requestHeaders, requestData);
     }, 
     
@@ -160,7 +173,7 @@ var Zap = {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
             throw new ErrorException(bundle.response.content);
         }
-    },
+    }, */
     
     
     /* ------------ TEXT: OTHER ------------ */
