@@ -5,6 +5,8 @@ const zapier = require('zapier-platform-core');
 const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
+const BulkmessagesCreate = require('../../creates/bulk_messages');
+
 describe('Creates - Send Bulk SMS', () => {
   zapier.tools.env.inject();
 
@@ -18,18 +20,16 @@ describe('Creates - Send Bulk SMS', () => {
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        BulkBody: null,
-        BulkFrom: null,
+        BulkBody: process.env.TEST_BODY,
+        BulkFrom: process.env.TEST_FROM,
         BulkReference: 'None',
-        BulkTo: null
+        BulkTo: process.env.TEST_TO
       }
     };
 
-    appTester(App.creates['BulkMessages'].operation.perform, bundle)
-      .then(result => {
-        result.should.not.be.an.Array();
-        done();
-      })
-      .catch(done);
+    appTester(App.creates[BulkmessagesCreate.key].operation.perform, bundle).then(result => {
+      result.should.not.be.an.Array();
+      done();
+    }).catch(done);
   });
 });
