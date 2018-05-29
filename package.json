@@ -4,17 +4,14 @@
   "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --recursive -t 10000"
+    "test": "node node_modules/mocha/bin/mocha --recursive"
   },
   "engines": {
-    "node": ">=6.10.0",
-    "npm": ">=3.0.0"
+    "node": ">=8.11.1",
+    "npm": ">=6.0.1"
   },
   "dependencies": {
-    "async": "^2.6.1",
     "lodash": "^4.17.10",
-    "moment-timezone": "^0.5.17",
-    "xmldom": "^0.1.27",
     "zapier-platform-core": "6.0.0",
     "zapier-platform-legacy-scripting-runner": "1.2.0"
   },
