@@ -12,15 +12,13 @@ const authentication = {
       label: 'Product Token',
       type: 'string',
       required: true
-    },
-    {
+    }, {
       key: 'shrdKey',
       label: 'Shared Key',
       helpText: "Only needed if you're using text to speech functionality.",
       type: 'string',
       required: false
-    },
-    {
+    }, {
       key: 'userN',
       label: 'Username',
       helpText: "Only needed if you're using text to speech functionality.",
@@ -28,8 +26,7 @@ const authentication = {
       required: false
     }
   ],
-
-  // TODO: Set connection label.
+  
   connectionLabel: ''
 };
 
