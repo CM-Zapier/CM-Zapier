@@ -23,7 +23,7 @@ function createAuthentication(bundle){
 }
 
 var Zap = {
-    /* ------------ TEXT: SMS ------------ */
+    /* ------------ TEXT ------------ */
     
     Messages_pre_write: function(bundle) {
         var authentication = createAuthentication(bundle);
@@ -101,51 +101,44 @@ var Zap = {
     },
     
     Hybrid_Messages_pre_write: function(bundle) {
-        var hybrid_head = {
+        var authentication = createAuthentication(bundle);
+        
+        var requestHeaders = {
             'Content-Type': 'application/json'
         };
-        var allc = bundle.action_fields_full.allowedChannels;
-    
-        var alch = [];
-    
-        allc = allc.toLowerCase();
-        if(allc =='sms' || allc == 'push') {
-            alch[0] = bundle.action_fields_full.allowedChannels;
-        }
-    
-        if(allc =='push_sms') {
-            alch[0] = 'push';
-            alch[1] = 'sms';
-        }
-        var hybrid_data = {
-            "messages": { // function createMessagesRequestData
-                "authentication": {
-                    "producttoken": bundle.auth_fields.productKey // function createAuthentication
-                },
-                "msg": [{
-                    "from": bundle.action_fields_full.From,
-                    "to": [{
-                        "number": bundle.action_fields_full.To
-                    }],
-                    "appKey": bundle.action_fields_full.appkey,
-                    "allowedChannels": alch,
-                    "Reference": bundle.action_fields_full.Reference,
-                    "customGrouping3": "Zapier",
-					"minimumNumberOfMessageParts": 1,
-					"maximumNumberOfMessageParts": 8,
-                    "body": {
-						"type": "AUTO",
-                        "content": bundle.action_fields_full.Body
-                    }
-                }]
-            }
-        };
 
-        var hybrid_resp = JSON.stringify(hybrid_data);
-        return { // function createRequest
-            headers: hybrid_head,
-            data: hybrid_resp
-        };
+        var allowedChannels = bundle.action_fields_full.allowedChannels;
+    
+        var allowedChannelsList = [];
+    
+        allowedChannels = allowedChannels.toLowerCase();
+        if(allowedChannels =='sms' || allowedChannels == 'push') {
+            allowedChannelsList[0] = bundle.action_fields_full.allowedChannels;
+        }
+    
+        if(allowedChannels =='push_sms') {
+            allowedChannelsList[0] = 'push';
+            allowedChannelsList[1] = 'sms';
+        }
+        var messageList = [{
+            from: bundle.action_fields_full.From,
+            to: [{
+                number: bundle.action_fields_full.To
+            }],
+            appKey: bundle.action_fields_full.appkey,
+            allowedChannels: allowedChannelsList,
+            Reference: bundle.action_fields_full.Reference,
+            customGrouping3: "Zapier",
+            minimumNumberOfMessageParts: 1,
+            maximumNumberOfMessageParts: 8,
+            body: {
+                type: "AUTO",
+                content: bundle.action_fields_full.Body
+            }
+        }];
+        var requestData = createMessagesRequestData(authentication, messageList);
+        
+        return createRequest(requestHeaders, requestData);
     },
     
     
@@ -183,11 +176,7 @@ var Zap = {
             }
         };
 
-        var push_resp = JSON.stringify(push_data);
-        return { // function createRequest
-            headers: push_head,
-            data: push_resp
-        };
+        return createRequest(push_head, push_data);
     },
     
     Push_Messages_post_write: function(bundle) {
@@ -200,18 +189,16 @@ var Zap = {
     /* ------------ VOICE ------------ */
     
     VoiceText_pre_write: function(bundle) {
-
         var main = bundle.action_fields_full.Language;
-
         console.log(main);
 
-        var lan = main.split(";")[0];
+        var mainSplitted = main.split(";");
 
-        var gen = main.split(";")[1];
+        var lan = mainSplitted[0];
+        var gen = mainSplitted[1];
+        var num = mainSplitted[2];
 
-        var num = main.split(";")[2];
-
-        var voice_data = {
+        var requestData = {
             "callee": bundle.action_fields_full.Callee,
             "caller": bundle.action_fields_full.Caller,
             "anonymous": false,
@@ -224,24 +211,19 @@ var Zap = {
             }
         };
 
-        var body_string = JSON.stringify(voice_data);
+        var body_string = JSON.stringify(requestData);
 
         // z.hmac(algorithm, key, string, encoding="hex")
         var hmac_hash = z.hmac('sha256', bundle.auth_fields.shrdKey, body_string);
 
         var user = bundle.auth_fields.userN;
         console.log(bundle.auth_fields.shrdKey +';'+ bundle.auth_fields.userN);
-        var voice_head = {
+        var requestHeaders = {
             'Content-Type': 'application/json',
             'Authorization': 'username=' + user + ';signature=' + hmac_hash
         };
 
-
-        var voice_resp = JSON.stringify(voice_data);
-        return {
-            headers: voice_head,
-            data: voice_resp
-        };
+        return createRequest(requestHeaders, requestData);
     },
 
     VoiceText_post_write: function(bundle) {
@@ -260,7 +242,7 @@ var Zap = {
     Num_Validation_post_read_resource: function(bundle) {
         var nparsed_response = z.JSON.parse(bundle.response.content);
         var nheads = bundle.response.headers;
-        var nst_code=bundle.response.status_code;
+        var nst_code = bundle.response.status_code;
         var nresult = {"result_code":200,"Status":"Success"};
         return [{
             response: "Success",
@@ -521,22 +503,18 @@ var Zap = {
     },
       
     ValidatePhoneNumber_pre_write: function(bundle) {
-        var validate_head = {
+        var requestHeaders = {
             'Content-Type':'application/json',
             'X-Cm-Producttoken':bundle.auth_fields.productKey
         };
-        console.log(validate_head);
+
+        console.log(requestHeaders);
         
-        var validate_data = {
-            "phonenumber":bundle.action_fields_full.PhoneNumber
+        var requestData = {
+            phonenumber: bundle.action_fields_full.PhoneNumber
         };
-        
-        var validate_resp = JSON.stringify(validate_data);
-        console.log(validate_resp);
-        return {
-            headers: validate_head,
-            data: validate_resp
-        };
+
+        return createRequest(requestHeaders, requestData);
     },
     
     ValidatePhoneNumber_post_write: function(bundle) {
@@ -546,24 +524,18 @@ var Zap = {
     },
     
     LookUp_pre_write: function(bundle) {
-        var lookup_head = {
+        var requestHeaders = {
             'Content-Type': 'application/json',
             'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
         };
         
-        console.log(lookup_head);
+        console.log(requestHeaders);
         
-        var lookup_data = {
-            "phonenumber": bundle.action_fields_full.Phone_Number,
-            "mnp_lookup": true
+        var requestData = {
+            phonenumber: bundle.action_fields_full.Phone_Number,
+            mnp_lookup: true
         };
         
-        var lookup_resp = JSON.stringify(lookup_data);
-        
-        console.log(lookup_resp);
-        return {
-            headers: lookup_head,
-            data: lookup_resp
-        };
+        return createRequest(requestHeaders, requestData);
     }
 };
