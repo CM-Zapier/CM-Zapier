@@ -26,6 +26,17 @@ function logJSON(json){
     console.log(JSON.stringify(json, null, 4));
 }
 
+function throwResponseError(bundle) {
+    if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
+        var response = JSON.parse(bundle.response.content);
+        try { 
+            throw new ErrorException(response.messages[0].messageDetails);
+        } catch(error) {
+            throw new ErrorException(JSON.stringify(response, null, 4));
+        }
+    }
+}
+
 var Zap = {
     /* ------------ TEXT ------------ */
     
@@ -38,15 +49,15 @@ var Zap = {
 
         var splitter = "||";
         
-        // Field with numbers where to send message to
-        var toNumbersText = bundle.action_fields_full.To;
-        var toNumbersArray = toNumbersText.split(splitter);
-        
         // Field with numbers where to send message from
         var fromNumbersText = bundle.action_fields_full.From;
         var fromNumbersArray = fromNumbersText.split(splitter);
         
-        // Body field
+        // Field with numbers where to send message to
+        var toNumbersText = bundle.action_fields_full.To;
+        var toNumbersArray = toNumbersText.split(splitter);
+        
+        // Body field/content of the message
         var smsBodyText = bundle.action_fields_full.Body;
         smsBodyText = smsBodyText.replace(/\r/g, "").replace(/\n/g, ""); // This removes all newlines/line breaks in the body
         console.log(smsBodyText);
@@ -98,11 +109,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
     
-    Messages_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
-        }
-    },
+    Messages_post_write: throwResponseError,
     
     Hybrid_Messages_pre_write: function(bundle) {
         var authentication = createAuthentication(bundle);
@@ -112,18 +119,17 @@ var Zap = {
         };
 
         var allowedChannels = bundle.action_fields_full.allowedChannels;
+        allowedChannels = allowedChannels.toLowerCase();
     
         var allowedChannelsList = [];
     
-        allowedChannels = allowedChannels.toLowerCase();
         if(allowedChannels =='sms' || allowedChannels == 'push') {
-            allowedChannelsList[0] = bundle.action_fields_full.allowedChannels;
+            allowedChannelsList.push(allowedChannels);
+        } else if(allowedChannels =='push_sms') {
+            allowedChannelsList.push('push');
+            allowedChannelsList.push('sms');
         }
-    
-        if(allowedChannels =='push_sms') {
-            allowedChannelsList[0] = 'push';
-            allowedChannelsList[1] = 'sms';
-        }
+
         var messageList = [{
             from: bundle.action_fields_full.From,
             to: [{
@@ -147,11 +153,7 @@ var Zap = {
     },
     
     
-    Hybrid_Messages_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
-        }
-    },
+    Hybrid_Messages_post_write: throwResponseError,
 
     Push_Messages_pre_write: function(bundle) {
         var authentication = createAuthentication(bundle);
@@ -181,11 +183,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
     
-    Push_Messages_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
-        }
-    },
+    Push_Messages_post_write: throwResponseError,
     
     
     /* ------------ VOICE ------------ */
@@ -231,11 +229,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
 
-    VoiceText_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
-        }
-    },
+    VoiceText_post_write: throwResponseError,
     
 
     /* ------------ PAYMENTS ------------ */
@@ -527,11 +521,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
     
-    ValidatePhoneNumber_post_write: function(bundle) {
-        if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
-        }
-    },
+    ValidatePhoneNumber_post_write: throwResponseError,
     
     // Look up
     LookUp_pre_write: function(bundle) {
