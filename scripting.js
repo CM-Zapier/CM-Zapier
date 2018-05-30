@@ -22,16 +22,20 @@ function createAuthentication(bundle){
     };
 }
 
+function logJSON(json){
+    console.log(JSON.stringify(json, null, 4));
+}
+
 var Zap = {
     /* ------------ TEXT ------------ */
     
     Messages_pre_write: function(bundle) {
         var authentication = createAuthentication(bundle);
-        
+
         var requestHeaders = {
             'Content-Type': 'application/json'
         };
-        
+
         var splitter = "||";
         
         // Field with numbers where to send message to
@@ -58,10 +62,10 @@ var Zap = {
             // Each message can be sent to multiple numbers
             /* 
             Example: 
-            Field 'To' as "number1||number2,number3||number4":
-            The first message will be sent to number1,
-            The second message will be sent to both number2 and number3,
-            The last message will be sent to number 4.
+            Field 'To' as "number1 || number2, number3",
+            Field 'Body' as "Hello! || Hi!":
+            Number 1 receives "Hello!",
+            Number 2 and 3 receive "Hi!"
             */
             var numberListText = toNumbersArray[j];
             var numberList = numberListText.split(',');
@@ -74,22 +78,22 @@ var Zap = {
             }
             
             messageList.push({
-                From: fromNumbersArray[j],
-                To: toNumbersList,
-                customGrouping3: "zapier",
-                Body: {
+                from: fromNumbersArray[j],
+                to: toNumbersList,
+                body: {
                     type: "AUTO",
-                    Content: smsBodyArray[j]
+                    content: smsBodyArray[j]
                 },
-                Reference: smsReferenceArray[j],
+                reference: smsReferenceArray[j],
                 minimumNumberOfMessageParts: 1,
-                maximumNumberOfMessageParts: 8
+                maximumNumberOfMessageParts: 8,
+                customGrouping3: "Zapier"
             });
         }
-        console.log(JSON.stringify(messageList), null, 4);
+        logJSON(messageList);
         
         var requestData = createMessagesRequestData(authentication, messageList);
-        console.log(requestData);
+        logJSON(requestData);
         
         return createRequest(requestHeaders, requestData);
     },
@@ -125,17 +129,18 @@ var Zap = {
             to: [{
                 number: bundle.action_fields_full.To
             }],
-            appKey: bundle.action_fields_full.appkey,
-            allowedChannels: allowedChannelsList,
-            Reference: bundle.action_fields_full.Reference,
-            customGrouping3: "Zapier",
-            minimumNumberOfMessageParts: 1,
-            maximumNumberOfMessageParts: 8,
             body: {
                 type: "AUTO",
                 content: bundle.action_fields_full.Body
-            }
+            },
+            reference: bundle.action_fields_full.Reference,
+            appKey: bundle.action_fields_full.appkey,
+            allowedChannels: allowedChannelsList,
+            minimumNumberOfMessageParts: 1,
+            maximumNumberOfMessageParts: 8,
+            customGrouping3: "Zapier"
         }];
+
         var requestData = createMessagesRequestData(authentication, messageList);
         
         return createRequest(requestHeaders, requestData);
@@ -149,34 +154,31 @@ var Zap = {
     },
 
     Push_Messages_pre_write: function(bundle) {
-        var push_head = {
+        var authentication = createAuthentication(bundle);
+
+        var requestHeaders = {
             'Content-Type': 'application/json'
         };
 
-        var push_data = {
-            "messages": { // function createMessagesRequestData
-                "authentication": {
-                    "producttoken": bundle.auth_fields.productKey // function createAuthentication
-                },
-                "msg": [{
-                    "from": bundle.action_fields_full.From,
-                    "to": [{
-                        "number": bundle.action_fields_full.To
-                    }],
-                    "body": {
-						"type": "AUTO",
-                        "content": bundle.action_fields_full.Body
-                    },
-                    "appKey": bundle.action_fields_full.appkey,
-                    "customGrouping3": "Zapier",
-                    "Reference": bundle.action_fields_full.Reference,
-					"minimumNumberOfMessageParts": 1,
-					"maximumNumberOfMessageParts": 8
-                }]
-            }
-        };
+        var messageList = [{
+            from: bundle.action_fields_full.From,
+            to: [{
+                number: bundle.action_fields_full.To
+            }],
+            body: {
+                type: "AUTO",
+                content: bundle.action_fields_full.Body
+            },
+            reference: bundle.action_fields_full.Reference,
+            appKey: bundle.action_fields_full.appkey,
+            minimumNumberOfMessageParts: 1,
+            maximumNumberOfMessageParts: 8,
+            customGrouping3: "Zapier"
+        }];
 
-        return createRequest(push_head, push_data);
+        var requestData = createMessagesRequestData(authentication, messageList)
+
+        return createRequest(requestHeaders, requestData);
     },
     
     Push_Messages_post_write: function(bundle) {
@@ -194,22 +196,24 @@ var Zap = {
 
         var mainSplitted = main.split(";");
 
-        var lan = mainSplitted[0];
-        var gen = mainSplitted[1];
-        var num = mainSplitted[2];
+        var voiceLanguage = mainSplitted[0];
+        var voiceGender = mainSplitted[1];
+        var voiceNumber = mainSplitted[2];
 
         var requestData = {
-            "callee": bundle.action_fields_full.Callee,
-            "caller": bundle.action_fields_full.Caller,
-            "anonymous": false,
-            "prompt": bundle.action_fields_full.Text,
-            "prompt-type": "TTS",
-            "voice": {
-                "language": lan,
-                "gender": gen,
-                "number": num
+            callee: bundle.action_fields_full.Callee,
+            caller: bundle.action_fields_full.Caller,
+            anonymous: false,
+            prompt: bundle.action_fields_full.Text,
+            'prompt-type': "TTS",
+            voice: {
+                language: voiceLanguage,
+                gender: voiceGender,
+                number: voiceNumber
             }
         };
+
+        // Authentication (old way): 
 
         var body_string = JSON.stringify(requestData);
 
@@ -218,6 +222,7 @@ var Zap = {
 
         var user = bundle.auth_fields.userN;
         console.log(bundle.auth_fields.shrdKey +';'+ bundle.auth_fields.userN);
+
         var requestHeaders = {
             'Content-Type': 'application/json',
             'Authorization': 'username=' + user + ';signature=' + hmac_hash
@@ -232,6 +237,7 @@ var Zap = {
         }
     },
     
+
     /* ------------ PAYMENTS ------------ */
     
     // TODO
@@ -239,57 +245,19 @@ var Zap = {
     
     /* ------------ NUMBER VALIDATION ------------ */
     
-    Num_Validation_post_read_resource: function(bundle) {
-        var nparsed_response = z.JSON.parse(bundle.response.content);
-        var nheads = bundle.response.headers;
-        var nst_code = bundle.response.status_code;
-        var nresult = {"result_code":200,"Status":"Success"};
-        return [{
-            response: "Success",
-            "id": 1,
-            status_code: nst_code,
-            content: {
-                "carrier": nparsed_response.carrier,
-                "country_code": nparsed_response.country_code,
-                "country_iso": nparsed_response.country_iso,
-                "format_e164": nparsed_response.format_e164,
-                "format_international": nparsed_response.format_international,
-                "format_national": nparsed_response.format_national,
-                "region": nparsed_response.region,
-                "region_code": nparsed_response.region_code,
-                "timezone": nparsed_response.timezone,
-                "type": {
-                    "mobile": nparsed_response.type.mobile,
-                    "fixed_line": nparsed_response.type.fixed_line,
-                    "fixed_line_or_mobile": nparsed_response.type.fixed_line_or_mobile,
-                    "voip": nparsed_response.type.voip,
-                    "toll_free": nparsed_response.type.toll_free,
-                    "premium_rate": nparsed_response.type.premium_rate,
-                    "standard_rate": nparsed_response.type.standard_rate,
-                    "shared_cost": nparsed_response.type.shared_cost,
-                    "personal": nparsed_response.type.personal,
-                    "pager": nparsed_response.type.pager,
-                    "voicemail": nparsed_response.type.voicemail,
-                    "shortcode": nparsed_response.type.shortcode,
-                    "emergency": nparsed_response.type.emergency,
-                    "unknown": nparsed_response.type.unknown
-                },
-                "valid_number": nparsed_response.valid_number
-            }/*,
-            headers:{
-                "Content-Encoding": nheads['Content-Encoding'], 
-                "Transfer-Encoding": nheads['Transfer-Encoding'], 
-                "Strict-Transport-Security": nheads['Strict-Transport-Security'], 
-                "Vary": nheads['Vary'], 
-                "Server": nheads['Server'], 
-                "Connection": nheads['Connection'], 
-                "Cache-Control": nheads['Cache-Control'], 
-                "Date": nheads['Date'], 
-                "Access-Control-Allow-Credentials": nheads['Access-Control-Allow-Credentials'], 
-                "Content-Type": nheads['Content-Type'], 
-                "Access-Control-Allow-Origin": nheads['Access-Control-Allow-Origin']
-            }*/
-        }];
+
+    // Number Validation
+    Num_Validation_pre_search: function(bundle) {
+        var lookup_headnw = {
+            'Content-Type': 'application/json',
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
+        };
+        
+        console.log(lookup_headnw);
+       
+        return {
+            headers: lookup_headnw
+        };
     },
 
     Num_Validation_post_search: function(bundle) {
@@ -348,81 +316,60 @@ var Zap = {
         }];
     },
 
-    Num_Validation_pre_search: function(bundle) {
-        var lookup_headnw = {
-            'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
-        };
-        
-        console.log(lookup_headnw);
-       
-        return {
-            headers: lookup_headnw
-        };
-    },
-
-    Num_LookUp_post_read_resource: function(bundle) {
-        var parsed_response = z.JSON.parse(bundle.response.content);
-        var heads=bundle.response.headers;
-        var st_code=bundle.response.status_code;
+    Num_Validation_post_read_resource: function(bundle) {
+        var nparsed_response = z.JSON.parse(bundle.response.content);
+        var nheads = bundle.response.headers;
+        var nst_code = bundle.response.status_code;
+        var nresult = {"result_code":200,"Status":"Success"};
         return [{
             response: "Success",
             "id": 1,
-            status_code: st_code,
+            status_code: nst_code,
             content: {
-                "active_number": parsed_response.active_number,
-                "carrier": parsed_response.carrier,
-                "carrier_mcc": parsed_response.carrier_mcc,
-                "carrier_mnc": parsed_response.carrier_mnc,
-                "country_code": parsed_response.country_code,
-                "country_iso": parsed_response.country_iso,
-                "format_e164": parsed_response.format_e164,
-                "format_international": parsed_response.format_international,
-                "format_national": parsed_response.format_national,
-                "ported": parsed_response.ported,
-                "region": parsed_response.region,
-                "region_code": parsed_response.region_code,
-                "roaming": parsed_response.roaming,
-                "roaming_carrier": parsed_response.roaming_carrier,
-                "roaming_country_iso": parsed_response.roaming_country_iso,
-                "roaming_country_prefix": parsed_response.roaming_country_prefix,
-                "roaming_mcc": parsed_response.roaming_mcc,
-                "roaming_mnc": parsed_response.roaming_mnc,
-                "timezone": parsed_response.timezone,
+                "carrier": nparsed_response.carrier,
+                "country_code": nparsed_response.country_code,
+                "country_iso": nparsed_response.country_iso,
+                "format_e164": nparsed_response.format_e164,
+                "format_international": nparsed_response.format_international,
+                "format_national": nparsed_response.format_national,
+                "region": nparsed_response.region,
+                "region_code": nparsed_response.region_code,
+                "timezone": nparsed_response.timezone,
                 "type": {
-                    "mobile": parsed_response.type.mobile,
-                    "fixed_line": parsed_response.type.fixed_line,
-                    "fixed_line_or_mobile": parsed_response.type.fixed_line_or_mobile,
-                    "voip": parsed_response.type.voip,
-                    "toll_free": parsed_response.type.toll_free,
-                    "premium_rate": parsed_response.type.premium_rate,
-                    "standard_rate": parsed_response.type.standard_rate,
-                    "shared_cost": parsed_response.type.shared_cost,
-                    "personal": parsed_response.type.personal,
-                    "pager": parsed_response.type.pager,
-                    "voicemail": parsed_response.type.voicemail,
-                    "shortcode": parsed_response.type.shortcode,
-                    "emergency": parsed_response.type.emergency,
-                    "unknown": parsed_response.type.unknown
+                    "mobile": nparsed_response.type.mobile,
+                    "fixed_line": nparsed_response.type.fixed_line,
+                    "fixed_line_or_mobile": nparsed_response.type.fixed_line_or_mobile,
+                    "voip": nparsed_response.type.voip,
+                    "toll_free": nparsed_response.type.toll_free,
+                    "premium_rate": nparsed_response.type.premium_rate,
+                    "standard_rate": nparsed_response.type.standard_rate,
+                    "shared_cost": nparsed_response.type.shared_cost,
+                    "personal": nparsed_response.type.personal,
+                    "pager": nparsed_response.type.pager,
+                    "voicemail": nparsed_response.type.voicemail,
+                    "shortcode": nparsed_response.type.shortcode,
+                    "emergency": nparsed_response.type.emergency,
+                    "unknown": nparsed_response.type.unknown
                 },
-                "valid_number": parsed_response.valid_number
+                "valid_number": nparsed_response.valid_number
             }/*,
-            headers: {
-                "Content-Encoding": heads.Content-Encoding, 
-                "Transfer-Encoding": heads.Transfer-Encoding, 
-                "Strict-Transport-Security": heads.Strict-Transport-Security, 
-                "Vary": heads.Vary, 
-                "Server": heads.Server, 
-                "Connection": heads.Connection, 
-                "Cache-Control": heads.Cache-Control, 
-                "Date": heads.Date, 
-                "Access-Control-Allow-Credentials": heads.Access-Control-Allow-Credentials, 
-                "Content-Type": heads.Content-Type, 
-                "Access-Control-Allow-Origin": heads.Access-Control-Allow-Origin
+            headers:{
+                "Content-Encoding": nheads['Content-Encoding'], 
+                "Transfer-Encoding": nheads['Transfer-Encoding'], 
+                "Strict-Transport-Security": nheads['Strict-Transport-Security'], 
+                "Vary": nheads['Vary'], 
+                "Server": nheads['Server'], 
+                "Connection": nheads['Connection'], 
+                "Cache-Control": nheads['Cache-Control'], 
+                "Date": nheads['Date'], 
+                "Access-Control-Allow-Credentials": nheads['Access-Control-Allow-Credentials'], 
+                "Content-Type": nheads['Content-Type'], 
+                "Access-Control-Allow-Origin": nheads['Access-Control-Allow-Origin']
             }*/
         }];
     },
     
+    // Number Lookup
     Num_LookUp_pre_search: function(bundle) {
         var lookup_headn = {
             'Content-Type': 'application/json',
@@ -501,7 +448,70 @@ var Zap = {
             }
         }];
     },
-      
+
+    Num_LookUp_post_read_resource: function(bundle) {
+        var parsed_response = z.JSON.parse(bundle.response.content);
+        var heads=bundle.response.headers;
+        var st_code=bundle.response.status_code;
+        return [{
+            response: "Success",
+            "id": 1,
+            status_code: st_code,
+            content: {
+                "active_number": parsed_response.active_number,
+                "carrier": parsed_response.carrier,
+                "carrier_mcc": parsed_response.carrier_mcc,
+                "carrier_mnc": parsed_response.carrier_mnc,
+                "country_code": parsed_response.country_code,
+                "country_iso": parsed_response.country_iso,
+                "format_e164": parsed_response.format_e164,
+                "format_international": parsed_response.format_international,
+                "format_national": parsed_response.format_national,
+                "ported": parsed_response.ported,
+                "region": parsed_response.region,
+                "region_code": parsed_response.region_code,
+                "roaming": parsed_response.roaming,
+                "roaming_carrier": parsed_response.roaming_carrier,
+                "roaming_country_iso": parsed_response.roaming_country_iso,
+                "roaming_country_prefix": parsed_response.roaming_country_prefix,
+                "roaming_mcc": parsed_response.roaming_mcc,
+                "roaming_mnc": parsed_response.roaming_mnc,
+                "timezone": parsed_response.timezone,
+                "type": {
+                    "mobile": parsed_response.type.mobile,
+                    "fixed_line": parsed_response.type.fixed_line,
+                    "fixed_line_or_mobile": parsed_response.type.fixed_line_or_mobile,
+                    "voip": parsed_response.type.voip,
+                    "toll_free": parsed_response.type.toll_free,
+                    "premium_rate": parsed_response.type.premium_rate,
+                    "standard_rate": parsed_response.type.standard_rate,
+                    "shared_cost": parsed_response.type.shared_cost,
+                    "personal": parsed_response.type.personal,
+                    "pager": parsed_response.type.pager,
+                    "voicemail": parsed_response.type.voicemail,
+                    "shortcode": parsed_response.type.shortcode,
+                    "emergency": parsed_response.type.emergency,
+                    "unknown": parsed_response.type.unknown
+                },
+                "valid_number": parsed_response.valid_number
+            }/*,
+            headers: {
+                "Content-Encoding": heads.Content-Encoding, 
+                "Transfer-Encoding": heads.Transfer-Encoding, 
+                "Strict-Transport-Security": heads.Strict-Transport-Security, 
+                "Vary": heads.Vary, 
+                "Server": heads.Server, 
+                "Connection": heads.Connection, 
+                "Cache-Control": heads.Cache-Control, 
+                "Date": heads.Date, 
+                "Access-Control-Allow-Credentials": heads.Access-Control-Allow-Credentials, 
+                "Content-Type": heads.Content-Type, 
+                "Access-Control-Allow-Origin": heads.Access-Control-Allow-Origin
+            }*/
+        }];
+    },
+
+    // Validate phone number
     ValidatePhoneNumber_pre_write: function(bundle) {
         var requestHeaders = {
             'Content-Type':'application/json',
@@ -523,6 +533,7 @@ var Zap = {
         }
     },
     
+    // Look up
     LookUp_pre_write: function(bundle) {
         var requestHeaders = {
             'Content-Type': 'application/json',
