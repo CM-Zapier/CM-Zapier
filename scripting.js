@@ -12,24 +12,24 @@ const btoa = require('zapier-platform-legacy-scripting-runner/btoa');
 const z = require('zapier-platform-legacy-scripting-runner/z');
 const $ = require('zapier-platform-legacy-scripting-runner/$');
 const {
-  ErrorException,
-  HaltedException,
-  StopRequestException,
-  ExpiredAuthException,
-  RefreshTokenException,
-  InvalidSessionException,
+    ErrorException,
+    HaltedException,
+    StopRequestException,
+    ExpiredAuthException,
+    RefreshTokenException,
+    InvalidSessionException,
 } = require('zapier-platform-legacy-scripting-runner/exceptions');
 // END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
 
-function createRequest(headers, data){
+function createRequest(headers, data) {
     return {
         headers: headers,
         data: typeof data == "string" ? data : JSON.stringify(data) // Our data needs to be a string, so when it's JSON convert it.
     };
 }
 
-function createMessagesRequestData(authentication, msg){
+function createMessagesRequestData(authentication, msg) {
     return {
         Messages: {
             Authentication: authentication,
@@ -38,23 +38,23 @@ function createMessagesRequestData(authentication, msg){
     };
 }
 
-function createAuthentication(bundle){
+function createAuthentication(bundle) {
     return {
         ProductToken: bundle.auth_fields.productToken_text
     };
 }
 
-function logJSON(json){
+function logJSON(json) {
     console.log(JSON.stringify(json, null, 4));
 }
 
 function throwResponseError(bundle) {
-    if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
+    if (!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)) {
         var response = JSON.parse(bundle.response.content);
         var errorMessage = "";
-        try { 
+        try {
             errorMessage = response.messages[0].messageDetails;
-        } catch(error) {
+        } catch (error) {
             errorMessage = JSON.stringify(response, null, 4);
         }
         throw new ErrorException(errorMessage);
@@ -63,8 +63,8 @@ function throwResponseError(bundle) {
 
 var Zap = {
     /* ------------ TEXT ------------ */
-    
-    Messages_pre_write: function(bundle) {
+
+    Messages_pre_write: function (bundle) {
         var authentication = createAuthentication(bundle);
 
         var requestHeaders = {
@@ -72,25 +72,25 @@ var Zap = {
         };
 
         var splitter = "||";
-        
+
         // Field with numbers where to send message from
         var fromNumbersText = bundle.action_fields_full.From;
         var fromNumbersArray = fromNumbersText.split(splitter);
-        
+
         // Field with numbers where to send message to
         var toNumbersText = bundle.action_fields_full.To;
         var toNumbersArray = toNumbersText.split(splitter);
-        
+
         // Body field/content of the message
         var smsBodyText = bundle.action_fields_full.Body;
         smsBodyText = smsBodyText.replace(/\r/g, "").replace(/\n/g, ""); // This removes all newlines/line breaks in the body
         console.log(smsBodyText);
         var smsBodyArray = smsBodyText.split(splitter);
-        
+
         // Reference field
         var smsReferenceText = bundle.action_fields_full.Reference;
         var smsReferenceArray = smsReferenceText.split(splitter);
-        
+
         // Create a list of messages
         var messageList = [];
         for (var j = 0; j < fromNumbersArray.length; j++) {
@@ -104,14 +104,14 @@ var Zap = {
             */
             var numberListText = toNumbersArray[j];
             var numberList = numberListText.split(',');
-            
+
             var toNumbersList = [];
-            for(var k = 0; k < numberList.length; k++) {
+            for (var k = 0; k < numberList.length; k++) {
                 toNumbersList.push({
                     Number: numberList[k]
                 });
             }
-            
+
             messageList.push({
                 from: fromNumbersArray[j],
                 to: toNumbersList,
@@ -126,30 +126,30 @@ var Zap = {
             });
         }
         logJSON(messageList);
-        
+
         var requestData = createMessagesRequestData(authentication, messageList);
         logJSON(requestData);
-        
+
         return createRequest(requestHeaders, requestData);
     },
-    
+
     Messages_post_write: throwResponseError,
-    
-    Hybrid_Messages_pre_write: function(bundle) {
+
+    Hybrid_Messages_pre_write: function (bundle) {
         var authentication = createAuthentication(bundle);
-        
+
         var requestHeaders = {
             'Content-Type': 'application/json'
         };
 
         var allowedChannels = bundle.action_fields_full.allowedChannels;
         allowedChannels = allowedChannels.toLowerCase();
-    
+
         var allowedChannelsList = [];
-    
-        if(allowedChannels =='sms' || allowedChannels == 'push') {
+
+        if (allowedChannels == 'sms' || allowedChannels == 'push') {
             allowedChannelsList.push(allowedChannels);
-        } else if(allowedChannels =='push_sms') {
+        } else if (allowedChannels == 'push_sms') {
             allowedChannelsList.push('push');
             allowedChannelsList.push('sms');
         }
@@ -172,14 +172,14 @@ var Zap = {
         }];
 
         var requestData = createMessagesRequestData(authentication, messageList);
-        
+
         return createRequest(requestHeaders, requestData);
     },
-    
-    
+
+
     Hybrid_Messages_post_write: throwResponseError,
 
-    Push_Messages_pre_write: function(bundle) {
+    Push_Messages_pre_write: function (bundle) {
         var authentication = createAuthentication(bundle);
 
         var requestHeaders = {
@@ -206,13 +206,13 @@ var Zap = {
 
         return createRequest(requestHeaders, requestData);
     },
-    
+
     Push_Messages_post_write: throwResponseError,
-    
-    
+
+
     /* ------------ VOICE ------------ */
-    
-    VoiceText_pre_write: function(bundle) {
+
+    VoiceText_pre_write: function (bundle) {
         var main = bundle.action_fields_full.Language;
         console.log(main);
 
@@ -243,7 +243,7 @@ var Zap = {
         var hmac_hash = z.hmac('sha256', bundle.auth_fields.shrdKey, body_string);
 
         var user = bundle.auth_fields.userN;
-        console.log(bundle.auth_fields.shrdKey +';'+ bundle.auth_fields.userN);
+        console.log(bundle.auth_fields.shrdKey + ';' + bundle.auth_fields.userN);
 
         var requestHeaders = {
             'Content-Type': 'application/json',
@@ -254,43 +254,42 @@ var Zap = {
     },
 
     VoiceText_post_write: throwResponseError,
-    
 
+    
     /* ------------ PAYMENTS ------------ */
-    
+
     // TODO
-    
-    
+
+
     /* ------------ NUMBER VALIDATION ------------ */
-    
 
     // Number Validation
-    Num_Validation_pre_search: function(bundle) {
+    Num_Validation_pre_search: function (bundle) {
         var lookup_headnw = {
             'Content-Type': 'application/json',
             'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
-        
+
         console.log(lookup_headnw);
-       
+
         return {
             headers: lookup_headnw
         };
     },
 
-    Num_Validation_post_search: function(bundle) {
+    Num_Validation_post_search: function (bundle) {
         var nparsed_response = z.JSON.parse(bundle.response.content);
         var nheads = bundle.response.headers;
         var nst_code = bundle.response.status_code;
         var nresult = {
-            "result_code":200,
-            "Status":"Success"
+            "result_code": 200,
+            "Status": "Success"
         };
         return [{
             response: "Success",
             "id": 1,
             status_code: nst_code,
-            content: { 
+            content: {
                 "carrier": nparsed_response.carrier,
                 "country_code": nparsed_response.country_code,
                 "country_iso": nparsed_response.country_iso,
@@ -319,26 +318,26 @@ var Zap = {
                 "valid_number": nparsed_response.valid_number
             },
             headers: {
-                "Content-Encoding": nheads.Content_Encoding, 
-                "Transfer-Encoding": nheads.Transfer_Encoding, 
-                "Strict-Transport-Security": nheads.Strict_Transport_Security, 
-                "Vary": nheads.Vary, 
-                "Server": nheads.Server, 
-                "Connection": nheads.Connection, 
-                "Cache-Control": nheads.Cache_Control, 
-                "Date": nheads.Date, 
-                "Access-Control-Allow-Credentials": nheads.Access_Control_Allow_Credentials, 
-                "Content-Type": nheads.Content_Type, 
+                "Content-Encoding": nheads.Content_Encoding,
+                "Transfer-Encoding": nheads.Transfer_Encoding,
+                "Strict-Transport-Security": nheads.Strict_Transport_Security,
+                "Vary": nheads.Vary,
+                "Server": nheads.Server,
+                "Connection": nheads.Connection,
+                "Cache-Control": nheads.Cache_Control,
+                "Date": nheads.Date,
+                "Access-Control-Allow-Credentials": nheads.Access_Control_Allow_Credentials,
+                "Content-Type": nheads.Content_Type,
                 "Access-Control-Allow-Origin": nheads.Access_Control_Allow_Origin
             }
         }];
     },
 
-    Num_Validation_post_read_resource: function(bundle) {
+    Num_Validation_post_read_resource: function (bundle) {
         var nparsed_response = z.JSON.parse(bundle.response.content);
         var nheads = bundle.response.headers;
         var nst_code = bundle.response.status_code;
-        var nresult = {"result_code":200,"Status":"Success"};
+        var nresult = { "result_code": 200, "Status": "Success" };
         return [{
             response: "Success",
             "id": 1,
@@ -386,34 +385,34 @@ var Zap = {
             }*/
         }];
     },
-    
+
     // Number Lookup
-    Num_LookUp_pre_search: function(bundle) {
+    Num_LookUp_pre_search: function (bundle) {
         var lookup_headn = {
             'Content-Type': 'application/json',
             'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
-        
+
         console.log(lookup_headn);
-       
+
         return {
             headers: lookup_headn
         };
     },
 
-    Num_LookUp_post_search: function(bundle) {
+    Num_LookUp_post_search: function (bundle) {
         var parsed_response = z.JSON.parse(bundle.response.content);
         var heads = bundle.response.headers;
         var st_code = bundle.response.status_code;
         var result = {
-            "result_code":200,
-            "Status":"Success"
+            "result_code": 200,
+            "Status": "Success"
         };
         return [{
             response: "Success",
             "id": 1,
             status_code: st_code,
-            content: { 
+            content: {
                 "active_number": parsed_response.active_number,
                 "carrier": parsed_response.carrier,
                 "carrier_mcc": parsed_response.carrier_mcc,
@@ -452,25 +451,25 @@ var Zap = {
                 "valid_number": parsed_response.valid_number
             },
             headers: {
-                "Content-Encoding": heads.Content_Encoding, 
-                "Transfer-Encoding": heads.Transfer_Encoding, 
-                "Strict-Transport-Security": heads.Strict_Transport_Security, 
-                "Vary": heads.Vary, 
-                "Server": heads.Server, 
-                "Connection": heads.Connection, 
-                "Cache-Control": heads.Cache_Control, 
-                "Date": heads.Date, 
-                "Access-Control-Allow-Credentials": heads.Access_Control_Allow_Credentials, 
-                "Content-Type": heads.Content_Type, 
+                "Content-Encoding": heads.Content_Encoding,
+                "Transfer-Encoding": heads.Transfer_Encoding,
+                "Strict-Transport-Security": heads.Strict_Transport_Security,
+                "Vary": heads.Vary,
+                "Server": heads.Server,
+                "Connection": heads.Connection,
+                "Cache-Control": heads.Cache_Control,
+                "Date": heads.Date,
+                "Access-Control-Allow-Credentials": heads.Access_Control_Allow_Credentials,
+                "Content-Type": heads.Content_Type,
                 "Access-Control-Allow-Origin": heads.Access_Control_Allow_Origin
             }
         }];
     },
 
-    Num_LookUp_post_read_resource: function(bundle) {
+    Num_LookUp_post_read_resource: function (bundle) {
         var parsed_response = z.JSON.parse(bundle.response.content);
-        var heads=bundle.response.headers;
-        var st_code=bundle.response.status_code;
+        var heads = bundle.response.headers;
+        var st_code = bundle.response.status_code;
         return [{
             response: "Success",
             "id": 1,
@@ -530,37 +529,37 @@ var Zap = {
     },
 
     // Validate phone number
-    ValidatePhoneNumber_pre_write: function(bundle) {
+    ValidatePhoneNumber_pre_write: function (bundle) {
         var requestHeaders = {
-            'Content-Type':'application/json',
-            'X-Cm-Producttoken':bundle.auth_fields.productToken_text
+            'Content-Type': 'application/json',
+            'X-Cm-Producttoken': bundle.auth_fields.productToken_text
         };
 
         console.log(requestHeaders);
-        
+
         var requestData = {
             phonenumber: bundle.action_fields_full.PhoneNumber
         };
 
         return createRequest(requestHeaders, requestData);
     },
-    
+
     ValidatePhoneNumber_post_write: throwResponseError,
-    
+
     // Look up
-    LookUp_pre_write: function(bundle) {
+    LookUp_pre_write: function (bundle) {
         var requestHeaders = {
             'Content-Type': 'application/json',
             'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
-        
+
         console.log(requestHeaders);
-        
+
         var requestData = {
             phonenumber: bundle.action_fields_full.Phone_Number,
             mnp_lookup: true
         };
-        
+
         return createRequest(requestHeaders, requestData);
     }
 };
