@@ -45,28 +45,35 @@ module.exports = {
       {
         key: 'Body',
         label: 'Body',
-        helpText: '**Please provide the content of message on behalf of every sender and separate them with || (double pipe) separator**.\n\nFor Example : Content Of Sender Name 1 || Content of Sender Name 2 || Content of Sender Name 3 and so on ...',
+        helpText:
+          '**Please provide the content of message on behalf of every sender and separate them with || (double pipe) separator**.\n\nFor Example : Content Of Sender Name 1 || Content of Sender Name 2 || Content of Sender Name 3 and so on ...',
         type: 'string',
         required: true,
         placeholder: 'Content 1 || Content 2 || Content 3 and so on ...'
-      }, {
+      },
+      {
         key: 'From',
         label: 'From',
-        helpText: "**Please provide multiple sender's name and separate them with || (double pipe) separator**.\n\nFor Example : Sender Name 1 || Sender Name 2 || Sender Name 3 and so on ...",
+        helpText:
+          "**Please provide multiple sender's name and separate them with || (double pipe) separator**.\n\nFor Example : Sender Name 1 || Sender Name 2 || Sender Name 3 and so on ...",
         type: 'string',
         required: true,
         placeholder: 'Name1 || Name2 || Name3 and so on ...'
-      }, {
+      },
+      {
         key: 'Reference',
         label: 'Reference',
-        helpText: '**Please set the reference for each sender and separate them with a || (double pipe) separator**.\n\nFor Example : Reference (Sender Name 1) || Reference (Sender Name 2) || Reference (Sender Name 3) and so on ...',
+        helpText:
+          '**Please set the reference for each sender and separate them with a || (double pipe) separator**.\n\nFor Example : Reference (Sender Name 1) || Reference (Sender Name 2) || Reference (Sender Name 3) and so on ...',
         type: 'string',
         required: false,
         default: 'None'
-      }, {
+      },
+      {
         key: 'To',
         label: 'To',
-        helpText: '**Please provide "To" (recipient number) for each sender and separate them with a || (double pipe) separator**\n\nFor Example : To (Sender Name 1) || To (Sender Name 2) || To (Sender Name 3) and so on ...\n\n**Here each "To" can have multiple recipient numbers which are separated with a comma**\n\nFor Example : +1224589XXXX , +91976056XXXX , +3223576XXXX || +1235467XXXX , +91757956XXXX , +3542576XXXX || +1725355XXXX , +91817143XXXX , +3972156XXXX and so on ...',
+        helpText:
+          '**Please provide "To" (recipient number) for each sender and separate them with a || (double pipe) separator**\n\nFor Example : To (Sender Name 1) || To (Sender Name 2) || To (Sender Name 3) and so on ...\n\n**Here each "To" can have multiple recipient numbers which are separated with a comma**\n\nFor Example : +1224589XXXX , +91976056XXXX , +3223576XXXX || +1235467XXXX , +91757956XXXX , +3542576XXXX || +1725355XXXX , +91817143XXXX , +3972156XXXX and so on ...',
         type: 'string',
         required: true,
         placeholder: '+1224589XXXX , +91976056XXXX || +1235467XXXX , +91757956XXXX || +3972156XXXX and so on ...'
@@ -79,8 +86,6 @@ module.exports = {
       }
     ],
     perform: makeRequest,
-    sample: { 
-      Status: 'Success' 
-    }
+    sample: { Status: 'Success' }
   }
 };

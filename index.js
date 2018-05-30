@@ -14,7 +14,7 @@ const maybeIncludeAuth = (request, z, bundle) => {
 
   request.headers['Username'] = `${bundle.authData['userN']}`;
 
-  request.headers['x-cm-producttoken'] = `${bundle.authData['productKey']}`;
+  request.headers['x-cm-producttoken'] = `${bundle.authData['productToken_text']}`;
 
   return request;
 };

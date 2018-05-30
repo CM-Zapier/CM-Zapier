@@ -11,7 +11,10 @@
     "npm": ">=6.0.1"
   },
   "dependencies": {
+    "async": "^2.6.1",
+    "crypto": "^1.0.1",
     "lodash": "^4.17.10",
+    "moment-timezone": "^0.5.17",
     "zapier-platform-core": "6.0.0",
     "zapier-platform-legacy-scripting-runner": "1.2.0"
   },

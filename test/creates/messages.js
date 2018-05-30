@@ -13,23 +13,26 @@ describe('Creates - Send SMS', () => {
   it('should create an object', done => {
     const bundle = {
       authData: {
-        productKey: process.env.PRODUCT_KEY,
+        productToken_text: process.env.PRODUCT_TOKEN_TEXT,
+        productToken_voice: process.env.PRODUCT_TOKEN_VOICE,
         shrdKey: process.env.SHRD_KEY,
         userN: process.env.USER_N
       },
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        BulkBody: process.env.TEST_BODY,
-        BulkFrom: process.env.TEST_FROM,
-        BulkReference: 'None',
-        BulkTo: process.env.TEST_TO
+        Body: process.env.TEST_BODY,
+        From: process.env.TEST_FROM,
+        Reference: 'None',
+        To: process.env.TEST_TO
       }
     };
 
-    appTester(App.creates[MessagesCreate.key].operation.perform, bundle).then(result => {
-      result.should.not.be.an.Array();
-      done();
-    }).catch(done);
+    appTester(App.creates[MessagesCreate.key].operation.perform, bundle)
+      .then(result => {
+        result.should.not.be.an.Array();
+        done();
+      })
+      .catch(done);
   });
 });

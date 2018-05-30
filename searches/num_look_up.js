@@ -73,7 +73,7 @@ module.exports = {
     label: 'Number Lookup',
     description:
       'Verify the status, including roaming information, of a phone number by checking it on the operator network.',
-    hidden: false,
+    hidden: true,
     important: true
   },
 

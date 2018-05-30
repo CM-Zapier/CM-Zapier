@@ -1,5 +1,27 @@
 'use strict';
 
+// START: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
+const _ = require('lodash');
+_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+const crypto = require('crypto');
+const async = require('async');
+const moment = require('moment-timezone');
+const { DOMParser, XMLSerializer } = require('xmldom');
+const atob = require('zapier-platform-legacy-scripting-runner/atob');
+const btoa = require('zapier-platform-legacy-scripting-runner/btoa');
+const z = require('zapier-platform-legacy-scripting-runner/z');
+const $ = require('zapier-platform-legacy-scripting-runner/$');
+const {
+  ErrorException,
+  HaltedException,
+  StopRequestException,
+  ExpiredAuthException,
+  RefreshTokenException,
+  InvalidSessionException,
+} = require('zapier-platform-legacy-scripting-runner/exceptions');
+// END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
+
+
 function createRequest(headers, data){
     return {
         headers: headers,
@@ -18,7 +40,7 @@ function createMessagesRequestData(authentication, msg){
 
 function createAuthentication(bundle){
     return {
-        ProductToken: bundle.auth_fields.productKey
+        ProductToken: bundle.auth_fields.productToken_text
     };
 }
 
@@ -246,7 +268,7 @@ var Zap = {
     Num_Validation_pre_search: function(bundle) {
         var lookup_headnw = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
         
         console.log(lookup_headnw);
@@ -369,7 +391,7 @@ var Zap = {
     Num_LookUp_pre_search: function(bundle) {
         var lookup_headn = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
         
         console.log(lookup_headn);
@@ -511,7 +533,7 @@ var Zap = {
     ValidatePhoneNumber_pre_write: function(bundle) {
         var requestHeaders = {
             'Content-Type':'application/json',
-            'X-Cm-Producttoken':bundle.auth_fields.productKey
+            'X-Cm-Producttoken':bundle.auth_fields.productToken_text
         };
 
         console.log(requestHeaders);
@@ -529,7 +551,7 @@ var Zap = {
     LookUp_pre_write: function(bundle) {
         var requestHeaders = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productKey
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
         };
         
         console.log(requestHeaders);
@@ -542,3 +564,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     }
 };
+
+// START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
+module.exports = Zap;
+// END: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0

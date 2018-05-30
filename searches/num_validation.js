@@ -73,7 +73,7 @@ module.exports = {
     label: 'Number Validation',
     description: 'Validate if the format of a phone number is correct and use the feedback in a next step.\n.',
     hidden: false,
-    important: false
+    important: true
   },
 
   operation: {
