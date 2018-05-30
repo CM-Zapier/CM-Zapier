@@ -29,11 +29,13 @@ function logJSON(json){
 function throwResponseError(bundle) {
     if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
         var response = JSON.parse(bundle.response.content);
+        var errorMessage = "";
         try { 
-            throw new ErrorException(response.messages[0].messageDetails);
+            errorMessage = response.messages[0].messageDetails;
         } catch(error) {
-            throw new ErrorException(JSON.stringify(response, null, 4));
+            errorMessage = JSON.stringify(response, null, 4);
         }
+        throw new ErrorException(errorMessage);
     }
 }
 
