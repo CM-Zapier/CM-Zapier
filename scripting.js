@@ -96,7 +96,7 @@ var Zap = {
     
     Messages_post_write: function(bundle) {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
+            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
         }
     },
     
@@ -144,7 +144,7 @@ var Zap = {
     
     Hybrid_Messages_post_write: function(bundle) {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
+            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
         }
     },
 
@@ -181,7 +181,7 @@ var Zap = {
     
     Push_Messages_post_write: function(bundle) {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
+            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
         }
     },
     
@@ -228,7 +228,7 @@ var Zap = {
 
     VoiceText_post_write: function(bundle) {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
+            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
         }
     },
     
@@ -519,7 +519,7 @@ var Zap = {
     
     ValidatePhoneNumber_post_write: function(bundle) {
         if(!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)){
-            throw new ErrorException(bundle.response.content);
+            throw new ErrorException(JSON.parse(bundle.response.content).messages[0].messageDetails);
         }
     },
     
