@@ -1,13 +1,17 @@
-const should = require('should');
+require('should');
 
 const zapier = require('zapier-platform-core');
 
 const App = require('../../index');
 const appTester = zapier.createAppTester(App);
-const app = App.creates["messages"].Messages
+// const app = App.creates["bulk_messages"].operation.inputFields
+const app = App.creates["bulk_messages"].operation.perform
 
 
-describe('Creates - Send SMS', () => {
+console.log(app)
+
+
+describe('Creates - Send Bulk SMS', () => {
   zapier.tools.env.inject();
 
   it('should create an object', done => {
@@ -19,27 +23,21 @@ describe('Creates - Send SMS', () => {
       },
 
       inputData: {
-      // TODO: Pulled from input fields' default values. Edit if necessary.
-        Body: null,
-        From: null,
-        Reference: 'None',
-        To: null
+        // TODO: Pulled from input fields' default values. Edit if necessary.
+        BulkBody: 'Hallo',
+        BulkFrom: '0031618213117',
+        BulkReference: 'None',
+        BulkTo: '0031618213117'
       }
     };
 
-    // appTester(App.creates['messages'].operation.perform, bundle)
-    // appTester(App.creates..operation.perform)
-    appTester(app)
-      .then(result => {
+    appTester(app)      
+    .then(result => {
         result.should.not.be.an.Array();
-        
         done();
       })
       .catch(done);
   });
-console.log(App.creates["messages"])
 });
 
-
-
-
+// 18 21 31 17

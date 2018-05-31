@@ -36,7 +36,7 @@ module.exports = {
   display: {
     label: 'Send Push Messages',
     description: 'Send a new push message to an app user.',
-    hidden: true,
+    hidden: false,
     important: false
   },
 

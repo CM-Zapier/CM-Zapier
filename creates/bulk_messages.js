@@ -1,0 +1,129 @@
+// "Create" stub created by 'zapier convert'. This is just a stub - you will need to edit!
+const { replaceVars } = require('../utils');
+
+
+
+const makeRequest = (z, bundle) => {
+
+bundle._legacyUrl = 'https://gw.cmtelecom.com/v1.0/message';
+    console.log(bundle._legacyUrl)
+    bundle._legacyUrl = replaceVars(bundle._legacyUrl, bundle);
+    console.log(bundle._legacyUrl)
+
+  const responsePromise = z.request({
+    method: 'POST',
+    url: bundle._legacyUrl,
+    // body: bundle.inputData.details,
+    headers: {
+      // 'Accept': 'application/json',
+      'Content-Type': 'application/json',   
+    }
+  });
+
+  return responsePromise
+    .then(response => JSON.parse(response.content));
+
+  console.log(responsePromise
+    .then(response => JSON.parse(response.content)))
+
+ 
+
+    // const scripting = require('../scripting');
+    // const legacyScriptingRunner = require('zapier-platform-legacy-scripting-runner')(scripting);
+
+    // bundle._legacyUrl = 'https://gw.cmtelecom.com/v1.0/message';
+    // console.log(bundle._legacyUrl)
+    // bundle._legacyUrl = replaceVars(bundle._legacyUrl, bundle);
+    // console.log(bundle._legacyUrl)
+
+    // // Do a _pre_write() from scripting.
+    // const preWriteEvent = {
+    //   name: 'create.pre',
+    //   key: 'bulk_messages'
+    // };
+    // return legacyScriptingRunner
+    //   .runEvent(preWriteEvent, z, bundle)
+    //   .then(preWriteResult => z.request(preWriteResult))
+    //   .then(response => {
+    //     response.throwForStatus();
+
+    //     // Do a _post_write() from scripting.
+    //     const postWriteEvent = {
+    //       name: 'create.post',
+    //       key: 'bulk_messages',
+    //       response
+    //     };
+        
+    //     return legacyScriptingRunner.runEvent(postWriteEvent, z, bundle);
+
+       
+    //   });
+
+};
+
+
+
+// const BulkMessages = {
+module.exports = {
+  key: 'bulk_messages',
+  noun: 'Bulk Sms',
+
+  display: {
+    label: 'Send Bulk SMS',
+    description: 'Send SMS to multiple people, optionally with different senders and different content.',
+    hidden: false,
+    important: false
+  },
+
+  operation: {
+    inputFields: [
+      {
+        key: 'BulkBody',
+        label: 'Body',
+        helpText:
+          '**Please provide the content of message on behalf of every sender and separate them with || (double pipe) separator**.\n\nFor Example : Content Of Sender Name 1 || Content of Sender Name 2 || Content of Sender Name 3 and so on ...',
+        type: 'string',
+        required: true,
+        placeholder: 'Content 1 || Content 2 || Content 3 and so on ...'
+      },
+      {
+        key: 'BulkFrom',
+        label: 'From',
+        helpText:
+          "**Please provide multiple sender's name and separate them with || (double pipe) separator**.\n\nFor Example : Sender Name 1 || Sender Name 2 || Sender Name 3 and so on ...",
+        type: 'string',
+        required: true,
+        placeholder: 'Name1 || Name2 || Name3 and so on ...'
+      },
+      {
+        key: 'BulkReference',
+        label: 'Reference',
+        helpText:
+          '**Please set the reference for each sender and separate them with a || (double pipe) separator**.\n\nFor Example : Reference (Sender Name 1) || Reference (Sender Name 2) || Reference (Sender Name 3) and so on ...',
+        type: 'string',
+        required: false,
+        default: 'None'
+      },
+      {
+        key: 'BulkTo',
+        label: 'To',
+        helpText:
+          '**Please provide "To" (recipient number) for each sender and separate them with a || (double pipe) separator**\n\nFor Example : To (Sender Name 1) || To (Sender Name 2) || To (Sender Name 3) and so on ...\n\n**Here each "To" can have multiple recipient numbers which are separated with a comma**\n\nFor Example : +1224589XXXX , +91976056XXXX , +3223576XXXX || +1235467XXXX , +91757956XXXX , +3542576XXXX || +1725355XXXX , +91817143XXXX , +3972156XXXX and so on ...',
+        type: 'string',
+        required: true,
+        placeholder: '+1224589XXXX , +91976056XXXX || +1235467XXXX , +91757956XXXX || +3972156XXXX and so on ...'
+      }
+    ],
+    outputFields: [
+      {
+        key: 'Status',
+        type: 'string'
+      }
+    ],
+    perform: makeRequest,
+    sample: { Status: 'Success' }
+  }
+};
+
+// module.exports = BulkMessages;
+

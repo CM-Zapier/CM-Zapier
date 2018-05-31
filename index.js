@@ -4,17 +4,18 @@ const authentication = require('./authentication');
 const NewaccountTrigger = require('./triggers/new_account');
 const NumlookupSearch = require('./searches/num_look_up');
 const NumvalidationSearch = require('./searches/num_validation');
+const BulkmessagesCreate = require('./creates/bulk_messages');
 const HybridmessagesCreate = require('./creates/hybrid_messages');
 const MessagesCreate = require('./creates/messages');
 const PushmessagesCreate = require('./creates/push_messages');
 const VoicetextCreate = require('./creates/voice_text');
 
 const maybeIncludeAuth = (request, z, bundle) => {
-  request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
+  // request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
 
   request.headers['Username'] = `${bundle.authData['userN']}`;
 
-  request.headers['x-cm-producttoken'] = `${bundle.authData['productToken_text']}`;
+  request.headers['x-cm-producttoken'] = `${bundle.authData['productKey']}`;
 
   return request;
 };
@@ -41,11 +42,11 @@ const App = {
   },
 
   creates: {
+    [BulkmessagesCreate.key]: BulkmessagesCreate,
     [HybridmessagesCreate.key]: HybridmessagesCreate,
     [MessagesCreate.key]: MessagesCreate,
     [PushmessagesCreate.key]: PushmessagesCreate,
     [VoicetextCreate.key]: VoicetextCreate
   }
 };
-
 module.exports = App;

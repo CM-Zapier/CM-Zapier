@@ -37,7 +37,7 @@ module.exports = {
     label: 'Send Hybrid Message',
     description:
       'Send a hybrid message, which means a Push notification or an SMS when the user cannot be reached via push. The zap uses the channels that you allow.',
-    hidden: true,
+    hidden: false,
     important: true
   },
 
