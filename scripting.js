@@ -62,10 +62,15 @@ function throwResponseError(bundle) {
             } else if (response.message !== undefined) { // Voice error handling
                 errorMessage = response.message;
             } else if (response.messages !== undefined) { // Text error handling
-                for (var i = 0; i < response.messages.length; i++) {
-                    errorMessage += response.messages[i].messageDetails + "\n";
+                if(response.messages.length == 0){
+                    errorMessage = response.details;
+                } else {
+                    for (var i = 0; i < response.messages.length; i++) {
+                        errorMessage += response.messages[i].messageDetails + "\n";
+                    }
                 }
             }
+            errorMessage += " (error code: " + response.errorCode + ")";
         } catch (error) {
             errorMessage = JSON.stringify(response, null, 4);
         }
@@ -180,7 +185,7 @@ var Zap = {
             allowedChannels: allowedChannelsList,
             minimumNumberOfMessageParts: 1,
             maximumNumberOfMessageParts: 8,
-            customGrouping3: "Zapier"
+            customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
         }];
 
         var requestData = createMessagesRequestData(authentication, messageList);
@@ -211,7 +216,7 @@ var Zap = {
             appKey: bundle.action_fields_full.appkey,
             minimumNumberOfMessageParts: 1,
             maximumNumberOfMessageParts: 8,
-            customGrouping3: "Zapier"
+            customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
         }];
 
         var requestData = createMessagesRequestData(authentication, messageList)
