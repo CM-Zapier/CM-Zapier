@@ -21,9 +21,13 @@ const {
 } = require('zapier-platform-legacy-scripting-runner/exceptions');
 // END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
+String.prototype.replaceAll = function (search, replacement) {
+    return this.replace(new RegExp(search, 'g'), replacement);
+};
+
 var settings = {
     useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
-    debug: false // True to print all errors in json.
+    debug: true // True to print all errors in json.
 };
 
 function createRequest(headers, data) {
@@ -62,7 +66,7 @@ function throwResponseError(bundle) {
             } else if (response.message !== undefined) { // Voice error handling
                 errorMessage = response.message;
             } else if (response.messages !== undefined) { // Text error handling
-                if(response.messages.length == 0){
+                if (response.messages.length === 0) {
                     errorMessage = response.details;
                 } else {
                     for (var i = 0; i < response.messages.length; i++) {
@@ -191,7 +195,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
 
-    VoiceText_post_write: throwResponseError
+    VoiceText_post_write: throwResponseError,
 
 
     /* ------------ PAYMENTS ------------ */
@@ -201,7 +205,47 @@ var Zap = {
 
     /* ------------ NUMBER VALIDATION ------------ */
 
-    // Fix code in legacy.js
+    Num_Validation_pre_search: function (bundle) {
+        var requestHeaders = {
+            'Content-Type': 'application/json',
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken
+        };
+
+        var requestData = {
+            phonenumber: bundle.search_fields.PhoneNumber
+        };
+
+        return {
+            url: "https://api.cmtelecom.com/v1.1/numbervalidation",
+            headers: requestHeaders,
+            data: JSON.stringify(requestData),
+            method: "POST"
+        };
+    },
+
+    Num_Validation_post_search: function (bundle) {
+        throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
+
+        return [{
+            response: "Success",
+            id: 1,
+            status_code: bundle.response.status_code,
+            content: JSON.parse(bundle.response.content),
+            headers: bundle.response.headers
+        }];
+    },
+
+    Num_Validation_post_read_resource: function (bundle) {
+        throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
+
+        return [{
+            response: "Success",
+            id: 1,
+            status_code: bundle.response.status_code,
+            content: JSON.parse(bundle.response.content),
+            headers: bundle.response.headers
+        }];
+    }
 };
 
 // START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
