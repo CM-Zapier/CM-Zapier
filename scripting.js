@@ -21,6 +21,10 @@ const {
 } = require('zapier-platform-legacy-scripting-runner/exceptions');
 // END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
+var settings = {
+    useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
+    debug: false // True to print all errors in json.
+};
 
 function createRequest(headers, data) {
     return {
@@ -40,7 +44,7 @@ function createMessagesRequestData(authentication, msg) {
 
 function createAuthentication(bundle) {
     return {
-        ProductToken: bundle.auth_fields.productToken_text
+        ProductToken: bundle.auth_fields.productToken
     };
 }
 
@@ -53,7 +57,15 @@ function throwResponseError(bundle) {
         var response = JSON.parse(bundle.response.content);
         var errorMessage = "";
         try {
-            errorMessage = response.messages[0].messageDetails;
+            if (settings.debug) { // Throw json error when debugging.
+                errorMessage = JSON.stringify(response, null, 4);
+            } else if (response.message !== undefined) { // Voice error handling
+                errorMessage = response.message;
+            } else if (response.messages !== undefined) { // Text error handling
+                for (var i = 0; i < response.messages.length; i++) {
+                    errorMessage += response.messages[i].messageDetails + "\n";
+                }
+            }
         } catch (error) {
             errorMessage = JSON.stringify(response, null, 4);
         }
@@ -122,7 +134,7 @@ var Zap = {
                 reference: smsReferenceArray[j] === undefined ? "None" : smsReferenceArray[j].trim(),
                 minimumNumberOfMessageParts: 1,
                 maximumNumberOfMessageParts: 8,
-                customGrouping3: "Zapier"
+                customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
             });
         }
         logJSON(messageList);
@@ -135,7 +147,7 @@ var Zap = {
 
     Messages_post_write: throwResponseError,
 
-    Hybrid_Messages_pre_write: function (bundle) {
+    /*Hybrid_Messages_pre_write: function (bundle) {
         var authentication = createAuthentication(bundle);
 
         var requestHeaders = {
@@ -177,9 +189,9 @@ var Zap = {
     },
 
 
-    Hybrid_Messages_post_write: throwResponseError,
+    Hybrid_Messages_post_write: throwResponseError,*/
 
-    Push_Messages_pre_write: function (bundle) {
+    /*Push_Messages_pre_write: function (bundle) {
         var authentication = createAuthentication(bundle);
 
         var requestHeaders = {
@@ -207,7 +219,7 @@ var Zap = {
         return createRequest(requestHeaders, requestData);
     },
 
-    Push_Messages_post_write: throwResponseError,
+    Push_Messages_post_write: throwResponseError,*/
 
 
     /* ------------ VOICE ------------ */
@@ -235,27 +247,30 @@ var Zap = {
             }
         };
 
-        // Authentication (old way): 
-
-        var body_string = JSON.stringify(requestData);
-
-        // z.hmac(algorithm, key, string, encoding="hex")
-        var hmac_hash = z.hmac('sha256', bundle.auth_fields.shrdKey, body_string);
-
-        var user = bundle.auth_fields.userN;
-        console.log(bundle.auth_fields.shrdKey + ';' + bundle.auth_fields.userN);
-
         var requestHeaders = {
-            'Content-Type': 'application/json',
-            'Authorization': 'username=' + user + ';signature=' + hmac_hash
+            'Content-Type': 'application/json'
         };
+
+        if (settings.useVoiceTokenAuthentication) {
+            requestHeaders["X-CM-PRODUCTTOKEN"] = bundle.auth_fields.productToken;
+        } else {
+            var body_string = JSON.stringify(requestData);
+
+            // z.hmac(algorithm, key, string, encoding="hex")
+            var hmac_hash = z.hmac('sha256', bundle.auth_fields.shrdKey, body_string);
+
+            var user = bundle.auth_fields.userN;
+            console.log(bundle.auth_fields.shrdKey + ';' + bundle.auth_fields.userN);
+
+            requestHeaders.Authorization = 'username=' + user + ';signature=' + hmac_hash;
+        }
 
         return createRequest(requestHeaders, requestData);
     },
 
     VoiceText_post_write: throwResponseError,
 
-    
+
     /* ------------ PAYMENTS ------------ */
 
     // TODO
@@ -267,7 +282,7 @@ var Zap = {
     Num_Validation_pre_search: function (bundle) {
         var lookup_headnw = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken
         };
 
         console.log(lookup_headnw);
@@ -390,7 +405,7 @@ var Zap = {
     Num_LookUp_pre_search: function (bundle) {
         var lookup_headn = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken
         };
 
         console.log(lookup_headn);
@@ -532,7 +547,7 @@ var Zap = {
     ValidatePhoneNumber_pre_write: function (bundle) {
         var requestHeaders = {
             'Content-Type': 'application/json',
-            'X-Cm-Producttoken': bundle.auth_fields.productToken_text
+            'X-Cm-Producttoken': bundle.auth_fields.productToken
         };
 
         console.log(requestHeaders);
@@ -550,7 +565,7 @@ var Zap = {
     LookUp_pre_write: function (bundle) {
         var requestHeaders = {
             'Content-Type': 'application/json',
-            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken_text
+            'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken
         };
 
         console.log(requestHeaders);
