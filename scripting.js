@@ -88,25 +88,17 @@ var Zap = {
             'Content-Type': 'application/json'
         };
 
-        var splitter = "||";
-
         // Field with numbers where to send message from
-        var fromNumbersText = bundle.action_fields_full.From;
-        var fromNumbersArray = fromNumbersText.split(splitter);
+        var fromNumbersArray = bundle.action_fields_full.From;
 
         // Field with numbers where to send message to
-        var toNumbersText = bundle.action_fields_full.To;
-        var toNumbersArray = toNumbersText.split(splitter);
+        var toNumbersArray = bundle.action_fields_full.To;
 
         // Body field/content of the message
-        var smsBodyText = bundle.action_fields_full.Body;
-        smsBodyText = smsBodyText.replace(/\r/g, "").replace(/\n/g, ""); // This removes all newlines/line breaks in the body
-        console.log(smsBodyText);
-        var smsBodyArray = smsBodyText.split(splitter);
+        var smsBodyArray = bundle.action_fields_full.Body;
 
         // Reference field
-        var smsReferenceText = bundle.action_fields_full.Reference;
-        var smsReferenceArray = smsReferenceText.split(splitter);
+        var smsReferenceArray = bundle.action_fields_full.Reference;
 
         // Create a list of messages
         var messageList = [];
@@ -134,7 +126,7 @@ var Zap = {
                 to: toNumbersList,
                 body: {
                     type: "AUTO",
-                    content: smsBodyArray[j].trim()
+                    content: smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim()
                 },
                 reference: smsReferenceArray[j] === undefined ? "None" : smsReferenceArray[j].trim(),
                 minimumNumberOfMessageParts: 1,
@@ -166,8 +158,8 @@ var Zap = {
         var voiceNumber = mainSplitted[2];
 
         var requestData = {
-            callee: bundle.action_fields_full.Callee,
-            caller: bundle.action_fields_full.Caller,
+            callee: bundle.action_fields_full.To,
+            caller: bundle.action_fields_full.From,
             anonymous: false,
             prompt: bundle.action_fields_full.Text,
             'prompt-type': "TTS",
