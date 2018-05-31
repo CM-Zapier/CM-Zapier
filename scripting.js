@@ -108,18 +108,18 @@ var Zap = {
             var toNumbersList = [];
             for (var k = 0; k < numberList.length; k++) {
                 toNumbersList.push({
-                    Number: numberList[k]
+                    Number: numberList[k].trim()
                 });
             }
 
             messageList.push({
-                from: fromNumbersArray[j],
+                from: fromNumbersArray[j].trim(),
                 to: toNumbersList,
                 body: {
                     type: "AUTO",
-                    content: smsBodyArray[j]
+                    content: smsBodyArray[j].trim()
                 },
-                reference: smsReferenceArray[j],
+                reference: smsReferenceArray[j] === undefined ? "None" : smsReferenceArray[j].trim(),
                 minimumNumberOfMessageParts: 1,
                 maximumNumberOfMessageParts: 8,
                 customGrouping3: "Zapier"

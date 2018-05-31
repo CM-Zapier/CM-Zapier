@@ -13,7 +13,8 @@ describe('Creates - Send SMS', () => {
   it('should create an object', done => {
     const bundle = {
       authData: {
-        productKey: process.env.PRODUCT_KEY,
+        productToken_text: process.env.PRODUCT_TOKEN_TEXT,
+        productToken_voice: process.env.PRODUCT_TOKEN_VOICE,
         shrdKey: process.env.SHRD_KEY,
         userN: process.env.USER_N
       },

@@ -4,7 +4,6 @@ const authentication = require('./authentication');
 const NewaccountTrigger = require('./triggers/new_account');
 const NumlookupSearch = require('./searches/num_look_up');
 const NumvalidationSearch = require('./searches/num_validation');
-const BulkmessagesCreate = require('./creates/bulk_messages');
 const HybridmessagesCreate = require('./creates/hybrid_messages');
 const MessagesCreate = require('./creates/messages');
 const PushmessagesCreate = require('./creates/push_messages');
@@ -42,7 +41,6 @@ const App = {
   },
 
   creates: {
-    [BulkmessagesCreate.key]: BulkmessagesCreate,
     [HybridmessagesCreate.key]: HybridmessagesCreate,
     [MessagesCreate.key]: MessagesCreate,
     [PushmessagesCreate.key]: PushmessagesCreate,
