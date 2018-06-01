@@ -74,7 +74,7 @@ function throwResponseError(bundle) {
                     }
                 }
             }
-            errorMessage += " (error code: " + response.errorCode + ")";
+            if (response.errorCode !== undefined) errorMessage += " (error code: " + response.errorCode + ")";
         } catch (error) {
             errorMessage = JSON.stringify(response, null, 4);
         }
