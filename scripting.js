@@ -49,7 +49,7 @@ var Settings = {
         max: 48 * 60
     },
     defaultReference: "None",
-    debug: true // True to print all errors in json.
+    debug: false // True to print all errors in json.
 };
 
 function ZapierRequest(headers, data) {
@@ -125,11 +125,11 @@ function parseValidityTime(input) {
 // When Zapier gets a result from CM.com, check it for errors and throw it as readable message.
 function throwResponseError(bundle) {
     if (!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)) {
-        var response = JSON.parse(bundle.response.content);
-        var errorMessage;
-        if (Settings.debug) { // Throw json error when debugging.
-            errorMessage = JSON.stringify(response, null, 4);
+        if (Settings.debug) {
+            throw new ErrorException(bundle.response.content);
         } else {
+            var response = JSON.parse(bundle.response.content);
+
             var errorMessages = []; // A list of error messages
             if (response.message !== undefined) { // If the error has a single message.
                 errorMessages.push(response.message); // Add the message to the list
@@ -138,8 +138,8 @@ function throwResponseError(bundle) {
                     return item.messageDetails !== null; // Filter all success messages from the list
                 }).map(function (item) { // Convert all error messages from json to text.
                     // Example: Message 2 (to 00447911123457 with reference your_reference_B): A body without content was found (error code 304)
-                    return "Message " + (response.messages.indexOf(item) + 1) + " (to " + item.to + (item.reference != "None" ? " with reference " + item.reference : "") + ") " +
-                        item.messageDetails + " (error code " + item.errorCode + ")";
+                    return "Message " + (response.messages.indexOf(item) + 1) + " (to '" + item.to + "'" + (item.reference != "None" ? " with reference '" + item.reference + "'" : "") + ") " +
+                        item.messageDetails + (item.errorCode !== undefined ? " (error code " + item.errorCode + ")" : "");
                 });
             }
 
@@ -156,9 +156,8 @@ function throwResponseError(bundle) {
                 errorMessages.push(msg);
             }
 
-            errorMessage = errorMessages.join("\n");
+            throw new ErrorException(errorMessages.join("\n"));
         }
-        throw new ErrorException(errorMessage);
     }
 }
 
@@ -199,11 +198,11 @@ var Zap = {
 
             var from = fromNumbersArray[j].trim();
 
-            if(from.matches(/[0-9+]+/)){
-                if(from.length > Settings.textFromField.maxDigits){ 
+            if (from.matches(/[0-9+]+/)) {
+                if (from.length > Settings.textFromField.maxDigits) {
                     throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
                 }
-            } else if(from.length > Settings.textFromField.maxChars){ 
+            } else if (from.length > Settings.textFromField.maxChars) {
                 throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
             }
 
