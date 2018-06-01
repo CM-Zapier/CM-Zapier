@@ -25,6 +25,10 @@ String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
 
+Date.prototype.addMinutes = function (minutes) {
+    return new Date(this.getTime() + minutes*60000);
+}
+
 var settings = {
     useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
     debug: false // True to print all errors in json.
@@ -54,6 +58,21 @@ function createAuthentication(bundle) {
 
 function logJSON(json) {
     console.log(JSON.stringify(json, null, 4));
+}
+
+function parseValidityTime(input){
+    var validityTime = input;
+    validityTime = validityTime === undefined ? "48h0m" : validityTime;
+    validityTime = validityTime.split("h");
+    validityTime[1] = validityTime[1].replace("m", "");
+    var validityTimeMinutes = parseInt(validityTime[1]) + (parseInt(validityTime[0]) * 60);
+    var currentDate = new Date();
+    var validityTime = currentDate.addMinutes(validityTimeMinutes);
+    validityTime = validityTime.toISOString();
+    validityTime = validityTime.replace("T", " ");
+    validityTime = validityTime.split(".")[0];
+    validityTime += " GMT";
+    return validityTime;
 }
 
 function throwResponseError(bundle) {
@@ -104,6 +123,9 @@ var Zap = {
         // Reference field
         var smsReferenceArray = bundle.action_fields_full.Reference;
 
+        // Validity time field
+        var validityTimeArray = bundle.action_fields_full.ValidityTime;
+
         // Create a list of messages
         var messageList = [];
         for (var j = 0; j < fromNumbersArray.length; j++) {
@@ -135,6 +157,7 @@ var Zap = {
                 reference: smsReferenceArray[j] === undefined ? "None" : smsReferenceArray[j].trim(),
                 minimumNumberOfMessageParts: 1,
                 maximumNumberOfMessageParts: 8,
+                validity: parseValidityTime(validityTimeArray[j]),
                 customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
             });
         }
@@ -171,7 +194,8 @@ var Zap = {
                 language: voiceLanguage,
                 gender: voiceGender,
                 number: voiceNumber
-            }
+            },
+            validity: parseValidityTime(bundle.action_fields_full.ValidityTime)
         };
 
         var requestHeaders = {
@@ -251,3 +275,4 @@ var Zap = {
 // START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 module.exports = Zap;
 // END: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
+
