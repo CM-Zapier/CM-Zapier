@@ -27,7 +27,7 @@ String.prototype.replaceAll = function (search, replacement) {
 
 var settings = {
     useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
-    debug: true // True to print all errors in json.
+    debug: false // True to print all errors in json.
 };
 
 function createRequest(headers, data) {
@@ -162,7 +162,7 @@ var Zap = {
         var voiceNumber = mainSplitted[2];
 
         var requestData = {
-            callee: bundle.action_fields_full.To,
+            callees: bundle.action_fields_full.To,
             caller: bundle.action_fields_full.From,
             anonymous: false,
             prompt: bundle.action_fields_full.Text,
