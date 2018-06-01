@@ -93,7 +93,7 @@ function parseValidityTime(input) {
     // If the input is undefined, use default Validity time.
     var validityTime = input === undefined ? Settings.validityTime.def : input;
 
-    if (!validityTime.matches(/[0-9]*h([0-5]|)[0-9]m/)) {
+    if (!validityTime.matches(/[0-9]+h([0-5]|)[0-9]m/)) {
         throw new ErrorException("Validity time is in an incorrect format");
     }
 
@@ -199,7 +199,7 @@ var Zap = {
 
             var from = fromNumbersArray[j].trim();
 
-            if(from.matches(/[0-9+]*/)){
+            if(from.matches(/[0-9+]+/)){
                 if(from.length > Settings.textFromField.maxDigits){ 
                     throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
                 }
