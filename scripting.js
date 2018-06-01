@@ -25,6 +25,10 @@ String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement)
 }
 
+String.prototype.matches = function (regex) {
+    return regex.test(this)
+}
+
 Date.prototype.addMinutes = function (minutes) {
     return new Date(this.getTime() + minutes * 60 * 1000)
 }
@@ -85,7 +89,7 @@ function parseValidityTime(input) {
     // If the input is undefined, use default Validity time.
     var validityTime = input === undefined ? Settings.validityTime.def : input
 
-    if (!validityTime.matches(/[0-9]*h[0-5][0-9]m/)) {
+    if (!validityTime.matches(/[0-9]*h([0-5]|)[0-9]m/)) {
         throw new ErrorException("Validity time is in an incorrect format")
     }
 
