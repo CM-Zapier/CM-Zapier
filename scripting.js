@@ -39,6 +39,10 @@ Date.prototype.addHours = function (hours) {
 
 var Settings = {
     useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
+    textFromField: {
+        maxDigits: 16,
+        maxChars: 11
+    },
     validityTime: {
         def: "48h0m", // Default
         min: 1,
@@ -134,7 +138,7 @@ function throwResponseError(bundle) {
                     return item.messageDetails !== null // Filter all success messages from the list
                 }).map(function (item) { // Convert all error messages from json to text.
                     // Example: Message 2 (to 00447911123457 with reference your_reference_B): A body without content was found (error code 304)
-                    return "Message " + response.messages.indexOf(item) + " (to " + item.to + (item.reference != "None" ? " with reference " + item.reference : "") + ") " +
+                    return "Message " + (response.messages.indexOf(item) + 1) + " (to " + item.to + (item.reference != "None" ? " with reference " + item.reference : "") + ") " +
                         item.messageDetails + " (error code " + item.errorCode + ")"
                 })
             }
@@ -193,8 +197,18 @@ var Zap = {
                 }
             })
 
+            var from = fromNumbersArray[j].trim();
+
+            if(from.matches(/[0-9+]*/)){
+                if(from.length > Settings.textFromField.maxDigits){ 
+                    throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)")
+                }
+            } else if(from.length > Settings.textFromField.maxChars){ 
+                throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)")
+            }
+
             messageList.push({
-                from: fromNumbersArray[j].trim(),
+                from: from,
                 to: toNumbersList,
                 body: {
                     type: "AUTO",
