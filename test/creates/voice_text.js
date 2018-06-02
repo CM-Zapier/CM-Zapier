@@ -18,10 +18,10 @@ describe('Creates - Send Voice (Text to Speech) Message', () => {
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        From: null,
-        Language: null,
-        Text: null,
-        To: null,
+        From: "Zapier test",
+        Language: "en-US;Male;1",
+        Text: "Test",
+        To: [process.env.TEST_PHONE_NUMBER],
         ValidityTime: '48h0m'
       }
     };

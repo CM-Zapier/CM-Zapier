@@ -21,10 +21,10 @@ describe('Creates - Send SMS', () => {
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        Body: null,
-        From: null,
+        Body: ["Test"],
+        From: ["Zapier test"],
         Reference: 'None',
-        To: null,
+        To: [process.env.TEST_PHONE_NUMBER],
         ValidityTime: '48h0m'
       }
     };
