@@ -8,29 +8,23 @@ const authentication = {
 
   fields: [
     {
-      key: 'productToken_text',
-      label: 'Product Token (Text)',
+      key: 'productToken',
+      label: 'Product Token',
       helpText: "You **must** enter this field if you're going to use message functionality.",
       type: 'string',
-      required: false
-    },
-    {
-      key: 'productToken_voice',
-      label: 'Product Token (Voice)',
-      helpText: "You **must** enter this field if you're going to use voice functionality.",
-      type: 'string',
-      required: false
+      required: true,
+      placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     },
     {
       key: 'shrdKey',
-      label: 'Shared Key (Voice, Old)',
+      label: 'Shared Key (Voice)',
       helpText: "Only needed if you're using text to speech functionality.",
       type: 'string',
       required: false
     },
     {
       key: 'userN',
-      label: 'Username (Voice, Old)',
+      label: 'Username (Voice)',
       helpText: "Only needed if you're using text to speech functionality.",
       type: 'string',
       required: false

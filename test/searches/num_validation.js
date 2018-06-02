@@ -11,15 +11,14 @@ describe('Searches - Number Validation', () => {
   it('should get an object', done => {
     const bundle = {
       authData: {
-        productToken_text: process.env.PRODUCT_TOKEN_TEXT,
-        productToken_voice: process.env.PRODUCT_TOKEN_VOICE,
+        productToken: process.env.PRODUCT_TOKEN,
         shrdKey: process.env.SHRD_KEY,
         userN: process.env.USER_N
       },
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        Phn_Numb: null
+        PhoneNumber: null
       }
     };
 

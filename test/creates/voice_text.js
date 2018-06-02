@@ -5,24 +5,24 @@ const zapier = require('zapier-platform-core');
 const App = require('../../index');
 const appTester = zapier.createAppTester(App);
 
-describe('Creates - Send Voice Text to Speech Notification', () => {
+describe('Creates - Send Voice (Text to Speech) Message', () => {
   zapier.tools.env.inject();
 
   it('should create an object', done => {
     const bundle = {
       authData: {
-        productToken_text: process.env.PRODUCT_TOKEN_TEXT,
-        productToken_voice: process.env.PRODUCT_TOKEN_VOICE,
+        productToken: process.env.PRODUCT_TOKEN,
         shrdKey: process.env.SHRD_KEY,
         userN: process.env.USER_N
       },
 
       inputData: {
         // TODO: Pulled from input fields' default values. Edit if necessary.
-        Callee: null,
-        Caller: null,
+        From: null,
         Language: null,
-        Text: null
+        Text: null,
+        To: null,
+        ValidityTime: '48h0m'
       }
     };
 

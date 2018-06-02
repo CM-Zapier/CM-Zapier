@@ -34,7 +34,7 @@ module.exports = {
   noun: 'Voice',
 
   display: {
-    label: 'Send Voice Text to Speech Notification',
+    label: 'Send Voice (Text to Speech) Message',
     description:
       'Your zap will call a phone number, a speech engine will tell the message based on your text input. Text to speech is available in many different languages, several dialects and genders.',
     hidden: false,
@@ -44,14 +44,7 @@ module.exports = {
   operation: {
     inputFields: [
       {
-        key: 'Callee',
-        label: 'To',
-        helpText: 'Please provide the recipient number(with country code) to whom you want to send the voice text.',
-        type: 'string',
-        required: true
-      },
-      {
-        key: 'Caller',
+        key: 'From',
         label: 'From',
         helpText: "Please specify the sender's number (caller).",
         type: 'integer',
@@ -80,6 +73,21 @@ module.exports = {
         helpText: 'Please type the text that you want to convert into the appropriate speech.',
         type: 'string',
         required: true
+      },
+      {
+        key: 'To',
+        label: 'To',
+        helpText: 'Please provide the recipient number (with country code) to whom you want to send the voice text.',
+        type: 'string',
+        required: true
+      },
+      {
+        key: 'ValidityTime',
+        label: 'Validity Time',
+        helpText: 'Set the validity time for your message. Minimally 1 minute, maximally 48 hours. Format: 0h0m.',
+        type: 'string',
+        required: true,
+        default: '48h0m'
       }
     ],
     outputFields: [

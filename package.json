@@ -1,14 +1,14 @@
 {
-  "name": "cm-com-cloned-2018-05-28",
+  "name": "cm-com",
   "version": "1.0.0",
   "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "main": "index.js",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha --recursive"
+    "test": "node node_modules/mocha/bin/mocha --recursive -t 10000"
   },
   "engines": {
-    "node": ">=8.11.1",
-    "npm": ">=6.0.1"
+    "node": ">=6.10.0",
+    "npm": ">=3.0.0"
   },
   "dependencies": {
     "async": "^2.6.1",
@@ -24,7 +24,7 @@
   },
   "private": true,
   "zapier": {
-    "convertedFromAppID": 92135,
+    "convertedFromAppID": 92379,
     "convertedByCLIVersion": "6.0.0"
   }
 }

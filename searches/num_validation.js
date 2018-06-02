@@ -9,10 +9,10 @@ const getList = (z, bundle) => {
   // We're cloning bundle to re-use it when mimicking a "fetch resource" that happened in WB
   const resourceBundle = _.cloneDeep(bundle);
 
-  bundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numbervalidation/{{Phn_Numb}}';
+  bundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numbervalidation/{{PhoneNumber}}';
   bundle._legacyUrl = replaceVars(bundle._legacyUrl, bundle);
 
-  resourceBundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numberlookup/{{Phn_Numb}}';
+  resourceBundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numberlookup/{{PhoneNumber}}';
 
   // Do a _pre_search() from scripting.
   const preSearchEvent = {
@@ -71,7 +71,7 @@ module.exports = {
 
   display: {
     label: 'Number Validation',
-    description: 'Validate if the format of a phone number is correct and use the feedback in a next step.\n.',
+    description: 'Validate if the format of a phone number is correct and use the feedback in a next step.',
     hidden: false,
     important: true
   },
@@ -79,7 +79,7 @@ module.exports = {
   operation: {
     inputFields: [
       {
-        key: 'Phn_Numb',
+        key: 'PhoneNumber',
         label: 'Phone Number',
         type: 'string',
         required: true

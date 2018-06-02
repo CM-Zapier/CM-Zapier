@@ -10,11 +10,11 @@ const PushmessagesCreate = require('./creates/push_messages');
 const VoicetextCreate = require('./creates/voice_text');
 
 const maybeIncludeAuth = (request, z, bundle) => {
-  // request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
+  request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
 
   request.headers['Username'] = `${bundle.authData['userN']}`;
 
-  request.headers['x-cm-producttoken'] = `${bundle.authData['productKey']}`;
+  request.headers['x-cm-producttoken'] = `${bundle.authData['productToken']}`;
 
   return request;
 };
@@ -47,4 +47,5 @@ const App = {
     [VoicetextCreate.key]: VoicetextCreate
   }
 };
+
 module.exports = App;
