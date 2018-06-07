@@ -198,7 +198,7 @@ var Zap = {
 
             var from = fromNumbersArray[j].trim();
 
-            if (from.matches(/[0-9+]+/)) {
+            if (from.matches(/(|\+)[0-9]+/)) {
                 if (from.length > Settings.textFromField.maxDigits) {
                     throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
                 }
@@ -234,7 +234,7 @@ var Zap = {
         var main = bundle.action_fields_full.Language;
         console.log(main);
 
-        var mainSplitted = main.split(";");
+        var mainSplitted = main.split(";"); // The language fields contains language;gender;number - this splits it up
 
         var voiceLanguage = mainSplitted[0];
         var voiceGender = mainSplitted[1];
@@ -250,8 +250,8 @@ var Zap = {
                 gender: voiceGender,
                 number: voiceNumber
             },
-            anonymous: false,
-            validity: parseValidityTime(bundle.action_fields_full.ValidityTime)
+            anonymous: false/*,
+            validity: parseValidityTime(bundle.action_fields_full.ValidityTime)*/
         };
 
         var requestHeaders = Settings.useVoiceTokenAuthentication ? new RequestHeaders(bundle) : {
@@ -268,6 +268,11 @@ var Zap = {
 
     Num_Validation_pre_search: function (bundle) {
         var requestHeaders = new RequestHeaders(bundle);
+
+        var phoneNumber = bundle.search_fields.PhoneNumber;
+
+        if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
+            throw new ErrorException("The specified phone number is not a valid phone number")
 
         var requestData = {
             phonenumber: bundle.search_fields.PhoneNumber
@@ -288,8 +293,7 @@ var Zap = {
             response: "Success",
             id: 1,
             status_code: bundle.response.status_code,
-            content: JSON.parse(bundle.response.content),
-            headers: bundle.response.headers
+            content: JSON.parse(bundle.response.content)
         }];
     },
 
@@ -300,8 +304,7 @@ var Zap = {
             response: "Success",
             id: 1,
             status_code: bundle.response.status_code,
-            content: JSON.parse(bundle.response.content),
-            headers: bundle.response.headers
+            content: JSON.parse(bundle.response.content)
         }];
     }
 }
