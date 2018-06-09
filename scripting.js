@@ -66,6 +66,13 @@ function RequestHeaders(bundle) {
     };
 }
 
+function RequestHeadersVoice(bundle, data) {
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + z.hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
+    };
+}
+
 var Messages = {
     getAuthentication: function (bundle) {
         return {
@@ -163,12 +170,12 @@ function throwResponseError(bundle) {
 
 var Zap = {
     /* ------------ TEXT ------------ */
-    Messages_pre_write: function (bundle) {
-        var fromNumbersArray = bundle.action_fields_full.From;
-        var toNumbersArray = bundle.action_fields_full.To;
-        var smsBodyArray = bundle.action_fields_full.Body;
-        var smsReferenceArray = bundle.action_fields_full.Reference;
-        var validityTimeArray = bundle.action_fields_full.ValidityTime;
+    smsMessage_pre_write: function (bundle) {
+        var fromNumbersArray = bundle.action_fields_full.from;
+        var toNumbersArray = bundle.action_fields_full.to;
+        var smsBodyArray = bundle.action_fields_full.messageContent;
+        var smsReferenceArray = bundle.action_fields_full.reference;
+        var validityTimeArray = bundle.action_fields_full.validityTime;
 
         // Test if amount of fields is correct.
         if (fromNumbersArray.length > toNumbersArray.length) {
@@ -227,55 +234,41 @@ var Zap = {
         return new ZapierRequest(requestHeaders, requestData);
     },
 
-    Messages_post_write: throwResponseError,
+    smsMessage_post_write: throwResponseError,
 
     /* ------------ VOICE ------------ */
-    VoiceText_pre_write: function (bundle) {
-        var main = bundle.action_fields_full.Language;
-        console.log(main);
-
-        var mainSplitted = main.split(";"); // The language fields contains language;gender;number - this splits it up
-
-        var voiceLanguage = mainSplitted[0];
-        var voiceGender = mainSplitted[1];
-        var voiceNumber = mainSplitted[2];
-
+    voiceMessage_pre_write: function (bundle) {
         var requestData = {
-            caller: bundle.action_fields_full.From,
-            callees: bundle.action_fields_full.To,
-            prompt: bundle.action_fields_full.Text,
+            caller: bundle.action_fields_full.from,
+            callees: bundle.action_fields_full.to,
+            prompt: bundle.action_fields_full.messageContent,
             'prompt-type': "TTS",
             voice: {
-                language: voiceLanguage,
-                gender: voiceGender,
-                number: voiceNumber
+                language: bundle.action_fields_full.language,
+                gender: bundle.action_fields_full.gender,
+                number: bundle.action_fields_full.voiceNumber
             },
-            anonymous: false/*,
-            validity: parseValidityTime(bundle.action_fields_full.ValidityTime)*/
+            anonymous: false
         };
 
-        var requestHeaders = Settings.useVoiceTokenAuthentication ? new RequestHeaders(bundle) : {
-            'Content-Type': 'application/json',
-            'Authorization': "username=" + bundle.auth_fields.userN + ";signature=" + z.hmac('sha256', bundle.auth_fields.shrdKey, JSON.stringify(requestData))
-        };
-
+        var requestHeaders = Settings.useVoiceTokenAuthentication ? new RequestHeaders(bundle) : new RequestHeadersVoice(bundle, requestData);
         return new ZapierRequest(requestHeaders, requestData);
     },
 
-    VoiceText_post_write: throwResponseError,
+    voiceMessage_post_write: throwResponseError,
 
     /* ------------ NUMBER VALIDATION ------------ */
 
-    Num_Validation_pre_search: function (bundle) {
+    numberValidation_pre_search: function (bundle) {
         var requestHeaders = new RequestHeaders(bundle);
 
-        var phoneNumber = bundle.search_fields.PhoneNumber;
+        var phoneNumber = bundle.search_fields.phoneNumber;
 
         if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
             throw new ErrorException("The specified phone number is not a valid phone number")
 
         var requestData = {
-            phonenumber: bundle.search_fields.PhoneNumber
+            phonenumber: phoneNumber
         };
 
         return {
@@ -286,10 +279,10 @@ var Zap = {
         };
     },
 
-    Num_Validation_post_search: function (bundle) {
+    numberValidation_post_search: function (bundle) {
         throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
 
-        return [{
+        return [{ // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
             response: "Success",
             id: 1,
             status_code: bundle.response.status_code,
@@ -297,10 +290,10 @@ var Zap = {
         }];
     },
 
-    Num_Validation_post_read_resource: function (bundle) {
+    numberValidation_post_read_resource: function (bundle) {
         throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
 
-        return [{
+        return [{ // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
             response: "Success",
             id: 1,
             status_code: bundle.response.status_code,
@@ -312,4 +305,3 @@ var Zap = {
 // START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 module.exports = Zap;
 // END: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
-
