@@ -100,9 +100,8 @@ function parseValidityTime(input) {
     // If the input is undefined, use default Validity time.
     var validityTime = input === undefined ? Settings.validityTime.def : input;
 
-    if (!validityTime.matches(/[0-9]+h([0-5]|)[0-9]m/)) {
+    if (!validityTime.matches(/[0-9]+h([0-5]|)[0-9]m/))
         throw new ErrorException("Validity time is in an incorrect format");
-    }
 
     // Convert the input (like 1h2m) to minutes (1 * 60 + 2)
     validityTime = validityTime.split("h"); // Result: ["1", "2m"]
@@ -117,11 +116,10 @@ function parseValidityTime(input) {
     var minutes = validityTime[1];
     var total = hours * 60 + minutes;
 
-    if (total > Settings.validityTime.max) {
+    if (total > Settings.validityTime.max)
         throw new ErrorException("Validity time is larger than allowed.");
-    } else if (total < Settings.validityTime.min) {
+    else if (total < Settings.validityTime.min)
         throw new ErrorException("Validity time is smaller than allowed.");
-    }
 
     var currentDate = new Date();
     var validityDate = currentDate.addHours(hours).addMinutes(minutes);
@@ -145,7 +143,7 @@ function throwResponseError(bundle) {
                     return item.messageDetails !== null; // Filter all success messages from the list
                 }).map(function (item) { // Convert all error messages from json to text.
                     // Example: Message 2 (to 00447911123457 with reference your_reference_B): A body without content was found (error code 304)
-                    return "Message " + (response.messages.indexOf(item) + 1) + " (to '" + item.to + "'" + (item.reference != "None" ? " with reference '" + item.reference + "'" : "") + ") " +
+                    return "Message " + (response.messages.indexOf(item) + 1) + " (to '" + item.to + "'" + (item.reference != "None" ? " with reference '" + item.reference + "'" : "") + "): " +
                         item.messageDetails + (item.errorCode !== undefined ? " (error code " + item.errorCode + ")" : "");
                 });
             }
@@ -153,12 +151,10 @@ function throwResponseError(bundle) {
             if (errorMessages.length === 0) { // If no error messages where found, use details and errorCode.
                 var msg = "";
 
-                if (response.details !== undefined) {
+                if (response.details !== undefined)
                     msg += response.details;
-                }
-                if (response.errorCode !== undefined) {
+                if (response.errorCode !== undefined)
                     msg += response.details !== undefined ? " (error code: " + response.errorCode + ")" : "Error with code: " + response.errorCode;
-                }
 
                 errorMessages.push(msg);
             }
@@ -170,7 +166,7 @@ function throwResponseError(bundle) {
 
 var Zap = {
     /* ------------ TEXT ------------ */
-    smsMessage_pre_write: function (bundle) {
+    textMessage_pre_write: function (bundle) {
         var fromNumbersArray = bundle.action_fields_full.from;
         var toNumbersArray = bundle.action_fields_full.to;
         var smsBodyArray = bundle.action_fields_full.messageContent;
@@ -188,6 +184,17 @@ var Zap = {
             throw new ErrorException("Error: there are more fields in 'From' than in 'Body'. They need to be equal.");
         } else if (smsBodyArray.length > fromNumbersArray.length) {
             throw new ErrorException("Error: there are more fields in 'Body' than in 'From'. They need to be equal.");
+        }
+
+        var allowedChannels = bundle.action_fields_full.messageType.toLowerCase();
+
+        var allowedChannelsList = [];
+
+        if (allowedChannels == 'sms' || allowedChannels == 'push') {
+            allowedChannelsList.push(allowedChannels);
+        } else if (allowedChannels == 'push_sms') {
+            allowedChannelsList.push('push');
+            allowedChannelsList.push('sms');
         }
 
         // Create a list of messages
@@ -221,6 +228,8 @@ var Zap = {
                     content: smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim()
                 },
                 reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
+                appKey: bundle.action_fields_full.appKey,
+                allowedChannels: allowedChannelsList,
                 minimumNumberOfMessageParts: 1,
                 maximumNumberOfMessageParts: 8,
                 validity: parseValidityTime(validityTimeArray[j]),
@@ -234,7 +243,7 @@ var Zap = {
         return new ZapierRequest(requestHeaders, requestData);
     },
 
-    smsMessage_post_write: throwResponseError,
+    textMessage_post_write: throwResponseError,
 
     /* ------------ VOICE ------------ */
     voiceMessage_pre_write: function (bundle) {
@@ -259,7 +268,7 @@ var Zap = {
 
     /* ------------ NUMBER VALIDATION ------------ */
 
-    numberValidation_pre_search: function (bundle) {
+    numberVerifier_pre_search: function (bundle) {
         var requestHeaders = new RequestHeaders(bundle);
 
         var phoneNumber = bundle.search_fields.phoneNumber;
@@ -272,14 +281,14 @@ var Zap = {
         };
 
         return {
-            url: "https://api.cmtelecom.com/v1.1/numbervalidation",
+            url: "https://api.cmtelecom.com/v1.1/number" + (bundle.search_fields.type == "numberLookUp" ? "lookup" : "validation"),
             headers: requestHeaders,
             data: JSON.stringify(requestData),
             method: "POST"
         };
     },
 
-    numberValidation_post_search: function (bundle) {
+    numberVerifier_post_search: function (bundle) {
         throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
 
         return [{ // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
@@ -290,7 +299,7 @@ var Zap = {
         }];
     },
 
-    numberValidation_post_read_resource: function (bundle) {
+    numberVerifier_post_read_resource: function (bundle) {
         throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
 
         return [{ // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
