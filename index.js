@@ -2,17 +2,14 @@
 
 const authentication = require('./authentication');
 const NewaccountTrigger = require('./triggers/new_account');
-const NumlookupSearch = require('./searches/num_look_up');
-const NumvalidationSearch = require('./searches/num_validation');
-const HybridmessagesCreate = require('./creates/hybrid_messages');
-const MessagesCreate = require('./creates/messages');
-const PushmessagesCreate = require('./creates/push_messages');
-const VoicetextCreate = require('./creates/voice_text');
+const NumberverifierSearch = require('./searches/number_verifier');
+const TextmessageCreate = require('./creates/text_message');
+const VoicemessageCreate = require('./creates/voice_message');
 
 const maybeIncludeAuth = (request, z, bundle) => {
-  request.headers['Shared Key'] = `${bundle.authData['shrdKey']}`;
+  request.headers['Shared Key'] = `${bundle.authData['sharedKey']}`;
 
-  request.headers['Username'] = `${bundle.authData['userN']}`;
+  request.headers['Username'] = `${bundle.authData['userName']}`;
 
   request.headers['x-cm-producttoken'] = `${bundle.authData['productToken']}`;
 
@@ -36,15 +33,12 @@ const App = {
   },
 
   searches: {
-    [NumlookupSearch.key]: NumlookupSearch,
-    [NumvalidationSearch.key]: NumvalidationSearch
+    [NumberverifierSearch.key]: NumberverifierSearch
   },
 
   creates: {
-    [HybridmessagesCreate.key]: HybridmessagesCreate,
-    [MessagesCreate.key]: MessagesCreate,
-    [PushmessagesCreate.key]: PushmessagesCreate,
-    [VoicetextCreate.key]: VoicetextCreate
+    [TextmessageCreate.key]: TextmessageCreate,
+    [VoicemessageCreate.key]: VoicemessageCreate
   }
 };
 

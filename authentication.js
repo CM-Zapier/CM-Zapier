@@ -16,14 +16,14 @@ const authentication = {
       placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     },
     {
-      key: 'shrdKey',
+      key: 'sharedKey',
       label: 'Shared Key (Voice)',
       helpText: "Only needed if you're using text to speech functionality.",
       type: 'string',
       required: false
     },
     {
-      key: 'userN',
+      key: 'userName',
       label: 'Username (Voice)',
       helpText: "Only needed if you're using text to speech functionality.",
       type: 'string',

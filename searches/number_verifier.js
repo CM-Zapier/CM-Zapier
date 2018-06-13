@@ -9,15 +9,15 @@ const getList = (z, bundle) => {
   // We're cloning bundle to re-use it when mimicking a "fetch resource" that happened in WB
   const resourceBundle = _.cloneDeep(bundle);
 
-  bundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numbervalidation/{{PhoneNumber}}';
+  bundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numbervalidation/{{phoneNumber}}';
   bundle._legacyUrl = replaceVars(bundle._legacyUrl, bundle);
 
-  resourceBundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numberlookup/{{PhoneNumber}}';
+  resourceBundle._legacyUrl = 'https://api.cmtelecom.com/v1.1/numbervalidation/{{phoneNumber}}';
 
   // Do a _pre_search() from scripting.
   const preSearchEvent = {
     name: 'search.pre',
-    key: 'num_validation'
+    key: 'number_verifier'
   };
   return legacyScriptingRunner
     .runEvent(preSearchEvent, z, bundle)
@@ -28,7 +28,7 @@ const getList = (z, bundle) => {
       // Do a _post_search() from scripting.
       const postSearchEvent = {
         name: 'search.post',
-        key: 'num_validation',
+        key: 'number_verifier',
         response
       };
       return legacyScriptingRunner.runEvent(postSearchEvent, z, bundle);
@@ -49,7 +49,7 @@ const getList = (z, bundle) => {
       // Do a _post_read_resource() from scripting.
       const postResourceEvent = {
         name: 'search.resource.post',
-        key: 'num_validation',
+        key: 'number_verifier',
         response,
         results: resourceBundle.results
       };
@@ -66,12 +66,13 @@ const getList = (z, bundle) => {
 };
 
 module.exports = {
-  key: 'num_validation',
+  key: 'number_verifier',
   noun: 'Validation',
 
   display: {
-    label: 'Number Validation',
-    description: 'Validate if the format of a phone number is correct and use the feedback in a next step.',
+    label: 'Number Verifier',
+    description:
+      'Validate if a phone number is valid and use the result (like formatting options, number type, carrier) in a next step. Please make sure your CM.com account has enough rights to use this action.',
     hidden: false,
     important: true
   },
@@ -79,10 +80,20 @@ module.exports = {
   operation: {
     inputFields: [
       {
-        key: 'PhoneNumber',
+        key: 'phoneNumber',
         label: 'Phone Number',
         type: 'string',
         required: true
+      },
+      {
+        key: 'type',
+        label: 'Action Type',
+        helpText:
+          'The type of request to make. LookUp returns the same data as validate, plus some additional data (like roaming information).',
+        type: 'string',
+        required: true,
+        default: 'Validate',
+        choices: { numberValidation: 'Validate', numberLookUp: 'LookUp' }
       }
     ],
     outputFields: [
