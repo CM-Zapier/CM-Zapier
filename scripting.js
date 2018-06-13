@@ -21,28 +21,42 @@ const {
 } = require('zapier-platform-legacy-scripting-runner/exceptions');
 // END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
+/**
+ * Replaces all search occurences in the string (this object) with the replacement
+ * @param {*} search - characters to replace
+ * @param {*} replacement - replacement for the characters
+ * @returns the original string, with all search occurences replaced with replacement
+ */
 String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement);
 };
 
+/**
+ * Tests if the string matches the given regex.
+ * @param {*} regex 
+ * @returns true if the string matches the given regex, false if not.
+ */
 String.prototype.matches = function (regex) {
     return regex.test(this);
 };
 
+// Adds the given minutes to the date and returns the new date.
 Date.prototype.addMinutes = function (minutes) {
     return new Date(this.getTime() + minutes * 60 * 1000);
 };
 
+// Adds the given hours to the date and returns the new date.
 Date.prototype.addHours = function (hours) {
     return new Date(this.getTime() + hours * 60 * 60 * 1000);
 };
 
+// Settings for this Zap. 
 var Settings = {
     useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
     textFromField: {
         maxDigits: 16,
         maxChars: 11
-    },
+    }, // A text message may only contain up to [maxDigits] amount of digits, [maxChars] amount of characters.
     validityTime: {
         def: "48h0m", // Default
         min: 1,
@@ -52,6 +66,11 @@ var Settings = {
     debug: false // True to print all errors in json.
 };
 
+/**
+ * @param {*} headers - The HTTP request headers
+ * @param {*} data - The content of the HTTP request
+ * @returns the data that will be used by Zapier to send a HTTP request to CM.com.
+ */
 function ZapierRequest(headers, data) {
     return {
         headers: headers,
@@ -59,6 +78,10 @@ function ZapierRequest(headers, data) {
     };
 }
 
+/**
+ * @param {*} bundle - The bundle object from Zapier.
+ * @returns the HTTP headers with a Product Token.
+ */
 function RequestHeaders(bundle) {
     return {
         'Content-Type': "application/json",
@@ -66,6 +89,12 @@ function RequestHeaders(bundle) {
     };
 }
 
+/**
+ * @deprecated - Replace with function 'RequestHeaders' for Product Token authentication.
+ * @param {*} bundle - The bundle object from Zapier.
+ * @param {*} data - The data that will be send to CM.com. This will be used to generate a signature needed for the authentication.
+ * @returns the HTTP headers for the old Voice authentication.
+ */
 function RequestHeadersVoice(bundle, data) {
     return {
         'Content-Type': 'application/json',
@@ -73,13 +102,25 @@ function RequestHeadersVoice(bundle, data) {
     };
 }
 
+/**
+ * Class with static methods related to text messages.
+ */
 var Messages = {
+    /**
+     * @param {*} bundle - The bundle object from Zapier.
+     * @returns JSON used in the request to CM.com with product token.
+     */
     getAuthentication: function (bundle) {
         return {
             ProductToken: bundle.auth_fields.productToken
         };
     },
 
+    /**
+     * @param {*} authentication - The authentication object. Can be generated using Messages.getAuthentication(bundle)
+     * @param {*} messageList - A list of message objects to send.
+     * @returns JSON that will be sent to CM.com, with the authentication object and a list of messages.
+     */
     getData: function (authentication, messageList) {
         return {
             Messages: {
@@ -95,7 +136,11 @@ function logJSON(json) {
     console.log(JSON.stringify(json, null, 4));
 }
 
-// Convert the input (like 1h2m) to a date from now (current datetime + 1h2m)
+/**
+ * Convert the input (like 1h2m) to a date from now (current datetime + 1h2m).
+ * @param {*} input 
+ * @throws ErrorException
+ */
 function parseValidityTime(input) {
     // If the input is undefined, use default Validity time.
     var validityTime = input === undefined ? Settings.validityTime.def : input;
@@ -127,7 +172,11 @@ function parseValidityTime(input) {
     return validityDate.toISOString().replace("T", " ").split(".")[0] + " GMT"; // Convert the date to a date CM.com can read.
 }
 
-// When Zapier gets a result from CM.com, check it for errors and throw it as readable message.
+/**
+ * When Zapier gets a result from CM.com, check it for errors and throw it as readable message.
+ * @param {*} bundle - The bundle object from Zapier.
+ * @throws ErrorException
+ */
 function throwResponseError(bundle) {
     if (!(bundle.response.status_code >= 200 && bundle.response.status_code < 300)) {
         if (Settings.debug) {
@@ -186,10 +235,9 @@ var Zap = {
             throw new ErrorException("Error: there are more fields in 'Body' than in 'From'. They need to be equal.");
         }
 
+        // Checks to which channels the message must be sent to.
         var allowedChannels = bundle.action_fields_full.messageType.toLowerCase();
-
         var allowedChannelsList = [];
-
         if (allowedChannels == 'sms' || allowedChannels == 'push') {
             allowedChannelsList.push(allowedChannels);
         } else if (allowedChannels == 'push_sms') {
@@ -267,7 +315,6 @@ var Zap = {
     voiceMessage_post_write: throwResponseError,
 
     /* ------------ NUMBER VALIDATION ------------ */
-
     numberVerifier_pre_search: function (bundle) {
         var requestHeaders = new RequestHeaders(bundle);
 
