@@ -1,6 +1,6 @@
 {
   "name": "cm-com",
-  "version": "1.0.0",
+  "version": "0.1.7",
   "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "crypto": "^1.0.1",
     "lodash": "^4.17.10",
     "moment-timezone": "^0.5.17",
-    "zapier-platform-core": "6.0.0",
+    "zapier-platform-core": "6.1.0",
     "zapier-platform-legacy-scripting-runner": "1.2.0"
   },
   "devDependencies": {

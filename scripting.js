@@ -1,24 +1,9 @@
 'use strict';
 
 // START: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
-const _ = require('lodash');
-_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-const crypto = require('crypto');
-const async = require('async');
-const moment = require('moment-timezone');
-const { DOMParser, XMLSerializer } = require('xmldom');
-const atob = require('zapier-platform-legacy-scripting-runner/atob');
-const btoa = require('zapier-platform-legacy-scripting-runner/btoa');
-const z = require('zapier-platform-legacy-scripting-runner/z');
-const $ = require('zapier-platform-legacy-scripting-runner/$');
-const {
-    ErrorException,
-    HaltedException,
-    StopRequestException,
-    ExpiredAuthException,
-    RefreshTokenException,
-    InvalidSessionException,
-} = require('zapier-platform-legacy-scripting-runner/exceptions');
+function ErrorException(message){
+    return new Error(message);
+}
 // END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
 /**
@@ -98,7 +83,7 @@ function RequestHeaders(bundle) {
 function RequestHeadersVoice(bundle, data) {
     return {
         'Content-Type': 'application/json',
-        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + z.hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
+        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + (z ? z : bundle.z).hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
     };
 }
 
@@ -216,11 +201,11 @@ function throwResponseError(bundle) {
 var Zap = {
     /* ------------ TEXT ------------ */
     textMessage_pre_write: function (bundle) {
-        var fromNumbersArray = bundle.action_fields_full.from;
-        var toNumbersArray = bundle.action_fields_full.to;
-        var smsBodyArray = bundle.action_fields_full.messageContent;
-        var smsReferenceArray = bundle.action_fields_full.reference;
-        var validityTimeArray = bundle.action_fields_full.validityTime;
+        var fromNumbersArray = bundle.action_fields.from;
+        var toNumbersArray = bundle.action_fields.to;
+        var smsBodyArray = bundle.action_fields.messageContent;
+        var smsReferenceArray = bundle.action_fields.reference;
+        var validityTimeArray = bundle.action_fields.validityTime;
 
         // Test if amount of fields is correct.
         if (fromNumbersArray.length > toNumbersArray.length) {
@@ -236,7 +221,7 @@ var Zap = {
         }
 
         // Checks to which channels the message must be sent to.
-        var allowedChannels = bundle.action_fields_full.messageType.toLowerCase();
+        var allowedChannels = bundle.action_fields.messageType.toLowerCase();
         var allowedChannelsList = [];
         if (allowedChannels == 'sms' || allowedChannels == 'push') {
             allowedChannelsList.push(allowedChannels);
@@ -276,7 +261,7 @@ var Zap = {
                     content: smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim()
                 },
                 reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
-                appKey: bundle.action_fields_full.appKey,
+                appKey: bundle.action_fields.appKey,
                 allowedChannels: allowedChannelsList,
                 minimumNumberOfMessageParts: 1,
                 maximumNumberOfMessageParts: 8,
@@ -296,14 +281,14 @@ var Zap = {
     /* ------------ VOICE ------------ */
     voiceMessage_pre_write: function (bundle) {
         var requestData = {
-            caller: bundle.action_fields_full.from,
-            callees: bundle.action_fields_full.to,
-            prompt: bundle.action_fields_full.messageContent,
+            caller: bundle.action_fields.from,
+            callees: bundle.action_fields.to,
+            prompt: bundle.action_fields.messageContent,
             'prompt-type': "TTS",
             voice: {
-                language: bundle.action_fields_full.language,
-                gender: bundle.action_fields_full.gender,
-                number: bundle.action_fields_full.voiceNumber
+                language: bundle.action_fields.language,
+                gender: bundle.action_fields.gender,
+                number: bundle.action_fields.voiceNumber
             },
             anonymous: false
         };

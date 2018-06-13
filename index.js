@@ -1,5 +1,3 @@
-// Created by 'zapier convert'. This is just a stub - you will need to edit!
-
 const authentication = require('./authentication');
 const NewaccountTrigger = require('./triggers/new_account');
 const NumberverifierSearch = require('./searches/number_verifier');
@@ -7,12 +5,9 @@ const TextmessageCreate = require('./creates/text_message');
 const VoicemessageCreate = require('./creates/voice_message');
 
 const maybeIncludeAuth = (request, z, bundle) => {
-  request.headers['Shared Key'] = `${bundle.authData['sharedKey']}`;
-
-  request.headers['Username'] = `${bundle.authData['userName']}`;
-
+  //request.headers['Shared Key'] = `${bundle.authData['sharedKey']}`;
+  //request.headers['Username'] = `${bundle.authData['userName']}`;
   request.headers['x-cm-producttoken'] = `${bundle.authData['productToken']}`;
-
   return request;
 };
 
