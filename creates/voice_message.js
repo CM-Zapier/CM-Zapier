@@ -4,7 +4,9 @@ const makeRequest = (z, bundle) => {
     const zapierRequestData = Zap.voiceMessage_pre_write({
         auth_fields: bundle.authData,
 		action_fields: bundle.inputData,
-		z: z
+		z: {
+			hmac: z.hash
+		}
     });
 
     return z.request({

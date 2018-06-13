@@ -81,9 +81,10 @@ function RequestHeaders(bundle) {
  * @returns the HTTP headers for the old Voice authentication.
  */
 function RequestHeadersVoice(bundle, data) {
+    var z = z || bundle.z
     return {
         'Content-Type': 'application/json',
-        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + (z ? z : bundle.z).hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
+        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + z.hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
     };
 }
 

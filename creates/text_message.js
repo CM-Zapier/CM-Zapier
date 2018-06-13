@@ -4,8 +4,7 @@ const makeRequest = (z, bundle) => {
 
     const zapierRequestData = Zap.textMessage_pre_write({
         auth_fields: bundle.authData,
-        action_fields: bundle.inputData,
-        z: z
+        action_fields: bundle.inputData
     });
 
     return z.request({
