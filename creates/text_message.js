@@ -1,4 +1,3 @@
-
 const makeRequest = (z, bundle) => {
     const Zap = require('../scripting');
 
