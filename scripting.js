@@ -37,7 +37,6 @@ Date.prototype.addHours = function (hours) {
 
 // Settings for this Zap. 
 var Settings = {
-    useVoiceTokenAuthentication: false, // True if Voice should use token authentication, false if Voice should use username + shared key.
     textFromField: {
         maxDigits: 16,
         maxChars: 11
@@ -71,20 +70,6 @@ function RequestHeaders(bundle) {
     return {
         'Content-Type': "application/json",
         'X-CM-PRODUCTTOKEN': bundle.auth_fields.productToken
-    };
-}
-
-/**
- * @deprecated - Replace with function 'RequestHeaders' for Product Token authentication.
- * @param {*} bundle - The bundle object from Zapier.
- * @param {*} data - The data that will be send to CM.com. This will be used to generate a signature needed for the authentication.
- * @returns the HTTP headers for the old Voice authentication.
- */
-function RequestHeadersVoice(bundle, data) {
-    var z = z || bundle.z
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': "username=" + bundle.auth_fields.userName + ";signature=" + z.hmac('sha256', bundle.auth_fields.sharedKey, typeof data !== "string" ? JSON.stringify(data) : data)
     };
 }
 
@@ -294,7 +279,7 @@ var Zap = {
             anonymous: false
         };
 
-        var requestHeaders = Settings.useVoiceTokenAuthentication ? new RequestHeaders(bundle) : new RequestHeadersVoice(bundle, requestData);
+        var requestHeaders = new RequestHeaders(bundle);
         return new ZapierRequest(requestHeaders, requestData);
     },
 

@@ -2,14 +2,20 @@
 const { replaceVars } = require('../utils');
 
 const getList = (z, bundle) => {
-  let url = 'https://api.cmtelecom.com/echo/v1.0/producttoken';
+  /*let url = 'https://api.cmtelecom.com/echo/v1.0/producttoken';
   url = replaceVars(url, bundle);
 
   const responsePromise = z.request({ url });
   return responsePromise.then(response => {
     response.throwForStatus();
     return z.JSON.parse(response.content);
-  });
+  });*/
+  return {
+    status: 200,
+    content: {
+      Status: "Success"
+    }
+  };
 };
 
 module.exports = {

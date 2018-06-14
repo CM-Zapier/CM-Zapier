@@ -3,15 +3,12 @@ const makeRequest = (z, bundle) => {
 
     const zapierRequestData = Zap.voiceMessage_pre_write({
         auth_fields: bundle.authData,
-		action_fields: bundle.inputData,
-		z: {
-			hmac: z.hash
-		}
+		action_fields: bundle.inputData
     });
 
     return z.request({
         method: "POST",
-        url: "https://voiceapi.cmtelecom.com/v2.0/Notification",
+        url: "https://api.cmtelecom.com/voiceapi/v2/Notification",
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {
