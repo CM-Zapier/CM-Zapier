@@ -62,6 +62,7 @@ module.exports = {
 				helpText: "Please select the language of the voice text. There are 46 languages and dialects available. In case you can't find your prefered language in the drop-down, use Custom Value and try [any other available language](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech) in a similar format in your Zap.",
 				type: 'string',
 				required: true,
+				default: 'English (Great Britain)',
 				choices: {
 					'da-DK': 'da-DK',
 					'de-DE': 'Deutsch (German)',
