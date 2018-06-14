@@ -5,7 +5,7 @@ const TextmessageCreate = require('./creates/text_message');
 const VoicemessageCreate = require('./creates/voice_message');
 
 const maybeIncludeAuth = (request, z, bundle) => {
-  request.headers['x-cm-producttoken'] = `${bundle.authData['productToken']}`;
+  request.headers['X-CM-PRODUCTTOKEN'] = `${bundle.authData['productToken']}`;
   return request;
 };
 
