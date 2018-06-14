@@ -1,6 +1,6 @@
 {
   "name": "cm-com",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "main": "index.js",
   "scripts": {
