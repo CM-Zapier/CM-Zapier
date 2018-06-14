@@ -18,7 +18,9 @@ const makeRequest = (z, bundle) => {
             response: resp
         });
         
-        return JSON.parse(response.content);
+        return {
+			response: JSON.parse(response.content)
+		};
     });
 };
 
