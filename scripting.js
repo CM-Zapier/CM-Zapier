@@ -315,7 +315,7 @@ var Zap = {
             status_code: bundle.response.status_code,
             content: JSON.parse(bundle.response.content)
         }];
-    },
+    }/*,
 
     numberVerifier_post_read_resource: function (bundle) {
         throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
@@ -326,7 +326,7 @@ var Zap = {
             status_code: bundle.response.status_code,
             content: JSON.parse(bundle.response.content)
         }];
-    }
+    }*/
 }
 
 // START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0

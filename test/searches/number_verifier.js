@@ -18,7 +18,7 @@ describe('Searches - Number Verifier', () => {
 
       inputData: {
         type: 'Validate',
-        phoneNumber: ""
+        phoneNumber: process.env.PHONE_NUMBER
       }
     };
 
