@@ -1,10 +1,12 @@
 'use strict';
 
-// START: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
-function ErrorException(message){
-    return new Error(message);
+var isNodeJS = typeof module != "undefined";
+
+if(isNodeJS){
+    function ErrorException(message){
+        return new Error(message);
+    }
 }
-// END: HEADER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
 
 /**
  * Replaces all search occurences in the string (this object) with the replacement
@@ -315,20 +317,7 @@ var Zap = {
             status_code: bundle.response.status_code,
             content: JSON.parse(bundle.response.content)
         }];
-    }/*,
-
-    numberVerifier_post_read_resource: function (bundle) {
-        throwResponseError(bundle); // Stops when an error is thrown, otherwise continue below.
-
-        return [{ // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
-            response: "Success",
-            id: 1,
-            status_code: bundle.response.status_code,
-            content: JSON.parse(bundle.response.content)
-        }];
-    }*/
+    }
 }
 
-// START: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
-module.exports = Zap;
-// END: FOOTER -- AUTOMATICALLY ADDED FOR COMPATIBILITY - v1.2.0
+if(isNodeJS) module.exports = Zap;
