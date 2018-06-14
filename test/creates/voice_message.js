@@ -17,9 +17,9 @@ describe('Creates - Send Voice (Text to Speech) Message', () => {
       },
 
       inputData: {
-        from: "",
-        to: [""],
-        messageContent: "",
+        from: "+31184123456",
+        to: ["+31612345678"],
+        messageContent: "Dit is een test.",
         language: "English (Great Britain)",
         gender: 'Female',
         voiceNumber: '1'

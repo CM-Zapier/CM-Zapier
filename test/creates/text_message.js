@@ -18,9 +18,9 @@ describe('Creates - Send Text (SMS/Push) Message', () => {
 
       inputData: {
         messageType: 'SMS Only',
-        from: [""],
-        to: [""],
-        messageContent: [""],
+        from: ["Test"],
+        to: ["+31612345678"],
+        messageContent: ["Dit is een test."],
         reference: ['None'],
         validityTime: ['48h0m']
       }
