@@ -58,7 +58,7 @@ module.exports = {
 				required: true
 			}, {
 				key: 'language',
-				label: 'Language',
+				label: 'Voice language',
 				helpText: "Please select the language of the voice text. There are 46 languages and dialects available. In case you can't find your prefered language in the drop-down, use Custom Value and try [any other available language](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech) in a similar format in your Zap.",
 				type: 'string',
 				required: true,
@@ -90,7 +90,7 @@ module.exports = {
 				}
 			}, {
 				key: 'gender',
-				label: 'Gender',
+				label: 'Voice gender',
 				helpText: 'Note: not all voices support all genders, look at the list provided in the description above for all voices.',
 				type: 'string',
 				required: true,
@@ -101,7 +101,7 @@ module.exports = {
 				}
 			}, {
 				key: 'voiceNumber',
-				label: 'Number',
+				label: 'Voice number',
 				helpText: 'The number of the voice to use.',
 				type: 'integer',
 				required: true,

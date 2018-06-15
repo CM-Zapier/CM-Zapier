@@ -87,7 +87,7 @@ module.exports = {
                 list: true
             }, {
                 key: 'appKey',
-                label: 'App Key',
+                label: 'Push: App Key',
                 helpText: '**This field is required for push messages.**\n\nThe app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
                 type: 'string',
                 required: false,
