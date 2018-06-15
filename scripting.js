@@ -187,24 +187,9 @@ function throwResponseError(bundle) {
 var Zap = {
     /* ------------ TEXT ------------ */
     textMessage_pre_write: function (bundle) {
-        var fromNumbersArray = bundle.action_fields.from;
+        var fromNumber = bundle.action_fields.from;
         var toNumbersArray = bundle.action_fields.to;
-        var smsBodyArray = bundle.action_fields.messageContent;
-        var smsReferenceArray = bundle.action_fields.reference;
-        var validityTimeArray = bundle.action_fields.validityTime;
-
-        // Test if amount of fields is correct.
-        if (fromNumbersArray.length > toNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'From' than in 'To'. They need to be equal.");
-        } else if (toNumbersArray.length > fromNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'To' than in 'From'. They need to be equal.");
-        }
-
-        if (fromNumbersArray.length > smsBodyArray.length) {
-            throw new ErrorException("Error: there are more fields in 'From' than in 'Body'. They need to be equal.");
-        } else if (smsBodyArray.length > fromNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'Body' than in 'From'. They need to be equal.");
-        }
+        var messageBody = bundle.action_fields.messageContent;
 
         // Checks to which channels the message must be sent to.
         var allowedChannels = bundle.action_fields.messageType.toLowerCase();
@@ -217,50 +202,45 @@ var Zap = {
         }
 
         // Create a list of messages
-        var messageList = [];
-        for (var j = 0; j < fromNumbersArray.length; j++) { // Iterate trough all messages
-            // Each message can be send to multiple numbers
-            var numberListText = toNumbersArray[j];
-            var numberList = numberListText.split(',');
+        var toNumbersList = toNumbersArray.map(function (item) {
+            return {
+                number: item.trim()
+            };
+        });
 
-            var toNumbersList = numberList.map(function (item) {
-                return {
-                    number: item.trim()
-                };
-            });
+        // Check from number length
+        var from = fromNumber.trim();
 
-            var from = fromNumbersArray[j].trim();
-
-            if (from.matches(/(|\+)[0-9]+/)) {
-                if (from.length > Settings.textFromField.maxDigits) {
-                    throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
-                }
-            } else if (from.length > Settings.textFromField.maxChars) {
-                throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
+        if (from.matches(/(|\+)[0-9]+/)) {
+            if (from.length > Settings.textFromField.maxDigits) {
+                throw new ErrorException("From length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
             }
-
-            var message = smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim();
-            var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
-
-            messageList.push({
-                from: from,
-                to: toNumbersList,
-                body: {
-                    type: "AUTO",
-                    content: message
-                },
-                reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
-                appKey: bundle.action_fields.appKey,
-                allowedChannels: allowedChannelsList,
-                minimumNumberOfMessageParts: 1,
-                maximumNumberOfMessageParts: maximumNumberOfMessageParts,
-                validity: parseValidityTime(validityTimeArray[j]),
-                customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
-            });
+        } else if (from.length > Settings.textFromField.maxChars) {
+            throw new ErrorException("From length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
         }
 
+        // Create message json object
+        var message = messageBody.replace(/\r/g, "").replace(/\n/g, "").trim();
+        var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
+
+        var messageObject = {
+            from: from,
+            to: toNumbersList,
+            body: {
+                type: "AUTO",
+                content: message
+            },
+            reference: bundle.action_fields.reference.trim(),
+            appKey: bundle.action_fields.appKey,
+            allowedChannels: allowedChannelsList,
+            minimumNumberOfMessageParts: 1,
+            maximumNumberOfMessageParts: maximumNumberOfMessageParts,
+            validity: parseValidityTime(bundle.action_fields.validityTime),
+            customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
+        };
+
         var authentication = Messages.getAuthentication(bundle);
-        var requestData = Messages.getData(authentication, messageList);
+        var requestData = Messages.getData(authentication, [messageObject]);
         var requestHeaders = new RequestHeaders(bundle);
         return new ZapierRequest(requestHeaders, requestData);
     },

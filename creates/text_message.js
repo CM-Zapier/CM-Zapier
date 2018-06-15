@@ -52,12 +52,11 @@ module.exports = {
                 label: 'From',
                 helpText: "Please provide sender's name. The maximum length is 11 alphanumerical characters or 16 digits.",
                 type: 'string',
-                required: true,
-                list: true
+                required: true
             }, {
                 key: 'to',
                 label: 'To',
-                helpText: 'Please provide the recipient number (with country code) to whom you want to send the message.\n\nTo send a message to multiple numbers, seperate them with a comma.',
+                helpText: 'Please provide the recipient number (with country code) to whom you want to send the message.',
                 type: 'string',
                 required: true,
                 placeholder: '+1224589XXXX , +91976056XXXX',
@@ -67,24 +66,21 @@ module.exports = {
                 label: 'Body',
                 helpText: 'Please provide the content of message.',
                 type: 'string',
-                required: true,
-                list: true
+                required: true
             }, {
                 key: 'validityTime',
                 label: 'Validity Time',
                 helpText: 'Set the validity time for your message. Minimally 1 minute, maximally 48 hours. Format: 0h0m.',
                 type: 'string',
                 required: true,
-                default: '48h0m',
-                list: true
+                default: '48h0m'
             }, {
                 key: 'reference',
                 label: 'Reference',
                 helpText: 'Please set the reference.',
                 type: 'string',
                 required: false,
-                default: 'None',
-                list: true
+                default: 'None'
             }, {
                 key: 'appKey',
                 label: 'Push: App Key',
