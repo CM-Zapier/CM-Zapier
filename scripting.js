@@ -241,6 +241,9 @@ var Zap = {
                 throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
             }
 
+            var message = smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim();
+            var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
+
             messageList.push({
                 from: from,
                 to: toNumbersList,
@@ -248,11 +251,11 @@ var Zap = {
                     type: "AUTO",
                     content: smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim()
                 },
-                reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
+                reference: message,
                 appKey: bundle.action_fields.appKey,
                 allowedChannels: allowedChannelsList,
                 minimumNumberOfMessageParts: 1,
-                maximumNumberOfMessageParts: 8,
+                maximumNumberOfMessageParts: maximumNumberOfMessageParts,
                 validity: parseValidityTime(validityTimeArray[j]),
                 customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
             });
