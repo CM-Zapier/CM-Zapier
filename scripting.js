@@ -1,12 +1,10 @@
 'use strict';
 
-var isNodeJS = typeof module != "undefined";
-
-if(isNodeJS){
-    function ErrorException(message){
-        return new Error(message);
-    }
+// [START] Remove this for the web version
+function ErrorException(message){
+    return new Error(message);
 }
+// [END]
 
 /**
  * Replaces all search occurences in the string (this object) with the replacement
@@ -241,7 +239,7 @@ var Zap = {
                 throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
             }
 
-            var message = smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim();
+            var message = smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim();
             var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
 
             messageList.push({
@@ -249,9 +247,9 @@ var Zap = {
                 to: toNumbersList,
                 body: {
                     type: "AUTO",
-                    content: smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim()
+                    content: message
                 },
-                reference: message,
+                reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
                 appKey: bundle.action_fields.appKey,
                 allowedChannels: allowedChannelsList,
                 minimumNumberOfMessageParts: 1,
@@ -323,4 +321,6 @@ var Zap = {
     }
 }
 
-if(isNodeJS) module.exports = Zap;
+// [START] Remove this for the web version
+module.exports = Zap;
+// [END]
