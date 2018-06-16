@@ -7,8 +7,8 @@ const makeRequest = (z, bundle) => {
     });
 
     return z.request({
-        method: "POST",
-        url: "https://api.cmtelecom.com/voiceapi/v2/Notification",
+        method: zapierRequestData.method,
+        url: zapierRequestData.url,
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {

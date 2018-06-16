@@ -51,12 +51,16 @@ var Settings = {
 };
 
 /**
+ * @param {*} url - The url
+ * @param {*} method - The HTTP request method (GET, POST, UPDATE, etc.)
  * @param {*} headers - The HTTP request headers
  * @param {*} data - The content of the HTTP request
  * @returns the data that will be used by Zapier to send a HTTP request to CM.com.
  */
-function ZapierRequest(headers, data) {
+function ZapierRequest(url, method, headers, data) {
     return {
+        url: url,
+        method: method,
         headers: headers,
         data: typeof data == "string" ? data : JSON.stringify(data) // Our data needs to be a string, so when it's JSON convert it.
     };
@@ -242,7 +246,7 @@ var Zap = {
         var authentication = Messages.getAuthentication(bundle);
         var requestData = Messages.getData(authentication, [messageObject]);
         var requestHeaders = new RequestHeaders(bundle);
-        return new ZapierRequest(requestHeaders, requestData);
+        return new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestHeaders, requestData);
     },
 
     textMessage_post_write: throwResponseError,
@@ -263,7 +267,7 @@ var Zap = {
         };
 
         var requestHeaders = new RequestHeaders(bundle);
-        return new ZapierRequest(requestHeaders, requestData);
+        return new ZapierRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", requestHeaders, requestData);
     },
 
     voiceMessage_post_write: throwResponseError,
@@ -281,12 +285,7 @@ var Zap = {
             phonenumber: phoneNumber
         };
 
-        return {
-            url: "https://api.cmtelecom.com/v1.1/number" + (bundle.search_fields.type == "numberLookUp" ? "lookup" : "validation"),
-            headers: requestHeaders,
-            data: JSON.stringify(requestData),
-            method: "POST"
-        };
+        return new ZapierRequest("https://api.cmtelecom.com/v1.1/number" + (bundle.search_fields.type == "numberLookUp" ? "lookup" : "validation"), "POST", requestHeaders, requestData);
     },
 
     numberVerifier_post_search: function (bundle) {

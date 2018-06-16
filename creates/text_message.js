@@ -7,8 +7,8 @@ const makeRequest = (z, bundle) => {
     });
 
     return z.request({
-        method: "POST",
-        url: "https://gw.cmtelecom.com/v1.0/message",
+        method: zapierRequestData.method,
+        url: zapierRequestData.url,
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {
@@ -18,7 +18,9 @@ const makeRequest = (z, bundle) => {
             response: resp
         });
         
-        return JSON.parse(response.content);
+        return {
+			response: JSON.parse(response.content)
+		};
     });
 };
 
