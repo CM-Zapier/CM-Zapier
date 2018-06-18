@@ -1,18 +1,17 @@
+const shouldCheckProductToken = false;
+
 const getList = (z, bundle) => {
-    // Enable when product token for voice & sms is the same.
-    /* const zapierRequest = {
-        url: "https://api.cmtelecom.com/echo/v1.0/producttoken",
-        body: {
-            // TODO
+    if(shouldCheckProductToken){
+        const zapierRequest = {
+            url: "https://api.cmtelecom.com/echo/v1.0/producttoken",
+            body: {}
         }
-    }
-    
-    return z.request(zapierRequest).then(response => {
-        response.throwForStatus();
-        return JSON.parse(response.content);
-    }); */
-    
-    return {
+        
+        return z.request(zapierRequest).then(response => {
+            response.throwForStatus();
+            return JSON.parse(response.content);
+        });
+    } else return {
         status: 200,
         content: {
             Status: "Success"
