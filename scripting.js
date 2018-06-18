@@ -205,8 +205,8 @@ var Zap = {
             allowedChannelsList.push('sms');
         }
 
-        // Create a list of messages
-        var toNumbersList = toNumbersArray.map(function (item) {
+        // Create a list of numbers
+        var toNumbersList = (toNumbersArray.length == 1 && toNumbersArray[0].includes(",") ? toNumbersArray[0].split(",") : toNumbersArray).map(function (item) {
             return {
                 number: item.trim()
             };
@@ -253,6 +253,13 @@ var Zap = {
 
     /* ------------ VOICE ------------ */
     voiceMessage_pre_write: function (bundle) {
+        var toNumbersArray = bundle.action_fields.to;
+
+        // Create a list of numbers
+        var toNumbersList = (toNumbersArray.length == 1 && toNumbersArray[0].includes(",") ? toNumbersArray[0].split(",") : toNumbersArray).map(function (item) {
+            return item.trim();
+        });
+
         var requestData = {
             caller: bundle.action_fields.from,
             callees: bundle.action_fields.to,

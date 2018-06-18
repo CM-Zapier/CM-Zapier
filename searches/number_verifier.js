@@ -28,8 +28,7 @@ module.exports = {
     
     display: {
         label: 'Number Verifier',
-        description:
-        'Validate if a phone number is valid and use the result (like formatting options, number type, carrier) in a next step. Please make sure your CM.com account has enough rights to use this action.',
+        description: 'Validate if a phone number is valid and use the result (like formatting options, number type, carrier) in a next step. Please make sure your CM.com account has enough rights to use this action.',
         hidden: false,
         important: true
     },
@@ -39,12 +38,14 @@ module.exports = {
             {
                 key: 'type',
                 label: 'Action Type',
-                helpText:
-                'The type of request to make. LookUp returns the same data as validate, plus some additional data (like roaming information).',
+                helpText: 'The type of request to make.\n\nLookUp returns the same data as validate, plus some additional data (like roaming information). LookUp can cost more depanding by country.',
                 type: 'string',
                 required: true,
                 default: 'Validate',
-                choices: { numberValidation: 'Validate', numberLookUp: 'LookUp' }
+                choices: { 
+                    numberValidation: 'Validate', 
+                    numberLookUp: 'LookUp' 
+                }
             }, {
                 key: 'phoneNumber',
                 label: 'Phone Number',

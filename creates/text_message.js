@@ -30,7 +30,7 @@ module.exports = {
 
     display: {
         label: 'Send Text (SMS/Push) Message',
-        description: 'Send an SMS or Push message to one or multiple people, optionally with different senders and different content.',
+        description: 'Send a SMS or Push message to one or multiple people.',
         hidden: false,
         important: true
     },
@@ -47,7 +47,7 @@ module.exports = {
                 choices: { 
                     sms: 'SMS only', 
                     push_sms: 'Push or SMS', 
-                    push: 'Push Only' 
+                    push: 'Push only' 
                 }
             }, {
                 key: 'from',
@@ -58,10 +58,10 @@ module.exports = {
             }, {
                 key: 'to',
                 label: 'To',
-                helpText: 'Please provide the recipient number (with country code) to whom you want to send the message.',
+                helpText: 'Please provide the recipient numbers (with country code) to whom you want to send the message. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
                 type: 'string',
                 required: true,
-                placeholder: '+1224589XXXX , +91976056XXXX',
+                placeholder: '+1224589XXXX, +91976056XXXX',
                 list: true
             }, {
                 key: 'messageContent',

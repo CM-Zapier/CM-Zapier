@@ -30,7 +30,7 @@ module.exports = {
 	
 	display: {
 		label: 'Send Voice (Text to Speech) Message',
-		description: 'Your zap will call a phone number, a speech engine will tell the message based on your text input. Text to speech is available in many different languages, several dialects and genders.',
+		description: 'Your zap will call one or more phone numbers, a speech engine will tell the message based on your text input. Text to speech is available in many different languages, several dialects and genders.',
 		hidden: false,
 		important: true
 	},
@@ -46,7 +46,7 @@ module.exports = {
 			}, {
 				key: 'to',
 				label: 'To',
-				helpText: 'Please provide the recipient number (with country code) to whom you want to send the voice text.',
+				helpText: 'Please provide the recipient numbers (with country code) to whom you want to send the voice text. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
 				type: 'string',
 				required: true,
                 list: true
