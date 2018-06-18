@@ -7,8 +7,8 @@ const makeRequest = (z, bundle) => {
     });
 
     return z.request({
-        method: "POST",
-        url: "https://gw.cmtelecom.com/v1.0/message",
+        method: zapierRequestData.method,
+        url: zapierRequestData.url,
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {
@@ -18,7 +18,9 @@ const makeRequest = (z, bundle) => {
             response: resp
         });
         
-        return JSON.parse(response.content);
+        return {
+			response: JSON.parse(response.content)
+		};
     });
 };
 
@@ -28,7 +30,7 @@ module.exports = {
 
     display: {
         label: 'Send Text (SMS/Push) Message',
-        description: 'Send an SMS or Push message to one or multiple people, optionally with different senders and different content.',
+        description: 'Send a SMS or Push message to one or multiple people.',
         hidden: false,
         important: true
     },
@@ -45,46 +47,42 @@ module.exports = {
                 choices: { 
                     sms: 'SMS only', 
                     push_sms: 'Push or SMS', 
-                    push: 'Push Only' 
+                    push: 'Push only' 
                 }
             }, {
                 key: 'from',
                 label: 'From',
                 helpText: "Please provide sender's name. The maximum length is 11 alphanumerical characters or 16 digits.",
                 type: 'string',
-                required: true,
-                list: true
+                required: true
             }, {
                 key: 'to',
                 label: 'To',
-                helpText: 'Please provide the recipient number (with country code) to whom you want to send the message.\n\nTo send a message to multiple numbers, seperate them with a comma.',
+                helpText: 'Please provide the recipient numbers (with country code) to whom you want to send the message. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
                 type: 'string',
                 required: true,
-                placeholder: '+1224589XXXX , +91976056XXXX',
+                placeholder: '+1224589XXXX, +91976056XXXX',
                 list: true
             }, {
                 key: 'messageContent',
                 label: 'Body',
                 helpText: 'Please provide the content of message.',
                 type: 'string',
-                required: true,
-                list: true
+                required: true
             }, {
                 key: 'validityTime',
                 label: 'Validity Time',
                 helpText: 'Set the validity time for your message. Minimally 1 minute, maximally 48 hours. Format: 0h0m.',
                 type: 'string',
                 required: true,
-                default: '48h0m',
-                list: true
+                default: '48h0m'
             }, {
                 key: 'reference',
                 label: 'Reference',
                 helpText: 'Please set the reference.',
                 type: 'string',
                 required: false,
-                default: 'None',
-                list: true
+                default: 'None'
             }, {
                 key: 'appKey',
                 label: 'Push: App Key',

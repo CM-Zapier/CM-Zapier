@@ -51,12 +51,16 @@ var Settings = {
 };
 
 /**
+ * @param {*} url - The url
+ * @param {*} method - The HTTP request method (GET, POST, UPDATE, etc.)
  * @param {*} headers - The HTTP request headers
  * @param {*} data - The content of the HTTP request
  * @returns the data that will be used by Zapier to send a HTTP request to CM.com.
  */
-function ZapierRequest(headers, data) {
+function ZapierRequest(url, method, headers, data) {
     return {
+        url: url,
+        method: method,
         headers: headers,
         data: typeof data == "string" ? data : JSON.stringify(data) // Our data needs to be a string, so when it's JSON convert it.
     };
@@ -187,24 +191,9 @@ function throwResponseError(bundle) {
 var Zap = {
     /* ------------ TEXT ------------ */
     textMessage_pre_write: function (bundle) {
-        var fromNumbersArray = bundle.action_fields.from;
+        var fromNumber = bundle.action_fields.from;
         var toNumbersArray = bundle.action_fields.to;
-        var smsBodyArray = bundle.action_fields.messageContent;
-        var smsReferenceArray = bundle.action_fields.reference;
-        var validityTimeArray = bundle.action_fields.validityTime;
-
-        // Test if amount of fields is correct.
-        if (fromNumbersArray.length > toNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'From' than in 'To'. They need to be equal.");
-        } else if (toNumbersArray.length > fromNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'To' than in 'From'. They need to be equal.");
-        }
-
-        if (fromNumbersArray.length > smsBodyArray.length) {
-            throw new ErrorException("Error: there are more fields in 'From' than in 'Body'. They need to be equal.");
-        } else if (smsBodyArray.length > fromNumbersArray.length) {
-            throw new ErrorException("Error: there are more fields in 'Body' than in 'From'. They need to be equal.");
-        }
+        var messageBody = bundle.action_fields.messageContent;
 
         // Checks to which channels the message must be sent to.
         var allowedChannels = bundle.action_fields.messageType.toLowerCase();
@@ -216,59 +205,61 @@ var Zap = {
             allowedChannelsList.push('sms');
         }
 
-        // Create a list of messages
-        var messageList = [];
-        for (var j = 0; j < fromNumbersArray.length; j++) { // Iterate trough all messages
-            // Each message can be send to multiple numbers
-            var numberListText = toNumbersArray[j];
-            var numberList = numberListText.split(',');
+        // Create a list of numbers
+        var toNumbersList = (toNumbersArray.length == 1 && toNumbersArray[0].includes(",") ? toNumbersArray[0].split(",") : toNumbersArray).map(function (item) {
+            return {
+                number: item.trim()
+            };
+        });
 
-            var toNumbersList = numberList.map(function (item) {
-                return {
-                    number: item.trim()
-                };
-            });
+        // Check from number length
+        var from = fromNumber.trim();
 
-            var from = fromNumbersArray[j].trim();
-
-            if (from.matches(/(|\+)[0-9]+/)) {
-                if (from.length > Settings.textFromField.maxDigits) {
-                    throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
-                }
-            } else if (from.length > Settings.textFromField.maxChars) {
-                throw new ErrorException("Message " + (j + 1) + ": from length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
+        if (from.matches(/(|\+)[0-9]+/)) {
+            if (from.length > Settings.textFromField.maxDigits) {
+                throw new ErrorException("From length is more than maximally allowed (" + Settings.textFromField.maxDigits + " digits)");
             }
-
-            var message = smsBodyArray[j].replace(/\r/g, "").replace(/\n/g, "").trim();
-            var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
-
-            messageList.push({
-                from: from,
-                to: toNumbersList,
-                body: {
-                    type: "AUTO",
-                    content: message
-                },
-                reference: smsReferenceArray[j] === undefined ? Settings.defaultReference : smsReferenceArray[j].trim(),
-                appKey: bundle.action_fields.appKey,
-                allowedChannels: allowedChannelsList,
-                minimumNumberOfMessageParts: 1,
-                maximumNumberOfMessageParts: maximumNumberOfMessageParts,
-                validity: parseValidityTime(validityTimeArray[j]),
-                customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
-            });
+        } else if (from.length > Settings.textFromField.maxChars) {
+            throw new ErrorException("From length is more than maximally allowed (" + Settings.textFromField.maxChars + " alphanumerical characters)");
         }
 
+        // Create message json object
+        var message = messageBody.replace(/\r/g, "").replace(/\n/g, "").trim();
+        var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
+
+        var messageObject = {
+            from: from,
+            to: toNumbersList,
+            body: {
+                type: "AUTO",
+                content: message
+            },
+            reference: bundle.action_fields.reference.trim(),
+            appKey: bundle.action_fields.appKey,
+            allowedChannels: allowedChannelsList,
+            minimumNumberOfMessageParts: 1,
+            maximumNumberOfMessageParts: maximumNumberOfMessageParts,
+            validity: parseValidityTime(bundle.action_fields.validityTime),
+            customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
+        };
+
         var authentication = Messages.getAuthentication(bundle);
-        var requestData = Messages.getData(authentication, messageList);
+        var requestData = Messages.getData(authentication, [messageObject]);
         var requestHeaders = new RequestHeaders(bundle);
-        return new ZapierRequest(requestHeaders, requestData);
+        return new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestHeaders, requestData);
     },
 
     textMessage_post_write: throwResponseError,
 
     /* ------------ VOICE ------------ */
     voiceMessage_pre_write: function (bundle) {
+        var toNumbersArray = bundle.action_fields.to;
+
+        // Create a list of numbers
+        var toNumbersList = (toNumbersArray.length == 1 && toNumbersArray[0].includes(",") ? toNumbersArray[0].split(",") : toNumbersArray).map(function (item) {
+            return item.trim();
+        });
+
         var requestData = {
             caller: bundle.action_fields.from,
             callees: bundle.action_fields.to,
@@ -283,7 +274,7 @@ var Zap = {
         };
 
         var requestHeaders = new RequestHeaders(bundle);
-        return new ZapierRequest(requestHeaders, requestData);
+        return new ZapierRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", requestHeaders, requestData);
     },
 
     voiceMessage_post_write: throwResponseError,
@@ -301,12 +292,7 @@ var Zap = {
             phonenumber: phoneNumber
         };
 
-        return {
-            url: "https://api.cmtelecom.com/v1.1/number" + (bundle.search_fields.type == "numberLookUp" ? "lookup" : "validation"),
-            headers: requestHeaders,
-            data: JSON.stringify(requestData),
-            method: "POST"
-        };
+        return new ZapierRequest("https://api.cmtelecom.com/v1.1/number" + (bundle.search_fields.type == "numberLookUp" ? "lookup" : "validation"), "POST", requestHeaders, requestData);
     },
 
     numberVerifier_post_search: function (bundle) {
