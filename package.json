@@ -1,7 +1,7 @@
 {
-  "name": "cm-telecom-cloned-2018-05-28",
-  "version": "1.0.0",
-  "description": "A new way to communicate with others...",
+  "name": "cm-com",
+  "version": "0.9.7",
+  "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "main": "index.js",
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive -t 10000"
@@ -11,20 +11,11 @@
     "npm": ">=3.0.0"
   },
   "dependencies": {
-    "lodash": "4.17.4",
-    "zapier-platform-core": "6.0.0",
-    "async": "2.5.0",
-    "moment-timezone": "0.5.13",
-    "xmldom": "0.1.27",
-    "zapier-platform-legacy-scripting-runner": "1.2.0"
+    "zapier-platform-core": "6.1.0"
   },
   "devDependencies": {
-    "mocha": "4.0.1",
-    "should": "13.1.2"
+    "mocha": "^4.1.0",
+    "should": "^13.2.1"
   },
-  "private": true,
-  "zapier": {
-    "convertedFromAppID": 92120,
-    "convertedByCLIVersion": "6.0.0"
-  }
+  "private": true
 }
