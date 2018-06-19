@@ -10,13 +10,12 @@
 `index.js` - Collection of triggers, searches, actions and information like version numbers  
 `scripting.js` - This file works on both the Web Builder and the CLI
   
+  
 ## Version numbers
 This project uses [SemVer](https://semver.org/) for versioning.  
 You can find the version number in `package.json`.  
   
-## General notice
-Verification of Product Token is disabled, go to `/triggers/new_account.js` to enable it.
-
+  
 ## Installing the project
 ### Install the Zapier CLI
 `npm install -g zapier-platform-cli`  
@@ -27,6 +26,7 @@ Verification of Product Token is disabled, go to `/triggers/new_account.js` to e
 ### Install app libraries
 `npm install` from the main directory of the app  
   
+
 ## Using the project
 ### Running tests
 `zapier test` from the main directory of the app

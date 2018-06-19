@@ -1,7 +1,7 @@
 'use strict';
 
-// [START] Remove this for the web version
-function ErrorException(message){
+// [START] Remove this for the web builder
+function ErrorException(message) {
     return new Error(message);
 }
 // [END]
@@ -307,6 +307,6 @@ var Zap = {
     }
 }
 
-// [START] Remove this for the web version
+// [START] Remove this for the web builder
 module.exports = Zap;
 // [END]

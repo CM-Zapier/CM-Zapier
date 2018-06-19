@@ -14,10 +14,10 @@ const makeRequest = (z, bundle) => {
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {
-		const resp = response;
-        resp.status_code = response.status;
+		const tmpResponse = response;
+        tmpResponse.status_code = response.status;
         Zap.voiceMessage_post_write({
-            response: resp
+            response: tmpResponse
         });
         
         return {

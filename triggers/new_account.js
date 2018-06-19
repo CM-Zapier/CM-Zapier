@@ -1,22 +1,19 @@
-const shouldCheckProductToken = false;
-
 const getList = (z, bundle) => {
-    if(shouldCheckProductToken){
-        const zapierRequest = {
-            url: "https://api.cmtelecom.com/echo/v1.0/producttoken",
-            body: {}
-        }
-        
-        return z.request(zapierRequest).then(response => {
-            response.throwForStatus();
-            return JSON.parse(response.content);
-        });
-    } else return {
-        status: 200,
-        content: {
-            Status: "Success"
-        }
-    };
+    const zapierRequest = {
+        url: "https://api.cmtelecom.com/echo/v1.0/producttoken",
+        method: "GET"
+    }
+    
+    return z.request(zapierRequest).then(response => {
+        response.throwForStatus();
+
+        return [{
+            response: "Success",
+            id: 1,
+            status_code: 200,
+            content: {}
+        }];
+    });
 };
 
 module.exports = {

@@ -14,10 +14,10 @@ const getList = (z, bundle) => {
         headers: zapierRequestData.headers,
         body: zapierRequestData.data
     }).then(response => {
-        const resp = response;
-        resp.status_code = response.status;
+        const tmpResponse = response;
+        tmpResponse.status_code = response.status;
         const newResponse = Zap.numberVerifier_post_search({
-            response: resp
+            response: tmpResponse
         });
         
         return newResponse;
