@@ -16,3 +16,23 @@ You can find the version number in `package.json`.
   
 ## General notice
 Verification of Product Token is disabled, go to `/triggers/new_account.js` to enable it.
+
+## Installing the project
+### Install the Zapier CLI
+`npm install -g zapier-platform-cli`  
+  
+### Log in to Zapier
+`zapier login`  
+  
+### Install app libraries
+`npm install` from the main directory of the app  
+  
+## Using the project
+### Running tests
+`zapier test` from the main directory of the app
+
+### Publishing the current version
+`zapier push` from the main directory of the app
+
+### Commands for managing versions
+See [the Zapier documentation](https://github.com/zapier/zapier-platform-cli?utm_source=zapier.com&utm_medium=referral&utm_campaign=zapier#deploying-an-app-version)
