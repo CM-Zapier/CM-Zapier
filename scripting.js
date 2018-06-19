@@ -41,6 +41,15 @@ var Settings = {
         maxDigits: 16,
         maxChars: 11
     }, // A text message may only contain up to [maxDigits] amount of digits, [maxChars] amount of characters.
+    multipartMaxChars: {
+        gsm: {
+            first: 160,
+            part: 153
+        }, utf8: {
+            first: 70,
+            part: 66
+        }
+    },
     validityTime: {
         def: "48h0m", // Default
         min: 1,
@@ -148,6 +157,16 @@ function parseValidityTime(input) {
 }
 
 /**
+ * Detects if the input is compatible with the GSM character set
+ * @param {*} text the input to check
+ * @returns true if the input is GSM-compatible, false if not (like UTF-8)
+ */
+function isGSMAlphabet(text) {
+    var regexp = new RegExp("^[A-Za-z0-9 \\r\\n@£$¥èéùìòÇØøÅå\u0394_\u03A6\u0393\u039B\u03A9\u03A0\u03A8\u03A3\u0398\u039EÆæßÉ!\"#$%&'()*+,\\-./:;<=>?¡ÄÖÑÜ§¿äöñüà^{}\\\\\\[~\\]|\u20AC]*$");
+    return text.matches(regexp);
+}
+
+/**
  * When Zapier gets a result from CM.com, check it for errors and throw it as readable message.
  * @param {*} bundle - The bundle object from Zapier.
  * @throws ErrorException
@@ -191,12 +210,12 @@ function throwResponseError(bundle) {
 var Zap = {
     /* ------------ TEXT ------------ */
     textMessage_pre_write: function (bundle) {
-        var fromNumber = bundle.action_fields.from;
-        var toNumbersArray = bundle.action_fields.to;
-        var messageBody = bundle.action_fields.messageContent;
+        var fromNumber = bundle.action_fields_full.from;
+        var toNumbersArray = bundle.action_fields_full.to;
+        var messageBody = bundle.action_fields_full.messageContent;
 
         // Checks to which channels the message must be sent to.
-        var allowedChannels = bundle.action_fields.messageType.toLowerCase();
+        var allowedChannels = bundle.action_fields_full.messageType;
         var allowedChannelsList = [];
         if (allowedChannels == 'sms' || allowedChannels == 'push') {
             allowedChannelsList.push(allowedChannels);
@@ -225,23 +244,28 @@ var Zap = {
 
         // Create message json object
         var message = messageBody.replace(/\r/g, "").replace(/\n/g, "").trim();
-        var maximumNumberOfMessageParts = message.length < 160 ? 1 : Math.ceil(message.length / 153);
+        // Checks if the message uses the GSM charset or the UTF-8 charset.
+        var isUTF8 = !isGSMAlphabet(message);
+        var maxAllowedChars = isUTF8 ? Settings.multipartMaxChars.utf8 : Settings.multipartMaxChars.gsm
+        var maximumNumberOfMessageParts = message.length < maxAllowedChars.first ? 1 : Math.ceil(message.length / maxAllowedChars.part);
 
         var messageObject = {
             from: from,
             to: toNumbersList,
             body: {
-                type: "AUTO",
                 content: message
             },
-            reference: bundle.action_fields.reference.trim(),
-            appKey: bundle.action_fields.appKey,
+            reference: bundle.action_fields_full.reference.trim(),
+            appKey: bundle.action_fields_full.appKey,
             allowedChannels: allowedChannelsList,
             minimumNumberOfMessageParts: 1,
             maximumNumberOfMessageParts: maximumNumberOfMessageParts,
-            validity: parseValidityTime(bundle.action_fields.validityTime),
+            validity: parseValidityTime(bundle.action_fields_full.validityTime),
             customGrouping3: "Zapier" // Allows CM.com to track where requests originate from.
         };
+
+        if(isUTF8) messageObject.dcs = 8;
+        else messageObject.body.type = "AUTO";
 
         var authentication = Messages.getAuthentication(bundle);
         var requestData = Messages.getData(authentication, [messageObject]);
@@ -253,7 +277,7 @@ var Zap = {
 
     /* ------------ VOICE ------------ */
     voiceMessage_pre_write: function (bundle) {
-        var toNumbersArray = bundle.action_fields.to;
+        var toNumbersArray = bundle.action_fields_full.to;
 
         // Create a list of numbers
         var toNumbersList = (toNumbersArray.length == 1 && toNumbersArray[0].includes(",") ? toNumbersArray[0].split(",") : toNumbersArray).map(function (item) {
@@ -261,14 +285,14 @@ var Zap = {
         });
 
         var requestData = {
-            caller: bundle.action_fields.from,
-            callees: bundle.action_fields.to,
-            prompt: bundle.action_fields.messageContent,
+            caller: bundle.action_fields_full.from,
+            callees: bundle.action_fields_full.to,
+            prompt: bundle.action_fields_full.messageContent,
             'prompt-type': "TTS",
             voice: {
-                language: bundle.action_fields.language,
-                gender: bundle.action_fields.gender,
-                number: bundle.action_fields.voiceNumber
+                language: bundle.action_fields_full.language,
+                gender: bundle.action_fields_full.gender,
+                number: bundle.action_fields_full.voiceNumber
             },
             anonymous: false
         };

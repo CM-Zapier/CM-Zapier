@@ -40,7 +40,7 @@ module.exports = {
             {
                 key: 'type',
                 label: 'Action Type',
-                helpText: 'The type of request to make.\n\nLookUp returns the same data as validate, plus some additional data (like roaming information). LookUp can cost more depanding by country.',
+                helpText: 'The type of request to make.\n\nLookUp returns the same data as validate, plus some additional data (like roaming information). LookUp can cost more depending by country.',
                 type: 'string',
                 required: true,
                 default: 'Validate',

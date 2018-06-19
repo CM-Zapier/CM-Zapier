@@ -4,7 +4,7 @@ const makeRequest = (z, bundle) => {
     const zapierRequestData = Zap.voiceMessage_pre_write({
 		// Converts JSON that works with the CLI to JSON that works in the Web Builder
         auth_fields: bundle.authData,
-		action_fields: bundle.inputData
+		action_fields_full: bundle.inputData
     });
 
     return z.request({

@@ -4,7 +4,7 @@ const makeRequest = (z, bundle) => {
     const zapierRequestData = Zap.textMessage_pre_write({
 		// Converts JSON that works with the CLI to JSON that works in the Web Builder
         auth_fields: bundle.authData,
-        action_fields: bundle.inputData
+        action_fields_full: bundle.inputData
     });
 
     return z.request({
@@ -45,7 +45,7 @@ module.exports = {
                 helpText: 'Please select the appropriate channel by which you want to send the message.',
                 type: 'string',
                 required: true,
-                default: 'SMS Only',
+                default: 'SMS only',
                 choices: { 
                     sms: 'SMS only', 
                     push_sms: 'Push or SMS', 
