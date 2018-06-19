@@ -2,11 +2,13 @@ const makeRequest = (z, bundle) => {
     const Zap = require('../scripting');
 
     const zapierRequestData = Zap.textMessage_pre_write({
+		// Converts JSON that works with the CLI to JSON that works in the Web Builder
         auth_fields: bundle.authData,
         action_fields: bundle.inputData
     });
 
     return z.request({
+		// Converts JSON that works with the Web Builder to JSON that works in the CLI
         method: zapierRequestData.method,
         url: zapierRequestData.url,
         headers: zapierRequestData.headers,

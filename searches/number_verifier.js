@@ -2,11 +2,13 @@ const getList = (z, bundle) => {
     const Zap = require('../scripting');
 
     const zapierRequestData = Zap.numberVerifier_pre_search({
+		// Converts JSON that works with the CLI to JSON that works in the Web Builder
         auth_fields: bundle.authData,
         search_fields: bundle.inputData
     });
 
     return z.request({
+		// Converts JSON that works with the Web Builder to JSON that works in the CLI
         method: zapierRequestData.method,
         url: zapierRequestData.url,
         headers: zapierRequestData.headers,
