@@ -286,7 +286,7 @@ var Zap = {
 
         var requestData = {
             caller: bundle.action_fields_full.from,
-            callees: bundle.action_fields_full.to,
+            callees: toNumbersList,
             prompt: bundle.action_fields_full.messageContent,
             'prompt-type': "TTS",
             voice: {
