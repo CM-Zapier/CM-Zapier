@@ -1,10 +1,42 @@
-const makeRequest = (z, bundle) => {
-    const Zap = require('../scripting');
+const voices = {
+	'cy-GB': 'Cymraeg (Prydain Fawr) / Welsch (Great Britain)',
+	'da-DK': 'Dansk (Danmark) / Danish (Denmark)',
+	'de-DE': 'Deutsch (Deutschland) / German (Germany)',
+	'en-AU': 'English (Australia)',
+	'en-GB': 'English (Great Britain)',
+	'en-IN': 'English (India)',
+	'en-US': 'English (United States)',
+	'es-ES': 'Español (España) / Spanish (Spain)',
+	'es-US': 'Español (Estados Unidos) / Spanish (United States)',
+	'fr-CA': 'Français (Canada) / French (Canada)',
+	'fr-FR': 'Français (France) / French (France)',
+	'is-IS': 'Íslenska (Ísland) / Icelandic (Iceland)',
+	'it-IT': 'Italiano (Italia) / Italian (Italy)',
+	'ja-JP': '日本語 (日本) / Japanese (Japan)',
+	'nb-NO': 'Bokmål (Norge) / Norwegian Bokmål (Norway)',
+	'nl-NL': 'Nederlands (Nederland) / Dutch (The Netherlands)',
+	'pl-PL': 'Język polski (Polska) / Polish (Poland)',
+	'pt-BR': 'Português (Brasil) / Portugese (Brazil)',
+	'pt-PT': 'Português (Portugal) / Portugese (Portugal)',
+	'ro-RO': 'Limba română (România) / Romanian (Romania)',
+	'ru-RU': 'ру́сский язы́к (Росси́я) / Rússkiy yazýk (Rossiya) / Russian (Russia)',
+	'sv-SE': 'Svenska (Sverige) / Swedish (Sweden)',
+	'tr-TR': 'Türkçe (Türkiye) / Turkish (Turkey)'
+};
 
+const makeRequest = (z, bundle) => {
+	const Zap = require('../scripting');
+
+	const inputFields = {};
+	Object.keys(bundle.inputData).forEach(function(key){
+		inputFields[key] = key == "language" ? Object.keys(voices).find(function(voiceKey) {
+			return voices[voiceKey] === bundle.inputData[key]
+		}) : bundle.inputData[key];
+	});
     const zapierRequestData = Zap.voiceMessage_pre_write({
 		// Converts JSON that works with the CLI to JSON that works in the Web Builder
         auth_fields: bundle.authData,
-		action_fields_full: bundle.inputData
+		action_fields_full: inputFields
     });
 
     return z.request({
@@ -65,31 +97,7 @@ module.exports = {
 				type: 'string',
 				required: true,
 				default: 'English (Great Britain)',
-				choices: {
-					'cy-GB': 'Cymraeg (Prydain Fawr) / Welsch (Great Britain)',
-					'da-DK': 'Dansk (Danmark) / Danish (Denmark)',
-					'de-DE': 'Deutsch (Deutschland) / German (Germany)',
-					'en-AU': 'English (Australia)',
-					'en-GB': 'English (Great Britain)',
-					'en-IN': 'English (India)',
-					'en-US': 'English (United States)',
-					'es-ES': 'Español (España) / Spanish (Spain)',
-					'es-US': 'Español (Estados Unidos) / Spanish (United States)',
-					'fr-CA': 'Français (Canada) / French (Canada)',
-					'fr-FR': 'Français (France) / French (France)',
-					'is-IS': 'Íslenska (Ísland) / Icelandic (Iceland)',
-					'it-IT': 'Italiano (Italia) / Italian (Italy)',
-					'ja-JP': '日本語 (日本) / Japanese (Japan)',
-					'nb-NO': 'Bokmål (Norge) / Norwegian Bokmål (Norway)',
-					'nl-NL': 'Nederlands (Nederland) / Dutch (The Netherlands)',
-					'pl-PL': 'Język polski (Polska) / Polish (Poland)',
-					'pt-BR': 'Português (Brasil) / Portugese (Brazil)',
-					'pt-PT': 'Português (Portugal) / Portugese (Portugal)',
-					'ro-RO': 'Limba română (România) / Romanian (Romania)',
-					'ru-RU': 'ру́сский язы́к (Росси́я) / Rússkiy yazýk (Rossiya) / Russian (Russia)',
-					'sv-SE': 'Svenska (Sverige) / Swedish (Sweden)',
-					'tr-TR': 'Türkçe (Türkiye) / Turkish (Turkey)'
-				}
+				choices: voices
 			}, {
 				key: 'gender',
 				label: 'Voice gender',
