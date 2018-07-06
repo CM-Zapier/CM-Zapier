@@ -59,13 +59,13 @@ module.exports = {
             }, {
                 key: 'from',
                 label: 'From',
-                helpText: "Please provide sender's name. The maximum length is 11 alphanumerical characters or 16 digits.",
+                helpText: "Please provide sender's name. The max. length is 11 characters or 16 numbers.",
                 type: 'string',
                 required: true
             }, {
                 key: 'to',
                 label: 'To',
-                helpText: 'Please provide the recipient numbers (with country code) to whom you want to send the message. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
+                helpText: 'Please provide the [recipient numbers (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format) to whom you want to send the message. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
                 type: 'string',
                 required: true,
                 placeholder: '+1224589XXXX, +91976056XXXX',
@@ -73,13 +73,13 @@ module.exports = {
             }, {
                 key: 'messageContent',
                 label: 'Body',
-                helpText: 'Please provide the content of message.',
+                helpText: 'Please provide the content of the message. The max. length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](https://en.wikipedia.org/wiki/GSM_03.38#GSM_7-bit_default_alphabet_and_extension_table_of_3GPP_TS_23.038_/_GSM_03.38)).',
                 type: 'string',
                 required: true
             }, {
                 key: 'validityTime',
                 label: 'Validity Time',
-                helpText: 'Set the validity time for your message. Minimally 1 minute, maximally 48 hours. Format: 0h0m.',
+                helpText: 'Set the validity time for your message. Must be between 1 minute and 48 hours. Format: 0h0m.',
                 type: 'string',
                 required: true,
                 default: '48h0m'
