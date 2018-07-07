@@ -6,7 +6,7 @@
     },
     validityTime: {
         // Default
-        def: 2880, // minutes
+        def: "In 48 hours",
         min: 1, // minutes
         max: 2880 // minutes
     }
