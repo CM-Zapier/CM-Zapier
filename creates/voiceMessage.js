@@ -52,12 +52,25 @@ module.exports = {
 				type: 'string',
 				required: true
 			}, {
-                key: "voice", 
-                label: "Voice options",
+                key: "voice_options",
                 children: [
+                    async (z, bundle) => { // 
+                        const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+                        const languageList = typeof response == "string" ? JSON.parse(response) : response
+
+                        return {
+                            key: 'language',
+                            label: 'Language',
+                            helpText: "Please select the language of the voice text. There are " + Object.keys(languageList).length + " languages and dialects available.",
+                            type: 'string',
+                            required: true,
+                            default: 'English (Great Britain)',
+                            choices: languageList
+                        }
+                    }, 
                     {
-                        key: 'language',
-                        label: 'Language',
+                        key: 'language_old',
+                        label: 'Language (Old)',
                         helpText: "Please select the language of the voice text. There are 46 languages and dialects available. In case you can't find your prefered language in the drop-down, use Custom Value and try [any other available language](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech) in a similar format in your Zap.",
                         type: 'string',
                         required: true,

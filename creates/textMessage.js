@@ -55,7 +55,8 @@ module.exports = {
                     sms: 'SMS only', 
                     push_sms: 'Push or SMS', 
                     push: 'Push only' 
-                }
+                },
+                altersDynamicFields: true
             }, {
                 key: 'from',
                 label: 'From',
@@ -90,13 +91,15 @@ module.exports = {
                 type: 'string',
                 required: false,
                 default: 'None'
-            }, {
-                key: 'appKey',
-                label: 'Push: App Key',
-                helpText: '**This field is required for push messages.**\n\nThe app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
-                type: 'string',
-                required: false,
-                placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+            }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
+                return bundle.inputData.messageType.includes("push") ? [{
+                    key: 'appKey',
+                    label: 'App Key',
+                    helpText: 'The app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
+                    type: 'string',
+                    required: true,
+                    placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+                }] : []
             }
         ],
         outputFields: [
