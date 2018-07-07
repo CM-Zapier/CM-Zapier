@@ -1,6 +1,10 @@
 require('json5/lib/register')
 const config = require('../config.json5')
 
+String.prototype.matches = function (regex) {
+    return regex.test(this)
+}
+
 class TextMessage {
     constructor(from, toList, body){
         // To field
@@ -43,11 +47,11 @@ class TextMessage {
         this.appKey = appKey
     }
     
-    set reference(reference){
+    setReference(reference){
         this.reference = reference
     }
     
-    set validity(validity){
+    setValidity(validity){
         this.validity = validity
     }
 }
