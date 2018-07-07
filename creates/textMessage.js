@@ -18,11 +18,12 @@ const makeRequest = async (z, bundle) => {
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
     const validityTime = moment(bundle.inputData.validityTime)
-    if(validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))){
-        messageObject.setValidity(validityTime.format().replace("T", " ").replace("Z", " GMT"))
-    } else throw new Error(`Validity time (${validityTime.calendar()}) is larger than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
-
-    throw new Error(JSON.stringify(messageObject, null, 4))
+    if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
+        throw new Error(`Validity time (${validityTime.calendar()}) is larger than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
+    else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
+        throw new Error(`Validity time (${validityTime.calendar()}) is smaller than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
+    else 
+        messageObject.setValidity(validityTime.format().replace("T", " ").replace("Z", " GMT")) 
     
     const requestData = {
         Messages: {
@@ -100,7 +101,7 @@ module.exports = {
             }, {
                 key: 'validityTime',
                 label: 'Validity Time',
-                helpText: 'Set the validity time for your message. Must be between 1 minute and 48 hours. Format: 0h0m.',
+                helpText: 'Set the validity time for your message. Must be between 1 minute and 48 hours.',
                 type: 'datetime',
                 required: true,
                 default: config.validityTime.def
