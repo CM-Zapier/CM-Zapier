@@ -16,6 +16,13 @@ const makeRequest = async (z, bundle) => {
     if(bundle.inputData.messageType.includes("push")) messageObject.setUsePush(bundle.inputData.appKey)
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
+
+    const validityTime = moment(bundle.inputData.validityTime)
+    if(validityTime.isSameOrBefore(moment().add(config.validityTime.def, "minutes"))){
+        messageObject.setValidity(validityTime.format().replace("T", " ").replace("Z", " GMT"))
+    }
+
+    throw new Error(JSON.stringify(messageObject, null, 4))
     
     const requestData = {
         Messages: {
@@ -25,8 +32,6 @@ const makeRequest = async (z, bundle) => {
             Msg: [messageObject]
         }
     }
-
-    throw new Error(JSON.stringify(bundle.inputData, null, 4))
     
     const response = await z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
     
