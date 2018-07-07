@@ -49,7 +49,7 @@ module.exports = {
 				key: 'messageContent',
 				label: 'Text',
 				helpText: 'The content of the message. The speech engine will tell this message.\n\nNote: emoji don\'t work, you can\'t use emoji in spoken language.',
-				type: 'string',
+				type: 'text',
 				required: true
 			}, async (z, bundle) => {
                 const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
