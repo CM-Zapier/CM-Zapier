@@ -19,9 +19,9 @@ const makeRequest = async (z, bundle) => {
 
     const validityTime = moment(bundle.inputData.validityTime)
     if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
-        throw new Error(`Validity time (${validityTime.calendar()}) is larger than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
+        throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
     else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
-        throw new Error(`Validity time (${validityTime.calendar()}) is smaller than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
+        throw new Error(`Validity time (${validityTime.calendar()}) is earlier than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
     else 
         messageObject.setValidity(validityTime.format().replace("T", " ").replace("Z", " GMT")) 
     
