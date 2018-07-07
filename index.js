@@ -1,13 +1,5 @@
-const ZapierApp = require('./model/ZapierApp')
-
-/* const App = new ZapierApp()
-
-const addAuthToHeaders = require("./auth/addAuthToHeaders.js")
-App.addAuthentication(require('./auth/authentication-inputFields'), addAuthToHeaders)
-
-App.addAction(require('./creates/textMessage-inputFields'))
-
-App.addAction(require('./creates/voiceMessage-inputFields')) */
+const textMessage = require('./creates/textMessage-inputFields')
+const voiceMessage = require('./creates/voiceMessage-inputFields')
 
 const App = {
     version: require('./package.json').version,
@@ -22,8 +14,8 @@ const App = {
     triggers: {},
     searches: {},
     creates: {
-        [require('./creates/textMessage-inputFields').key]: require('./creates/textMessage-inputFields'),
-        [require('./creates/voiceMessage-inputFields').key]: require('./creates/voiceMessage-inputFields')
+        [textMessage.key]: textMessage,
+        [voiceMessage.key]: voiceMessage
     }
 }
 
