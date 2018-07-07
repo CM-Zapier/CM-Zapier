@@ -2,14 +2,14 @@ module.exports = (statusCode, responseBody) => {
     if (statusCode >= 200 && statusCode < 300) return
 
     try {
-        const response = JSON.parse(responseBody);
+        const response = JSON.parse(responseBody)
     } catch (error){
         throw new Error("The response we got is incomplete or corrupted. Please check your internet connection and try again later.")
     }
     
-    var errorMessages = []; // A list of error messages
+    var errorMessages = [] // A list of error messages
     if (response.message !== undefined) { // If the error has a single message.
-        errorMessages.push(response.message); // Add the message to the list
+        errorMessages.push(response.message) // Add the message to the list
     } else if (response.messages !== undefined && response.messages.length > 0) { // If the error has multiple messages in an array.
         errorMessages = response.messages
             .filter((item) => item.messageDetails !== null) // Filter all success messages from the list
@@ -17,14 +17,13 @@ module.exports = (statusCode, responseBody) => {
     }
     
     if (errorMessages.length === 0) { // If no error messages where found, use details and errorCode.
-        var msg = "";
+        let msg = ""
         
-        if (response.details) msg += response.details;
-        if (response.errorCode) msg += response.details ? ` (error code: ${response.errorCode})` : `Error with code: ${response.errorCode}`;
+        if (response.details) msg += response.details
+        if (response.errorCode) msg += response.details ? ` (error code: ${response.errorCode})` : `Error with code: ${response.errorCode}`
         
-        errorMessages.push(msg);
+        errorMessages.push(msg)
     }
     
-    throw new Error(errorMessages.join("\n"));}
-    
+    throw new Error(errorMessages.join("\n"))    
 }
