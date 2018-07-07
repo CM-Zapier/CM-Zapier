@@ -6,9 +6,8 @@
     },
     validityTime: {
         // Default
-        def: "48h0m", 
-        // In minutes:
-        min: 1,
-        max: 2880
+        def: 2880, // minutes
+        min: 1, // minutes
+        max: 2880 // minutes
     }
 }

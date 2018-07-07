@@ -1,3 +1,7 @@
+require('json5/lib/register')
+const config = require('../config.json5')
+const moment = require("moment")
+
 const ZapierRequest = require("../model/ZapierRequest")
 const TextMessage = require("../model/TextMessage")
 const errorHandler = require("../ErrorHandlerCM")
@@ -11,7 +15,7 @@ const makeRequest = async (z, bundle) => {
     if(bundle.inputData.messageType.includes("sms")) messageObject.setUseSMS()
     if(bundle.inputData.messageType.includes("push")) messageObject.setUsePush(bundle.inputData.appKey)
     
-    if(bundle.inputData.reference) messageObject.reference = bundle.inputData.reference.trim()
+    if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
     
     const requestData = {
         Messages: {
@@ -21,6 +25,8 @@ const makeRequest = async (z, bundle) => {
             Msg: [messageObject]
         }
     }
+
+    throw new Error(JSON.stringify(bundle.inputData, null, 4))
     
     const response = await z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
     
@@ -32,7 +38,7 @@ const makeRequest = async (z, bundle) => {
 }
 
 module.exports = {
-    key: 'text_message',
+    key: 'textMessage',
     noun: 'Message',
     
     display: {
@@ -90,16 +96,16 @@ module.exports = {
                 key: 'validityTime',
                 label: 'Validity Time',
                 helpText: 'Set the validity time for your message. Must be between 1 minute and 48 hours. Format: 0h0m.',
-                type: 'string',
+                type: 'datetime',
                 required: true,
-                default: '48h0m'
+                default: moment().add(config.validityTime.def, "minutes").calendar()
             }, {
                 key: 'reference',
                 label: 'Reference',
                 helpText: 'Please set the reference.',
                 type: 'string',
                 required: false,
-                default: 'None'
+                placeholder: 'None'
             }
         ],
         outputFields: [

@@ -20,7 +20,7 @@ const makeRequest = async (z, bundle) => {
 }
 
 module.exports = {
-	key: 'voice_message',
+	key: 'voiceMessage',
 	noun: 'Voice',
 	
 	display: {

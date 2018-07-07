@@ -1,6 +1,6 @@
 {
   "name": "cm-zapier",
-  "version": "0.10.6",
+  "version": "0.5.0",
   "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
   "repository": "https://github.com/CMTelecom/CM-Zapier",
   "homepage": "https://www.cm.com/",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "json5": "^1.0.1",
+    "moment": "^2.22.2",
     "zapier-platform-core": "7.0.0"
   },
   "devDependencies": {
