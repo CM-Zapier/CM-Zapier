@@ -70,7 +70,7 @@ module.exports = {
                         }, {
                             key: 'gender',
                             label: 'Gender',
-                            helpText: 'Note: not all voices support all genders, look at the list provided in the description above for all voices.',
+                            helpText: 'Note: not all voices support all genders, [check this list for the supported genders](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
                             type: 'string',
                             required: true,
                             default: 'Female',
@@ -81,7 +81,7 @@ module.exports = {
                         }, {
                             key: 'number',
                             label: 'Number',
-                            helpText: 'The number of the voice to use.',
+                            helpText: 'The number of the voice to use, [check this list for the supported numbers](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
                             type: 'integer',
                             required: true,
                             default: '1'
