@@ -2,7 +2,7 @@ const ZapierRequest = require("../model/ZapierRequest")
 const TextMessage = require("../model/TextMessage")
 const errorHandler = require("../ErrorHandlerCM")
 
-const makeRequest = (z, bundle) => {
+const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
     toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
@@ -22,13 +22,13 @@ const makeRequest = (z, bundle) => {
         }
     }
     
-    return z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData)).then(response => {
-        errorHandler(response.status, response.content)
+    const response = await z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
     
-        return {
-            response: JSON.parse(response.content)
-        }
-    })
+    errorHandler(response.status, response.content)
+    
+    return {
+        response: JSON.parse(response.content)
+    }
 }
 
 module.exports = {
@@ -77,6 +77,15 @@ module.exports = {
                 helpText: 'Please provide the content of the message. The max. length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](https://en.wikipedia.org/wiki/GSM_03.38#GSM_7-bit_default_alphabet_and_extension_table_of_3GPP_TS_23.038_/_GSM_03.38)).',
                 type: 'string',
                 required: true
+            }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
+                return bundle.inputData.messageType.includes("push") ? [{
+                    key: 'appKey',
+                    label: 'App Key',
+                    helpText: 'The app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
+                    type: 'string',
+                    required: true,
+                    placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+                }] : []
             }, {
                 key: 'validityTime',
                 label: 'Validity Time',
@@ -91,15 +100,6 @@ module.exports = {
                 type: 'string',
                 required: false,
                 default: 'None'
-            }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
-                return bundle.inputData.messageType.includes("push") ? [{
-                    key: 'appKey',
-                    label: 'App Key',
-                    helpText: 'The app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
-                    type: 'string',
-                    required: true,
-                    placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-                }] : []
             }
         ],
         outputFields: [
