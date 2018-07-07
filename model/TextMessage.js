@@ -26,7 +26,7 @@ class TextMessage {
         // Message body
         this.body = {
             type: "AUTO",
-            content: body.replace(/\r/g, "").replace(/\n/g, "").trim()
+            content: body/* .replace(/\r/g, "").replace(/\n/g, "") */.trim()
         }
 
         // Other

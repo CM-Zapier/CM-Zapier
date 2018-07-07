@@ -25,7 +25,7 @@ module.exports = {
 	
 	display: {
 		label: 'Send Voice (Text to Speech) Message',
-		description: 'Your zap will call one or more phone numbers, a speech engine will tell the message based on your text input. Text to speech is available in many different languages, several dialects and genders.',
+		description: 'Send a voice message to one or multiple people. A speech engine will tell the text message you gave in the selected language, dialect and gender. The recipient will receive the message as a call.',
 		hidden: false,
 		important: true
 	},
@@ -35,20 +35,20 @@ module.exports = {
 			{
 				key: 'from',
 				label: 'From',
-				helpText: "Please specify the sender's number (caller).",
+				helpText: "The sender of the message, which must be a [phone number (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).",
 				type: 'string',
 				required: true
 			}, {
 				key: 'to',
 				label: 'To',
-				helpText: 'Please provide the recipient numbers (with country code) to whom you want to send the voice text. You can use the list functionality, or put all your numbers into the first field seperated by a comma.',
+				helpText: 'Please provide the [recipient numbers (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.',
 				type: 'string',
 				required: true,
                 list: true
 			}, {
 				key: 'messageContent',
 				label: 'Text',
-				helpText: 'Please type the text that you want to convert into the appropriate speech.',
+				helpText: 'The content of the message. The speech engine will tell this message.\n\nNote: emoji don\'t work, you can\'t use emoji in spoken language.',
 				type: 'string',
 				required: true
 			}, async (z, bundle) => {
@@ -56,13 +56,13 @@ module.exports = {
                 const languageList = JSON.parse(response.content)
 
                 return [{
-                    key: "voice",
+                    key: "voice_options",
                     label: "Voice options",
                     children: [
                         {
                             key: 'language',
                             label: 'Language',
-                            helpText: "Please select the language of the voice text. There are " + Object.keys(languageList).length + " languages and dialects available.",
+                            helpText: "The language of the message.\nThere are " + Object.keys(languageList).length + " languages and dialects available.",
                             type: 'string',
                             required: true,
                             default: languageList["en-GB"],
@@ -70,7 +70,7 @@ module.exports = {
                         }, {
                             key: 'gender',
                             label: 'Gender',
-                            helpText: 'Note: not all voices support all genders, [check this list for the supported genders](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
+                            helpText: 'The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
                             type: 'string',
                             required: true,
                             default: 'Female',
