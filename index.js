@@ -1,11 +1,11 @@
-const textMessage = require('./creates/textMessage-inputFields')
-const voiceMessage = require('./creates/voiceMessage-inputFields')
+const textMessage = require('./creates/textMessage')
+const voiceMessage = require('./creates/voiceMessage')
 
 const App = {
     version: require('./package.json').version,
     platformVersion: require('zapier-platform-core').version,
 
-    authentication: require('./auth/authentication-inputFields'),
+    authentication: require('./auth/authentication'),
 
     beforeRequest: [ require("./auth/addAuthToHeaders.js") ],
     afterResponse: [],
