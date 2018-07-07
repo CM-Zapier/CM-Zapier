@@ -51,23 +51,24 @@ module.exports = {
 				helpText: 'Please type the text that you want to convert into the appropriate speech.',
 				type: 'string',
 				required: true
-			}, {
-                key: "voice_options",
-                children: [
-                    async (z, bundle) => { // 
-                        const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
-                        const languageList = typeof response == "string" ? JSON.parse(response) : response
+			}, async (z, bundle) => {
+                const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+                
+                const languageList = typeof response == "string" ? JSON.parse(response) : response
 
-                        return {
-                            key: 'language',
-                            label: 'Language',
-                            helpText: "Please select the language of the voice text. There are " + Object.keys(languageList).length + " languages and dialects available.",
-                            type: 'string',
-                            required: true,
-                            default: 'English (Great Britain)',
-                            choices: languageList
-                        }
-                    }, 
+                return [{
+                    key: 'language',
+                    label: 'Voice language',
+                    helpText: "Please select the language of the voice text. There are " + Object.keys(languageList).length + " languages and dialects available.",
+                    type: 'string',
+                    required: true,
+                    default: languageList["en-GB"],
+                    choices: languageList
+                }]
+            }, {
+                key: "voice",
+                label: "Voice options",
+                children: [
                     {
                         key: 'language_old',
                         label: 'Language (Old)',
