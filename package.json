@@ -1,26 +1,26 @@
 {
-  "name": "cm-zapier",
-  "version": "0.5.4",
-  "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
-  "repository": "https://github.com/CMTelecom/CM-Zapier",
-  "homepage": "https://www.cm.com/",
-  "author": "CM.com",
-  "license": "CC-BY-NC-ND-4.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha --recursive"
-  },
-  "engines": {
-    "node": "8.10.0",
-    "npm": ">=5.6.0"
-  },
-  "dependencies": {
-    "json5": "^1.0.1",
-    "moment": "^2.22.2",
-    "zapier-platform-core": "7.0.0"
-  },
-  "devDependencies": {
-    "mocha": "^5.2.0",
-    "should": "^13.2.0"
-  }
+    "name": "cm-zapier",
+    "version": "0.5.6",
+    "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
+    "repository": "https://github.com/CMTelecom/CM-Zapier",
+    "homepage": "https://www.cm.com/",
+    "author": "CM.com",
+    "license": "CC-BY-NC-ND-4.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha --recursive"
+    },
+    "engines": {
+        "node": "8.10.0",
+        "npm": ">=5.6.0"
+    },
+    "dependencies": {
+        "json5": "^1.0.1",
+        "moment": "^2.22.2",
+        "zapier-platform-core": "7.0.0"
+    },
+    "devDependencies": {
+        "mocha": "^5.2.0",
+        "should": "^13.2.0"
+    }
 }
