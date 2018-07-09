@@ -54,7 +54,7 @@ module.exports = {
                 required: true
             }      
         ],
-        perform: getList,
+        perform: makeRequest,
         sample: require("./numberVerifier-sample.json5"),
         outputFields: require("./numberVerifier-outputFields.json5")
     }
