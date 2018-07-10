@@ -2,6 +2,10 @@ require('json5/lib/register')
 const ZapierRequest = require("../model/ZapierRequest")
 const errorHandler = require("../ErrorHandlerCM")
 
+String.prototype.matches = function (regex) {
+    return regex.test(this)
+}
+
 const makeRequest = async (z, bundle) => {
     const requestType = bundle.inputData.type
     if(!["validation", "lookup"].includes(requestType)) 
