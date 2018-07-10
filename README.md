@@ -34,7 +34,7 @@
 ---
 
 ## 3. Using the project
-Description  | command
+Description  | Command
 ------------ | -------------
 Run tests | `zapier test`
 Publishing local code to Zapier | `zapier push`
