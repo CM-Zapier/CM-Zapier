@@ -9,7 +9,9 @@ class TextMessage {
     constructor(from, toList, body){
         // To field
         this.to = toList.map((phoneNumber) => {
-            number: phoneNumber.trim()
+            return {
+                number: phoneNumber.trim()
+            }
         })
 
         // From field
