@@ -6,7 +6,8 @@ module.exports = (statusCode, responseBody) => {
     try {
         response = JSON.parse(responseBody)
     } catch (error){
-        throw new Error("The response we got is incomplete or corrupted. Please check your internet connection and try again later.")
+        if(statusCode == 401) throw new Error("Your account doesn't have enough rights to use this feature.")
+        else throw new Error("The response we got is incomplete or corrupted. Please check your internet connection and try again later.")
     }
     
     var errorMessages = [] // A list of error messages
