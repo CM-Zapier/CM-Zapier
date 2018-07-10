@@ -38,7 +38,9 @@ const makeRequest = async (z, bundle) => {
     
     errorHandler(response.status, response.content)
     
-    return {}
+    return {
+        result: "success"
+    }
 }
 
 module.exports = {
@@ -112,8 +114,15 @@ module.exports = {
                 placeholder: 'None'
             }
         ],
-        outputFields: [],
+        outputFields: [
+            {
+                key: "result",
+                label: "Result"
+            }
+        ],
         perform: makeRequest,
-        sample: {}
+        sample: {
+            result: "success"
+        }
     }
 }
