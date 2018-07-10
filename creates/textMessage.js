@@ -90,7 +90,7 @@ module.exports = {
                 type: 'text',
                 required: true
             }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
-                return bundle.inputData.messageType.includes("push") ? [{
+                return bundle.inputData.messageType != undefined && bundle.inputData.messageType.includes("push") ? [{
                     key: 'appKey',
                     label: 'App Key',
                     helpText: 'An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
