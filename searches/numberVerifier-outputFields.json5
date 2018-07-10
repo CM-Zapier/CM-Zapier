@@ -1,0 +1,39 @@
+[
+    {
+        key: 'id',
+        label: 'ID'
+    }, {
+        key: 'carrier',
+        label: 'Carrier'
+    }, {
+        key: 'country_code',
+        label: 'Country code'
+    }, {
+        key: 'country_iso',
+        label: 'Country (ISO)'
+    }, {
+        key: 'format_e164',
+        label: 'Fromat (E164)'
+    }, {
+        key: 'format_international',
+        label: 'Format (international)'
+    }, {
+        key: 'format_national',
+        label: 'Format (national)'
+    }, {
+        key: 'region',
+        label: 'Region'
+    }, {
+        key: 'region_code',
+        label: 'Region code'
+    }, {
+        key: 'timezone',
+        label: 'Timezone'
+    }, {
+        key: 'type',
+        label: 'Type'
+    }, {
+        key: 'valid_number',
+        label: 'Valid number'
+    }
+]

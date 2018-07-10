@@ -1,0 +1,13 @@
+{
+    // Maximal amount of digits/characters a from field is allowed to contain. 
+    textFromField: {
+        maxDigits: 16,
+        maxChars: 11
+    },
+    validityTime: {
+        // Default
+        def: "In 48 hours",
+        min: 1, // minutes
+        max: 2880 // minutes
+    }
+}

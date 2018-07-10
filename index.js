@@ -1,38 +1,25 @@
-const authentication = require('./authentication');
-const NewaccountTrigger = require('./triggers/new_account');
-const NumberverifierSearch = require('./searches/number_verifier');
-const TextmessageCreate = require('./creates/text_message');
-const VoicemessageCreate = require('./creates/voice_message');
-
-const maybeIncludeAuth = (request, z, bundle) => {
-  request.headers['X-CM-PRODUCTTOKEN'] = `${bundle.authData['productToken']}`;
-  return request;
-};
+const textMessage = require('./creates/textMessage')
+const voiceMessage = require('./creates/voiceMessage')
+const numberVerifier = require('./searches/numberVerifier')
 
 const App = {
-  version: require('./package.json').version,
-  platformVersion: require('zapier-platform-core').version,
+    version: require('./package.json').version,
+    platformVersion: require('zapier-platform-core').version,
 
-  authentication,
+    authentication: require('./auth/authentication'),
 
-  beforeRequest: [maybeIncludeAuth],
+    beforeRequest: [ require("./auth/addAuthToHeaders.js") ],
+    afterResponse: [],
 
-  afterResponse: [],
+    resources: {},
+    triggers: {},
+    searches: {
+        [numberVerifier.key]: numberVerifier
+    },
+    creates: {
+        [textMessage.key]: textMessage,
+        [voiceMessage.key]: voiceMessage
+    }
+}
 
-  resources: {},
-
-  triggers: {
-    [NewaccountTrigger.key]: NewaccountTrigger
-  },
-
-  searches: {
-    [NumberverifierSearch.key]: NumberverifierSearch
-  },
-
-  creates: {
-    [TextmessageCreate.key]: TextmessageCreate,
-    [VoicemessageCreate.key]: VoicemessageCreate
-  }
-};
-
-module.exports = App;
+module.exports = App
