@@ -13,7 +13,7 @@
         label: 'Country (ISO)'
     }, {
         key: 'format_e164',
-        label: 'Fromat (E164)'
+        label: 'Format (E164)'
     }, {
         key: 'format_international',
         label: 'Format (international)'
@@ -30,8 +30,50 @@
         key: 'timezone',
         label: 'Timezone'
     }, {
-        key: 'type',
-        label: 'Type'
+        key: 'mobile',
+        label: 'Is mobile'
+    }, {
+        key: 'fixed_line',
+        label: 'Is fixed line'
+    }, {
+        key: 'fixed_line_or_mobile',
+        label: 'Is fixed line or mobile'
+    }, {
+        key: 'voip',
+        label: 'VoIP'
+    }, {
+        key: 'toll_free',
+        label: 'Is toll free'
+    }, {
+        key: 'premium_rate',
+        label: 'Has premium rate'
+    }, {
+        key: 'premium_rate',
+        label: 'Has premium rate'
+    }, {
+        key: 'standard_rate',
+        label: 'Has standard rate'
+    }, {
+        key: 'shared_cost',
+        label: 'Shared cost'
+    }, {
+        key: 'personal',
+        label: 'Is personal'
+    }, {
+        key: 'pager',
+        label: 'Pager'
+    }, {
+        key: 'voicemail',
+        label: 'Voicemail'
+    }, {
+        key: 'shortcode',
+        label: 'Shortcode'
+    }, {
+        key: 'emergency',
+        label: 'Is emergency number'
+    }, {
+        key: 'unknown',
+        label: 'Is unknown'
     }, {
         key: 'valid_number',
         label: 'Valid number'
