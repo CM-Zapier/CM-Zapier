@@ -72,13 +72,13 @@ module.exports = {
             }, {
                 key: 'from',
                 label: 'From',
-                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`,
+                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`,
                 type: 'string',
                 required: true
             }, {
                 key: 'to',
                 label: 'To',
-                helpText: 'Please provide the [recipient numbers (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.',
+                helpText: `Please provide the [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
                 type: 'string',
                 required: true,
                 placeholder: '+1224589XXXX, +91976056XXXX',
@@ -86,14 +86,14 @@ module.exports = {
             }, {
                 key: 'messageContent',
                 label: 'Body',
-                helpText: 'The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](https://en.wikipedia.org/wiki/GSM_03.38#GSM_7-bit_default_alphabet_and_extension_table_of_3GPP_TS_23.038_/_GSM_03.38)).',
+                helpText: `The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`,
                 type: 'text',
                 required: true
             }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
                 return bundle.inputData.messageType != undefined && bundle.inputData.messageType.includes("push") ? [{
                     key: 'appKey',
                     label: 'App Key',
-                    helpText: 'An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](https://appmanager.cmtelecom.com/).',
+                    helpText: `An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](${config.links.appkey}).`,
                     type: 'string',
                     required: true,
                     placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'

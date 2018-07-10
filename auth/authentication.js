@@ -1,3 +1,5 @@
+require('json5/lib/register')
+const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 
 const testAuthenticationValidity = async (z) => {
@@ -18,7 +20,7 @@ module.exports = {
 		{
 			key: 'productToken',
 			label: 'Product Token',
-			helpText: "Enter [the product token you got](https://gateway.cmtelecom.com/) from CM.",
+			helpText: `Enter [the product token you got](${config.links.productToken}) from CM.`,
 			type: 'string',
 			required: true,
 			placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'

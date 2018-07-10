@@ -1,4 +1,5 @@
 require('json5/lib/register')
+const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 const errorHandler = require("../ErrorHandlerCM")
 const phoneNumberFormatter = require("../phoneNumberFormatter")
@@ -50,7 +51,7 @@ module.exports = {
             }, {
                 key: 'phoneNumber',
                 label: 'Phone Number',
-                helpText: "The phone number where you want to get the information of.\n\nNote: [The phone number must include the country code](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).",
+                helpText: `The phone number where you want to get the information of.\n\nNote: [The phone number must include the country code](${config.links.helpDocs.phoneNumberFormat}).`,
                 type: 'string',
                 required: true
             }      

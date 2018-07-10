@@ -1,3 +1,5 @@
+require('json5/lib/register')
+const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 const VoiceMessage = require("../model/VoiceMessage")
 const Voice = require("../model/Voice")
@@ -35,13 +37,13 @@ module.exports = {
 			{
 				key: 'from',
 				label: 'From',
-				helpText: "The sender of the message, which must be a [phone number (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).",
+				helpText: `The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`,
 				type: 'string',
 				required: true
 			}, {
 				key: 'to',
 				label: 'To',
-				helpText: 'The [recipient numbers (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.',
+				helpText: `The [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
 				type: 'string',
 				required: true,
                 list: true
@@ -70,7 +72,7 @@ module.exports = {
                         }, {
                             key: 'gender',
                             label: 'Gender',
-                            helpText: 'The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
+                            helpText: `The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](${config.links.helpDocs.voiceGenders}).`,
                             type: 'string',
                             required: true,
                             default: 'Female',
@@ -81,7 +83,7 @@ module.exports = {
                         }, {
                             key: 'number',
                             label: 'Number',
-                            helpText: 'The number of the voice to use, [check this list for the supported numbers](https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech).',
+                            helpText: `The number of the voice to use, [check this list for the supported numbers](${config.links.helpDocs.voiceNumbers}).`,
                             type: 'integer',
                             required: true,
                             default: '1'
