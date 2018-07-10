@@ -1,21 +1,12 @@
-String.prototype.matches = function (regex) {
-    return regex.test(this)
-}
-
-function checkPhoneNumberValidity(phoneNumber){
-    if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
-        throw new Error("The specified phone number is not a valid phone number, it contains invalid characters")
-}
+const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 class VoiceMessage {
     constructor(from, toList, body, voice){
         // To field
-        this.callees = toList.map((phoneNumber) => phoneNumber.trim())
-        this.callees.forEach((phoneNumber) => checkPhoneNumberValidity(phoneNumber))
+        this.callees = toList.map((phoneNumber) => phoneNumberFormatter(phoneNumber.trim()))
 
         // From field
-        this.caller = from.trim()
-        checkPhoneNumberValidity(this.caller)
+        this.caller = phoneNumberFormatter(from.trim())
         
         // Message body
         this.prompt = body

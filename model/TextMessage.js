@@ -1,35 +1,32 @@
 require('json5/lib/register')
 const config = require('../config.json5')
-
-String.prototype.matches = function (regex) {
-    return regex.test(this)
-}
-
-function checkPhoneNumberValidity(phoneNumber){
-    if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
-        throw new Error("The specified phone number is not a valid phone number, it contains invalid characters")
-}
+const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 class TextMessage {
     constructor(from, toList, body){
         // To field
         this.to = toList.map((phoneNumber) => {
             return {
-                number: phoneNumber.trim()
+                number: phoneNumberFormatter(phoneNumber.trim())
             }
         })
 
-        this.to.forEach((phoneNumber) => checkPhoneNumberValidity(phoneNumber))
-
         // From field
-        var from = from.trim()
-        if (from.matches(/(|\+)[0-9]+/)) {
-            if (from.length > config.textFromField.maxDigits) {
-                throw new Error(`From length is more than maximally allowed (${config.textFromField.maxDigits} digits)`)
-            }
+        let from = from.trim()
+        let isFromAPhoneNumber
+        try {
+            from = phoneNumberFormatter(from)
+            isFromAPhoneNumber = true
+        } catch (error) {
+            isFromAPhoneNumber = false
+        }
+
+        if (isFromAPhoneNumber && from.length > config.textFromField.maxDigits) {
+            throw new Error(`From length is more than maximally allowed (${config.textFromField.maxDigits} digits)`)
         } else if (from.length > config.textFromField.maxChars) {
             throw new Error(`From length is more than maximally allowed (${config.textFromField.maxChars} alphanumerical characters)`)
         }
+        
         this.from = from
         
         // Message body

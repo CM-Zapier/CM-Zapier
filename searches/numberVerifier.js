@@ -1,25 +1,18 @@
 require('json5/lib/register')
 const ZapierRequest = require("../model/ZapierRequest")
 const errorHandler = require("../ErrorHandlerCM")
-
-String.prototype.matches = function (regex) {
-    return regex.test(this)
-}
-
-function checkPhoneNumberValidity(phoneNumber){
-    if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
-        throw new Error("The specified phone number is not a valid phone number, it contains invalid characters")
-}
+const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 const makeRequest = async (z, bundle) => {
     const requestType = bundle.inputData.type
     if(!["validation", "lookup"].includes(requestType)) 
         throw new Error(`Invalid request type. Was '${requestType}', but expected 'validation' or 'lookup'.`)
 
-    const phoneNumber = bundle.inputData.phoneNumber
-    checkPhoneNumberValidity(phoneNumber)
+    const requestData = {
+        phonenumber: phoneNumberFormatter(bundle.inputData.phoneNumber)
+    }
     
-    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", { phonenumber: phoneNumber }))
+    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", requestData))
     
     errorHandler(response.status, response.content)
 
