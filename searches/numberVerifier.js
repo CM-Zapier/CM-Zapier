@@ -15,10 +15,14 @@ const makeRequest = async (z, bundle) => {
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", requestData))
 
+    let responseObject
     try {
-        if(requestType == "lookup" && response.status == 503 && JSON.parse(response.content).message == "Unable to process the request" && Object.keys(JSON.parse(response.content)).length == 1)
-            throw new Error("Your account doesn't have enough rights to use this feature")
-    } catch (error) {}
+        responseObject = JSON.parse(response.content)
+    } catch (error) {
+        responseObject = {}
+    }
+    if(requestType == "lookup" && response.status == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
+        throw new Error("Your account doesn't have enough rights to use this feature")
     
     errorHandler(response.status, response.content)
 
