@@ -24,6 +24,11 @@ const makeRequest = async (z, bundle) => {
 
     const result = JSON.parse(response.content)
     result.id = 1
+    const type = result.type
+    Object.keys(type).forEach((key) => {
+        result[key] = type[key]
+    })
+    delete result.type
 
     // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
     return [ result ]

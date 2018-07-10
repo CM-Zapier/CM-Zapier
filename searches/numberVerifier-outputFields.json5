@@ -30,46 +30,46 @@
         key: 'timezone',
         label: 'Timezone'
     }, {
-        key: 'type.mobile',
+        key: 'mobile',
         label: 'Is mobile'
     }, {
-        key: 'type.fixed_line',
+        key: 'fixed_line',
         label: 'Is fixed line'
     }, {
-        key: 'type.fixed_line_or_mobile',
+        key: 'fixed_line_or_mobile',
         label: 'Is fixed line or mobile'
     }, {
-        key: 'type.voip',
+        key: 'voip',
         label: 'VoIP'
     }, {
-        key: 'type.toll_free',
+        key: 'toll_free',
         label: 'Is toll free'
     }, {
-        key: 'type.premium_rate',
+        key: 'premium_rate',
         label: 'Has premium rate'
     }, {
-        key: 'type.standard_rate',
+        key: 'standard_rate',
         label: 'Has standard rate'
     }, {
-        key: 'type.shared_cost',
+        key: 'shared_cost',
         label: 'Shared cost'
     }, {
-        key: 'type.personal',
+        key: 'personal',
         label: 'Is personal'
     }, {
-        key: 'type.pager',
+        key: 'pager',
         label: 'Pager'
     }, {
-        key: 'type.voicemail',
+        key: 'voicemail',
         label: 'Voicemail'
     }, {
-        key: 'type.shortcode',
+        key: 'shortcode',
         label: 'Shortcode'
     }, {
-        key: 'type.emergency',
+        key: 'emergency',
         label: 'Is emergency number'
     }, {
-        key: 'type.unknown',
+        key: 'unknown',
         label: 'Is unknown'
     }, {
         key: 'valid_number',
