@@ -12,7 +12,7 @@ class TextMessage {
         })
 
         // From field
-        let from = from.trim()
+        from = from.trim()
         let isFromAPhoneNumber
         try {
             from = phoneNumberFormatter(from)
