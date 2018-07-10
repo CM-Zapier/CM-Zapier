@@ -62,7 +62,7 @@ module.exports = {
                         {
                             key: 'language',
                             label: 'Language',
-                            helpText: "The language of the message.\nThere are " + Object.keys(languageList).length + " languages and dialects available.",
+                            helpText: `The language of the message.\nThere are ${Object.keys(languageList).length} languages and dialects available.`,
                             type: 'string',
                             required: true,
                             default: languageList["en-GB"],

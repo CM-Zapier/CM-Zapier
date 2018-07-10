@@ -72,7 +72,7 @@ module.exports = {
             }, {
                 key: 'from',
                 label: 'From',
-                helpText: "The sender of the message, which can be a name or a [phone number (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).\n\nNote: The maximum length is 11 characters or 16 numbers.",
+                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](https://help.cmtelecom.com/en/supporting-apps/address-book/what-is-the-right-phone-number-format).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`,
                 type: 'string',
                 required: true
             }, {
