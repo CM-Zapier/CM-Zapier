@@ -1,0 +1,31 @@
+{
+    id: 1,
+    carrier: "Lycamobile",
+    country_code: 31,
+    country_iso: "NL",
+    format_e164: "+31687654321",
+    format_international: "+31 6 87654321",
+    format_national: "06 87654321",
+    region: "Netherlands",
+    region_code: "NL",
+    timezone: [ 
+        "Europe/Amsterdam"
+    ],
+    type: { 
+        mobile: true,
+        fixed_line: false,
+        fixed_line_or_mobile: false,
+        voip: false,
+        toll_free: false,
+        premium_rate: false,
+        standard_rate: false,
+        shared_cost: false,
+        personal: false,
+        pager: false,
+        voicemail: false,
+        shortcode: false, 
+        emergency: false,
+        unknown: false
+    },
+    valid_number: true
+}
