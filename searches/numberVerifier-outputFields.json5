@@ -73,6 +73,6 @@
         label: 'Is unknown'
     }, {
         key: 'valid_number',
-        label: 'Valid number'
+        label: 'Is a valid number'
     }
 ]

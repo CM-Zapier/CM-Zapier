@@ -3,7 +3,7 @@ const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 
 const testAuthenticationValidity = async (z) => {
-	const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/echo/v1.0/producttoken"))
+	const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/echo/v1.0/sso2"))
 	
 	if (response.status === 401) 
 		throw new Error('The Product Token you supplied is invalid')
