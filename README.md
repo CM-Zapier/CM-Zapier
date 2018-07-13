@@ -27,9 +27,7 @@
 ---
 
 ## 2. Installing the project
-1. `npm install -g zapier-platform-cli`
-2. `zapier login`
-3. `npm install` from the main directory of the app
+`cm install`
   
 ---
 

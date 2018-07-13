@@ -1,5 +1,11 @@
 @echo off
 
+if "%1" EQU "install" (
+    npm install -g zapier-platform-cli
+    zapier login
+    npm install
+)
+
 if "%1" EQU "branch" (
     if "%2" NEQ "release" if "%2" NEQ "backup" GOTO end
 
