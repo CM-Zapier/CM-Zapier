@@ -37,7 +37,10 @@
 Description  | Command
 ------------ | -------------
 Run tests | `zapier test`
-Publishing local code to Zapier | `zapier push`
+Switching to the release branch | `cm branch release`
+Switching to the backup branch | `cm branch backup`
+Push release to Zapier | `cm push release`, `cm push`
+Push backup to Zapier | `cm push backup`
 Delete version | `zapier delete version [version]`
 
 _Commands have to be run from the main directory of the app._
