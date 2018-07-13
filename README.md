@@ -39,8 +39,9 @@ Description  | Command
 Run tests | `zapier test`
 Switching to the release branch | `cm branch release`
 Switching to the backup branch | `cm branch backup`
-Push release to Zapier | `cm push release`, `cm push`
+Push release to Zapier | `cm push release`
 Push backup to Zapier | `cm push backup`
+Push to Zapier with last selected branch | `cm push`, `zapier push`
 Delete version | `zapier delete version [version]`
 
 _Commands have to be run from the main directory of the app._
