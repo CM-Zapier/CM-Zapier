@@ -6,9 +6,9 @@
     "homepage": "https://www.cm.com/",
     "author": "CM.com",
     "license": "CC-BY-NC-ND-4.0",
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
-        "test": "mocha --recursive"
+        "test": "mocha \"src/test\" --recursive"
     },
     "engines": {
         "node": "8.10.0",
