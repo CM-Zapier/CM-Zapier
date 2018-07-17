@@ -2,21 +2,19 @@ require('json5/lib/register')
 const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 const errorHandler = require("../ErrorHandlerCM")
+const Contact = require("../model/Contact")
 
 const makeRequest = async (z, bundle) => {
-    /* let toNumbersList = bundle.inputData.to
-    toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
+    const contact = new Contact()
+    contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     
-    const voice = new Voice(bundle.inputData.language, bundle.inputData.gender, bundle.inputData.number)
-    const voiceMessage = new VoiceMessage(bundle.inputData.from, toNumbersList, bundle.inputData.messageContent, voice)
-    
-    const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
+    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
     errorHandler(response.status, response.content)
     
     return {
         result: "success"
-    } */
+    }
 }
 
 module.exports = {
@@ -58,6 +56,27 @@ module.exports = {
                     required: true,
                     choices: groupList
                 }]
+            }, {
+                key: "contact_fields",
+                label: "Contact Fields",
+                children: [
+                    {
+                        key: "firstName",
+                        label: "First name",
+                        type: "string",
+                        required: true
+                    }, {
+                        key: "insertion",
+                        label: "Insertion",
+                        type: "string",
+                        required: false
+                    }, {
+                        key: "lastName",
+                        label: "Last name",
+                        type: "string",
+                        required: true
+                    }
+                ]
             }
 		],
 		outputFields: [
