@@ -18,7 +18,7 @@
             voiceNumbers: "https://docs.cmtelecom.com/voice-api-apps/v2.0#/prerequisites%7Ctext-to-speech"
         },
         appkey: "https://appmanager.cmtelecom.com/",
-        productToken: "https://gateway.cmtelecom.com/"
+        productToken: "https://gateway.cmtelecom.com/",
+        addressbook: "https://addressbook.cmtelecom.com/"
     }
-    
 }

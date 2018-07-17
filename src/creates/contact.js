@@ -34,7 +34,7 @@ module.exports = {
 			{
 				key: 'accountID',
 				label: 'Account Token',
-				helpText: `Your account token. You can find this token in the url when you visit the [CM AdressBook](https://addressbook.cmtelecom.com/), behind the country code (example with dutch country code (nl): https://addressbook.cmtelecom.com/nl/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX).`,
+				helpText: `Your account token. You can find this token in the url when you visit the [CM AdressBook](${config.links.addressbook}), behind the country/language code.`,
 				type: 'string',
 				required: true,
                 placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
