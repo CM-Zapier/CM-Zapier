@@ -55,7 +55,7 @@ module.exports = {
 				required: true
 			}, {
                 key: "voice_options",
-                label: "Voice options",
+                label: "Voice Options",
                 children: [
                     {
                         key: 'language',

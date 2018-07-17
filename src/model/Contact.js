@@ -11,7 +11,7 @@ class Contact {
         this.lastName = lastName
     }
 
-    setName(fullName){
+    setFullName(fullName){
         this.setName(undefined, undefined, fullName)
     }
 }
