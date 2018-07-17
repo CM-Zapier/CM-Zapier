@@ -1,5 +1,6 @@
 const textMessage = require('./creates/textMessage')
 const voiceMessage = require('./creates/voiceMessage')
+const addContact = require('./creates/contact')
 const numberVerifier = require('./searches/numberVerifier')
 const voiceLanguages = require('./triggers/voiceLanguages')
 
@@ -21,7 +22,8 @@ const App = {
     },
     creates: {
         [textMessage.key]: textMessage,
-        [voiceMessage.key]: voiceMessage
+        [voiceMessage.key]: voiceMessage,
+        [addContact.key]: addContact
     }
 }
 
