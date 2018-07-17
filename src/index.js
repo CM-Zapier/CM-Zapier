@@ -1,6 +1,7 @@
 const textMessage = require('./creates/textMessage')
 const voiceMessage = require('./creates/voiceMessage')
 const numberVerifier = require('./searches/numberVerifier')
+const voiceLanguages = require('./triggers/voiceLanguages')
 
 const App = {
     version: require('../package.json').version,
@@ -12,7 +13,9 @@ const App = {
     afterResponse: [],
 
     resources: {},
-    triggers: {},
+    triggers: {
+        [voiceLanguages.key]: voiceLanguages
+    },
     searches: {
         [numberVerifier.key]: numberVerifier
     },
