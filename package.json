@@ -15,6 +15,7 @@
         "npm": ">=5.6.0"
     },
     "dependencies": {
+        "email-validator": "^2.0.4",
         "json5": "^1.0.1",
         "moment": "^2.22.2",
         "zapier-platform-core": "7.0.0"

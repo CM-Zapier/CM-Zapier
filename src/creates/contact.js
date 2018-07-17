@@ -7,6 +7,7 @@ const Contact = require("../model/Contact")
 const makeRequest = async (z, bundle) => {
     const contact = new Contact()
     contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
+    contact.setEmail(bundle.inputData.email)
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
@@ -75,6 +76,11 @@ module.exports = {
                         label: "Last name",
                         type: "string",
                         required: true
+                    }, {
+                        key: "email",
+                        label: "Email",
+                        type: "string",
+                        required: false
                     }
                 ]
             }
