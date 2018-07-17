@@ -3,7 +3,7 @@ const validator = require("email-validator");
 
 class Contact {
     constructor(){
-        this.createdOnUtc = moment().utc().format().replace("Z", "")
+        this.createdOnUtc = moment().utc().format().replace("Z", ".0000000")
     }
 
     setName(firstName, insertion, lastName){
