@@ -99,9 +99,9 @@ module.exports = {
                         key: "customFields",
                         label: "Custom fields",
                         helpText: "Enter the custom field number on the left, the content on the right.",
-                        type: "object",
+                        type: "string",
                         required: false, 
-                        list: true
+                        dict: true
                     }
                 ]
             }, {
