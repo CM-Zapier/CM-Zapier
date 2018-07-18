@@ -1,5 +1,7 @@
 require('json5/lib/register')
 const config = require('../config.json5')
+const moment = require("moment")
+
 const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 class TextMessage {
@@ -57,8 +59,15 @@ class TextMessage {
         this.reference = reference
     }
     
-    setValidity(validity){
-        this.validity = validity
+    setValidityTime(parseableDate){
+        const validityTime = moment(parseableDate)
+        
+        if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
+            throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
+        else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
+            throw new Error(`Validity time (${validityTime.calendar()}) is earlier than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
+            
+        this.validity = validityTime.format().replace("T", " ").replace("Z", " GMT") 
     }
 }
 

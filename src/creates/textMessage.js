@@ -1,6 +1,5 @@
 require('json5/lib/register')
 const config = require('../config.json5')
-const moment = require("moment")
 
 const ZapierRequest = require("../model/ZapierRequest")
 const TextMessage = require("../model/TextMessage")
@@ -17,13 +16,7 @@ const makeRequest = async (z, bundle) => {
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
-    const validityTime = moment(bundle.inputData.validityTime)
-    if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
-        throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
-    else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
-        throw new Error(`Validity time (${validityTime.calendar()}) is earlier than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
-    else 
-        messageObject.setValidity(validityTime.format().replace("T", " ").replace("Z", " GMT")) 
+    messageObject.setValidityTime(bundle.inputData.validityTime) 
     
     const requestData = {
         Messages: {
