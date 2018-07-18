@@ -23,12 +23,19 @@ class Contact {
         this.email = email
     }
 
-    setCompany(company){
+    addCustomValue(id, value){
         this.customValues = this.customValues ? this.customValues : []
-        this.customValues.push({
-            fieldId: 6,
-            value: company
-        })
+        const obj = {
+            fieldId: id,
+            value: value
+        }
+        const index = this.customValues.findIndex(item => item.fieldId === id)
+        if(index == -1) this.customValues.push(obj)
+        else this.customValues[index] = obj
+    }
+
+    setCompany(company){
+        this.addCustomValue(6, company)
     }
 }
 

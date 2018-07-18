@@ -6,10 +6,12 @@ const errorHandler = require("../ErrorHandlerCM")
 const Contact = require("../model/Contact")
 
 const makeRequest = async (z, bundle) => {
+    z.console.log("Input data", JSON.stringify(bundle.inputData, null, 4))
     const contact = new Contact()
     contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     contact.setEmail(bundle.inputData.email)
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
+    contact.setCompany(bundle.inputData.company)
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
