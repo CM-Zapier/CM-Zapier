@@ -1,5 +1,6 @@
 require('json5/lib/register')
 const config = require('../config.json5')
+
 const ZapierRequest = require("../model/ZapierRequest")
 const errorHandler = require("../ErrorHandlerCM")
 const Contact = require("../model/Contact")
@@ -8,6 +9,8 @@ const makeRequest = async (z, bundle) => {
     const contact = new Contact()
     contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     contact.setEmail(bundle.inputData.email)
+    contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
+    contact.setCreationDate(bundle.inputData.createdAt)
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
@@ -81,8 +84,33 @@ module.exports = {
                         label: "Email",
                         type: "string",
                         required: false
+                    }, {
+                        key: "telephoneNumber",
+                        label: "Phone",
+                        helpText: `Must be a valid [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat})`,
+                        type: "string",
+                        required: false
+                    }, {
+                        key: "company",
+                        label: "Company",
+                        type: "string",
+                        required: false
+                    }, {
+                        key: "customFields",
+                        label: "Custom fields",
+                        helpText: "Enter the custom field number on the left, the content on the right.",
+                        type: "object",
+                        required: false, 
+                        list: true
                     }
                 ]
+            }, {
+                key: 'createdAt',
+                label: 'Created at',
+                helpText: 'The date & time this contact was created\n\nNote: can\'t be in the future',
+                type: 'datetime',
+                required: true,
+                default: "Now"
             }
 		],
 		outputFields: [
