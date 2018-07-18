@@ -25,6 +25,10 @@ const makeRequest = async (z, bundle) => {
     responseContent.fullName = [responseContent.firstName, responseContent.insertion, responseContent.lastName].filter(item => item && item !== "").join(" ")
     responseContent.createdAt = responseContent.createdOnUtc.split(".")[0] + "Z"
     delete responseContent.createdOnUtc
+    responseContent.customValues.forEach(item => {
+        if(item.fieldId === 6) responseContent.company = item.value
+        else responseContent[`customField${item.fieldId - 6}`] = item.value
+    })
     
     return responseContent
 }
