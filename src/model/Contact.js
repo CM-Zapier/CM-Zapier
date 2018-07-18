@@ -14,6 +14,7 @@ class Contact {
 
     setTelephoneNumber(telephoneNumber){
         this.phoneNumber = phoneNumberFormatter(telephoneNumber.trim())
+        this.phoneCountry = this.phoneNumber.startsWith("+31") || this.phoneNumber.startsWith("0031") ? "NL" : undefined
     }
 
     setEmail(email){
@@ -23,7 +24,7 @@ class Contact {
         this.email = email
     }
 
-    addCustomValue(id, value){
+    __addCustomValue(id, value){
         this.customValues = this.customValues ? this.customValues : []
         const obj = {
             fieldId: id,
@@ -35,7 +36,14 @@ class Contact {
     }
 
     setCompany(company){
-        this.addCustomValue(6, company)
+        this.__addCustomValue(6, company)
+    }
+
+    addCustomField(number, value){
+        if(number < 1 || number > 10)
+            throw new Error("Custom field numbers must be in the 1 to 10 range.")
+
+        this.__addCustomValue(number + 6, value)
     }
 }
 

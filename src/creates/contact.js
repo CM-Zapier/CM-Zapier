@@ -6,12 +6,16 @@ const errorHandler = require("../ErrorHandlerCM")
 const Contact = require("../model/Contact")
 
 const makeRequest = async (z, bundle) => {
-    z.console.log("Input data", JSON.stringify(bundle.inputData, null, 4))
     const contact = new Contact()
     contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     contact.setEmail(bundle.inputData.email)
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
     contact.setCompany(bundle.inputData.company)
+
+    const customFields = bundle.inputData.customFields
+    Object.keys(customFields).forEach(key => {
+        contact.addCustomField(parseInt(key), customFields[key])
+    })
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
@@ -88,7 +92,7 @@ module.exports = {
                     }, {
                         key: "telephoneNumber",
                         label: "Phone",
-                        helpText: `Must be a valid [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat})`,
+                        helpText: `Must be a [valid phone number (with country code)](${config.links.helpDocs.phoneNumberFormat})`,
                         type: "string",
                         required: false
                     }, {
@@ -99,7 +103,7 @@ module.exports = {
                     }, {
                         key: "customFields",
                         label: "Custom fields",
-                        helpText: "Enter the custom field number on the left, the content on the right.",
+                        helpText: "Enter the custom field number on the left, the content on the right.\n\nNote: custom fields support numbers 1 to 10.",
                         type: "string",
                         required: false, 
                         dict: true
