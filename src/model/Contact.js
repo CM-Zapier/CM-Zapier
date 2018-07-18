@@ -14,7 +14,6 @@ class Contact {
 
     setTelephoneNumber(telephoneNumber){
         this.phoneNumber = phoneNumberFormatter(telephoneNumber.trim())
-        this.phoneCountry = this.phoneNumber.startsWith("+31") || this.phoneNumber.startsWith("0031") ? "NL" : undefined
     }
 
     setEmail(email){

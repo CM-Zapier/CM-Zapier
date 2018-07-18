@@ -20,10 +20,13 @@ const makeRequest = async (z, bundle) => {
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
     errorHandler(response.status, response.content)
+
+    const responseContent = JSON.parse(response.content)
+    responseContent.fullName = [responseContent.firstName, responseContent.insertion, responseContent.lastName].filter(item => item && item !== "").join(" ")
+    responseContent.createdAt = responseContent.createdOnUtc.split(".")[0] + "Z"
+    delete responseContent.createdOnUtc
     
-    return {
-        result: "success"
-    }
+    return responseContent
 }
 
 module.exports = {
@@ -113,13 +116,58 @@ module.exports = {
 		],
 		outputFields: [
             {
-                key: "result",
-                label: "Result"
+                key: "createdAt",
+                label: "Created at"
+            }, {
+                key: "email",
+                label: "Email"
+            }, {
+                key: "firstName",
+                label: "First name"
+            }, {
+                key: "insertion",
+                label: "Insertion"
+            }, {
+                key: "lastName",
+                label: "Last name"
+            }, {
+                key: "fullName",
+                label: "Full name"
+            }, {
+                key: "phoneCountry",
+                label: "Phone number (country code)"
+            }, {
+                key: "phoneNumber",
+                label: "Phone number"
+            }, {
+                key: "id",
+                label: "ID"
+            }, {
+                key: "groupId",
+                label: "Group ID"
             }
         ],
 		perform: makeRequest,
 		sample: {
-            result: "success"
+            createdAt: "2018-07-18T13:17:37Z",
+            customValues: [
+                {
+                    fieldId: 6,
+                    value: "MyCompany"
+                }, {
+                    fieldId: 7,
+                    value: "Hello World!"
+                }
+            ],
+            email: "test@example.com",
+            firstName: "Test", 
+            insertion: "testing",
+            lastName: "Example",
+            fullName: "Test testing Example",
+            phoneCountry:"NL",
+            phoneNumber:"+31610678189",
+            id: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+            groupId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
         }
 	}
 }
