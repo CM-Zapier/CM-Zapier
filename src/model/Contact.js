@@ -1,12 +1,7 @@
-const moment = require("moment")
 const validator = require("email-validator")
 const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 class Contact {
-    constructor(){
-        this.createdOnUtc = moment().utc().format().replace("Z", ".0000000")
-    }
-
     setName(firstName, insertion, lastName){
         this.firstName = firstName
         this.insertion = insertion
@@ -34,13 +29,6 @@ class Contact {
             fieldId: 6,
             value: company
         })
-    }
-
-    setCreationDate(parseableDate){
-        if(!moment(parseableDate).isSameOrBefore(moment().add(1, "minute")))
-            throw new Error("Contact creation date is later than allowed")
-
-        this.createdOnUtc = moment(parseableDate).utc().format().replace("Z", ".0000000")
     }
 }
 

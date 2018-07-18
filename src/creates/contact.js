@@ -10,7 +10,6 @@ const makeRequest = async (z, bundle) => {
     contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     contact.setEmail(bundle.inputData.email)
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
-    contact.setCreationDate(bundle.inputData.createdAt)
     
     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
     
@@ -104,13 +103,6 @@ module.exports = {
                         dict: true
                     }
                 ]
-            }, {
-                key: 'createdAt',
-                label: 'Created at',
-                helpText: 'The date & time this contact was created\n\nNote: can\'t be in the future',
-                type: 'datetime',
-                required: true,
-                default: "Now"
             }
 		],
 		outputFields: [
