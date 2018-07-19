@@ -17,7 +17,7 @@ class Contact {
     }
 
     setTelephoneNumber(telephoneNumber) {
-        if (!phoneNumber || typeof phoneNumber != "string") return 
+        if (!telephoneNumber || typeof telephoneNumber != "string") return 
         
         this.phoneNumber = phoneNumberFormatter(telephoneNumber.trim())
     }
