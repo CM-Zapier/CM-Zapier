@@ -30,7 +30,7 @@ const makeRequest = async (z, bundle) => {
         if(item.fieldId === 6) responseContent.company = item.value
         else responseContent[`customField${item.fieldId - 6}`] = item.value
     })
-    delete responseContent.customValues
+    //delete responseContent.customValues
     
     return responseContent
 }
