@@ -94,14 +94,14 @@ module.exports = {
                         key: "fullName",
                         label: "Name",
                         type: "string",
-                        required: true
+                        required: false
                     }
                 ] : [
                     {
                         key: "firstName",
                         label: "First name",
                         type: "string",
-                        required: true
+                        required: false
                     }, {
                         key: "insertion",
                         label: "Insertion",
@@ -111,7 +111,7 @@ module.exports = {
                         key: "lastName",
                         label: "Last name",
                         type: "string",
-                        required: true
+                        required: false
                     }
                 ]
 
