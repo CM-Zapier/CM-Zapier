@@ -95,8 +95,8 @@ module.exports = {
                     }
                 ] : [
                     {
-                        key: "lastName",
-                        label: "Last name",
+                        key: "firstName",
+                        label: "First name",
                         type: "string",
                         required: true
                     }, {
@@ -105,8 +105,8 @@ module.exports = {
                         type: "string",
                         required: false
                     }, {
-                        key: "firstName",
-                        label: "First name",
+                        key: "lastName",
+                        label: "Last name",
                         type: "string",
                         required: true
                     }
@@ -138,7 +138,7 @@ module.exports = {
                         dict: true
                     }
                 ])
-                
+
                 return [{
                     key: "contact_fields",
                     label: "Contact Fields",
