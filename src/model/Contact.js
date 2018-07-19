@@ -2,9 +2,7 @@ const validator = require("email-validator")
 const phoneNumberFormatter = require("../phoneNumberFormatter")
 
 class Contact {
-    setName(firstName, insertion, lastName) {
-        if (!firstName || typeof firstName != "string" || !insertion || typeof insertion != "string" || !lastName || typeof lastName != "string") return
-        
+    setName(firstName, insertion, lastName) {        
         this.firstName = firstName
         this.insertion = insertion
         this.lastName = lastName
