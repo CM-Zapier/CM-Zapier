@@ -118,60 +118,8 @@ module.exports = {
                 ]
             }
 		],
-		outputFields: [
-            {
-                key: "createdAt",
-                label: "Created at"
-            }, {
-                key: "email",
-                label: "Email"
-            }, {
-                key: "firstName",
-                label: "First name"
-            }, {
-                key: "insertion",
-                label: "Insertion"
-            }, {
-                key: "lastName",
-                label: "Last name"
-            }, {
-                key: "fullName",
-                label: "Full name"
-            }, {
-                key: "phoneCountry",
-                label: "Phone number (country code)"
-            }, {
-                key: "phoneNumber",
-                label: "Phone number"
-            }, {
-                key: "id",
-                label: "ID"
-            }, {
-                key: "groupId",
-                label: "Group ID"
-            }
-        ],
+		outputFields: require("./contact-outputFields.json5"),
 		perform: makeRequest,
-		sample: {
-            createdAt: "2018-07-18T13:17:37Z",
-            customValues: [
-                {
-                    fieldId: 6,
-                    value: "MyCompany"
-                }, {
-                    fieldId: 7,
-                    value: "Hello World!"
-                }
-            ],
-            email: "test@example.com",
-            firstName: "Test", 
-            insertion: "testing",
-            lastName: "Example",
-            fullName: "Test testing Example",
-            phoneCountry:"NL",
-            phoneNumber:"+31610678189",
-            id: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
-            groupId: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-        }
+		sample: require("./contact-sample.json5")
 	}
 }
