@@ -7,11 +7,12 @@ const Contact = require("../model/Contact")
 
 const makeRequest = async (z, bundle) => {
     const contact = new Contact()
-    contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
+    if(bundle.inputData.nameType == "full") contact.setFullName(bundle.inputData.fullName)
+    else contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
     contact.setEmail(bundle.inputData.email)
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
     contact.setCompany(bundle.inputData.company)
-
+ 
     const customFields = bundle.inputData.customFields
     Object.keys(customFields).forEach(key => {
         contact.addCustomField(parseInt(key), customFields[key])
@@ -73,12 +74,29 @@ module.exports = {
                     choices: groupList
                 }]
             }, {
-                key: "contact_fields",
-                label: "Contact Fields",
-                children: [
+                key: 'nameType',
+                label: 'Name Type',
+                helpText: 'The type of the name to input.\n\nYou can choose between 3 fields for the first name, insertion and last name (recommended), or 1 field for the entire name.',
+                type: 'string',
+                required: true,
+                default: 'First name, insertion & last name (recommended)',
+                choices: { 
+                    splitted: 'First name, insertion & last name (recommended)',
+                    full: 'Full name only' 
+                },
+                altersDynamicFields: true
+            }, (z, bundle) => {
+                const fields = bundle.inputData.nameType == "full" ? [
                     {
-                        key: "firstName",
-                        label: "First name",
+                        key: "fullName",
+                        label: "Name",
+                        type: "string",
+                        required: true
+                    }
+                ] : [
+                    {
+                        key: "lastName",
+                        label: "Last name",
                         type: "string",
                         required: true
                     }, {
@@ -87,11 +105,15 @@ module.exports = {
                         type: "string",
                         required: false
                     }, {
-                        key: "lastName",
-                        label: "Last name",
+                        key: "firstName",
+                        label: "First name",
                         type: "string",
                         required: true
-                    }, {
+                    }
+                ]
+
+                const childFields = fields.concat([
+                    {
                         key: "email",
                         label: "Email",
                         type: "string",
@@ -115,7 +137,13 @@ module.exports = {
                         required: false, 
                         dict: true
                     }
-                ]
+                ])
+                
+                return [{
+                    key: "contact_fields",
+                    label: "Contact Fields",
+                    children: childFields
+                }]
             }
 		],
 		outputFields: require("./contact-outputFields.json5"),
