@@ -13,7 +13,7 @@ const makeRequest = async (z, bundle) => {
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
     contact.setCompany(bundle.inputData.company)
  
-    const customFields = bundle.inputData.customFields
+    const customFields = bundle.inputData.customFields || []
     Object.keys(customFields).forEach(key => {
         contact.addCustomField(parseInt(key), customFields[key])
     })
@@ -26,11 +26,13 @@ const makeRequest = async (z, bundle) => {
     responseContent.fullName = [responseContent.firstName, responseContent.insertion, responseContent.lastName].filter(item => item && item !== "").join(" ")
     responseContent.createdAt = responseContent.createdOnUtc.split(".")[0] + "Z"
     delete responseContent.createdOnUtc
-    responseContent.customValues.forEach(item => {
-        if(item.fieldId === 6) responseContent.company = item.value
-        else responseContent[`customField${item.fieldId - 6}`] = item.value
-    })
-    //delete responseContent.customValues
+    if(responseContent.customValues){
+        responseContent.customValues.forEach(item => {
+            if(item.fieldId === 6) responseContent.company = item.value
+            else responseContent[`customField${item.fieldId - 6}`] = item.value
+        })
+        //delete responseContent.customValues
+    }
     
     return responseContent
 }
