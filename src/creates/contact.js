@@ -29,9 +29,9 @@ const makeRequest = async (z, bundle) => {
     if(responseContent.customValues){
         responseContent.customValues.forEach(item => {
             if(item.fieldId === 6) responseContent.company = item.value
-            else responseContent[`customField${item.fieldId - 6}`] = item.value
+            else responseContent[`customField_${item.fieldId - 6}`] = item.value
         })
-        //delete responseContent.customValues
+        delete responseContent.customValues
     }
     
     return responseContent
