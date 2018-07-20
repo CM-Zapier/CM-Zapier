@@ -4,6 +4,7 @@ const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 const TextMessage = require("../model/TextMessage")
 const errorHandler = require("../ErrorHandlerCM")
+const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierInputField")
 
 const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
@@ -36,6 +37,46 @@ const makeRequest = async (z, bundle) => {
     }
 }
 
+const messageType = new ZapierInputField.Builder("messageType", "Message Type")
+    .setDescription(`The type of message.\n\n"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn't have the app installed.`)
+    .addDropdownItem("sms", "SMS Only", true)
+    .addDropdownItem("push_sms", "Push or SMS")
+    .addDropdownItem("push", "Push only")
+    .modifiesDynamicFields()
+    .build()
+
+const from = new ZapierInputField.Builder("from", "From")
+    .setDescription(`The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`)
+    .build()
+
+const to = new ZapierInputField.Builder("to", "To")
+    .setDescription(`Please provide the [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`)
+    .setPlaceholder("+1224589XXXX, +91976056XXXX")
+    .asList()
+    .build()
+
+const messageContent = new ZapierInputField.Builder("messageContent", "Body")
+    .setDescription(`The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`)
+    .build()
+
+const appKey = new ZapierInputField.Builder("appKey", "App Key")
+    .setDescription(`An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](${config.links.appkey}).`)
+    .setPlaceholder("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+    .build()
+
+// Show only the app key field when the user selected "push" in message type.
+const shouldIncludeAppKey = (z, bundle) => bundle.inputData.messageType != undefined && bundle.inputData.messageType.includes("push") ? [ appKey ] : []
+
+const validityTime = new ZapierInputField.Builder("validityTime", "Validity Time", "datetime")
+    .setDescription(`Cancels the message if not sent within the set validity time.\n\nNote: Must be within the next 48 hours.`)
+    .setDefault(config.validityTime.def)
+    .build()
+
+const reference = new ZapierInputField.Builder("reference", "Reference", undefined, false)
+    .setDescription(`Please set the reference`)
+    .setPlaceholder("None")
+    .build()
+
 module.exports = {
     key: 'textMessage',
     noun: 'Message',
@@ -48,71 +89,8 @@ module.exports = {
     },
     
     operation: {
-        inputFields: [
-            {
-                key: 'messageType',
-                label: 'Message Type',
-                helpText: 'The type of message.\n\n"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn\'t have the app installed.',
-                type: 'string',
-                required: true,
-                default: 'SMS only',
-                choices: { 
-                    sms: 'SMS only', 
-                    push_sms: 'Push or SMS', 
-                    push: 'Push only' 
-                },
-                altersDynamicFields: true
-            }, {
-                key: 'from',
-                label: 'From',
-                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`,
-                type: 'string',
-                required: true
-            }, {
-                key: 'to',
-                label: 'To',
-                helpText: `Please provide the [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
-                type: 'string',
-                required: true,
-                placeholder: '+1224589XXXX, +91976056XXXX',
-                list: true
-            }, {
-                key: 'messageContent',
-                label: 'Body',
-                helpText: `The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`,
-                type: 'text',
-                required: true
-            }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
-                return bundle.inputData.messageType != undefined && bundle.inputData.messageType.includes("push") ? [{
-                    key: 'appKey',
-                    label: 'App Key',
-                    helpText: `An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](${config.links.appkey}).`,
-                    type: 'string',
-                    required: true,
-                    placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
-                }] : []
-            }, {
-                key: 'validityTime',
-                label: 'Validity Time',
-                helpText: 'Cancels the message if not sent within the set validity time.\n\nNote: Must be within the next 48 hours.',
-                type: 'datetime',
-                required: true,
-                default: config.validityTime.def
-            }, {
-                key: 'reference',
-                label: 'Reference',
-                helpText: 'Please set the reference.',
-                type: 'string',
-                required: false,
-                placeholder: 'None'
-            }
-        ],
-        outputFields: [
-            {
-                key: "result",
-                label: "Result"
-            }
-        ],
+        inputFields: [messageType, from, to, messageContent, shouldIncludeAppKey, validityTime, reference],
+        outputFields: [new ZapierField("result", "Result")],
         perform: makeRequest,
         sample: {
             result: "success"
