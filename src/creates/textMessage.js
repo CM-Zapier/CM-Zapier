@@ -4,7 +4,7 @@ const config = require('../config.json5')
 const ZapierRequest = require("../model/ZapierRequest")
 const TextMessage = require("../model/TextMessage")
 const errorHandler = require("../ErrorHandlerCM")
-const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierInputField")
+const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierFields")
 
 const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
@@ -17,7 +17,7 @@ const makeRequest = async (z, bundle) => {
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
-    messageObject.setValidityTime(bundle.inputData.validityTime) 
+    messageObject.setValidityTime(bundle.inputData.validityTime)
     
     const requestData = {
         Messages: {
