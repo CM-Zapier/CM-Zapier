@@ -65,7 +65,7 @@ const appKey = new ZapierInputField.Builder("appKey", "App Key")
     .build()
 
 // Show only the app key field when the user selected "push" in message type.
-const shouldIncludeAppKey = (z, bundle) => bundle.inputData.messageType != undefined && bundle.inputData.messageType.includes("push") ? [ appKey ] : []
+const shouldIncludeAppKey = (z, bundle) => bundle.inputData.messageType && bundle.inputData.messageType.includes("push") ? [ appKey ] : []
 
 const validityTime = new ZapierInputField.Builder("validityTime", "Validity Time", "datetime")
     .setDescription(`Cancels the message if not sent within the set validity time.\n\nNote: Must be within the next 48 hours.`)

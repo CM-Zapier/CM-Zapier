@@ -69,7 +69,7 @@ class ZapierInputField extends ZapierField {
     static get Builder() {
         return class Builder {
             constructor(key, label, type = "string", required = true){
-                this._class = new ZapierField(key, label, type, required)
+                this._class = new ZapierInputField(key, label, type, required)
             }
 
             addDropdownItem(key, value, defaultChoice = false){
