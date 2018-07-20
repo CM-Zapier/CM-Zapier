@@ -1,9 +1,11 @@
 require('json5/lib/register')
 const config = require('../config.json5')
+
 const ZapierRequest = require("../model/ZapierRequest")
 const VoiceMessage = require("../model/VoiceMessage")
 const Voice = require("../model/Voice")
 const errorHandler = require("../ErrorHandlerCM")
+const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierFields")
 
 const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
@@ -34,26 +36,17 @@ module.exports = {
 	
 	operation: {
 		inputFields: [
-			{
-				key: 'from',
-				label: 'From',
-				helpText: `The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`,
-				type: 'string',
-				required: true
-			}, {
-				key: 'to',
-				label: 'To',
-				helpText: `The [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
-				type: 'string',
-				required: true,
-                list: true
-			}, {
-				key: 'messageContent',
-				label: 'Text',
-				helpText: 'The content of the message. The speech engine will tell this message.\n\nNote: emoji don\'t work, you can\'t use emoji in spoken language.',
-				type: 'text',
-				required: true
-			}, {
+            new ZapierInputField.Builder("from", "From")
+                .setDescription(`The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`)
+                .build(), 
+            new ZapierInputField.Builder("to", "To")
+                .setDescription(`The [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`)
+                .asList()
+                .build(), 
+            new ZapierInputField.Builder("messageContent", "Text", "text")
+                .setDescription(`The content of the message. The speech engine will tell this message.\n\nNote: emoji don't work, you can't use emoji in spoken language.`)
+                .build(), 
+            {
                 key: "voice_options",
                 label: "Voice Options",
                 children: [
