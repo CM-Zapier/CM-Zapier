@@ -1,5 +1,5 @@
 # CM-Zapier  
-## 1. Project structure
+## 1. Project structure (in /src/)
 - `/triggers` - Triggers in Zapier
 - `/searches` - Searches in Zapier
   - `numberVerifier.js`
@@ -34,12 +34,12 @@
 ## 3. Using the project
 Description  | Command
 ------------ | -------------
-Run tests | `zapier test`
+Run tests | `cm test`
 Switching to the release branch | `cm branch release`
 Switching to the backup branch | `cm branch backup`
 Push release to Zapier | `cm push release`
 Push backup to Zapier | `cm push backup`
-Push to Zapier with last selected branch | `cm push`, `zapier push`
+Push to Zapier with last selected branch | `cm push`
 Delete version | `zapier delete version [version]`
 
 _Commands have to be run from the main directory of the app._

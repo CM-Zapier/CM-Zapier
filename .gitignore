@@ -140,3 +140,6 @@ fabric.properties
 build
 docs
 .environment
+
+#TypeScript
+lib

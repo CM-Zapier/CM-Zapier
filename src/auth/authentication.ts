@@ -1,8 +1,10 @@
-require('json5/lib/register')
-const config = require('../config.json5')
-const ZapierRequest = require("../model/ZapierRequest")
+declare function require(path: string): any
 
-const testAuthenticationValidity = async (z) => {
+const config = require("../config.json5")
+import { zObject } from "zapier-platform-core"
+import ZapierRequest from "../model/ZapierRequest"
+
+const testAuthenticationValidity = async (z: zObject): Promise<object> => {
 	const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/echo/v1.0/sso2"))
 	
 	if (response.status === 401) 
@@ -11,7 +13,7 @@ const testAuthenticationValidity = async (z) => {
 	return {}
 }
 
-module.exports = {
+export default {
 	type: 'custom',
 	
 	test: testAuthenticationValidity,

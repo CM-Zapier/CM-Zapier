@@ -16,9 +16,10 @@ if "%1" EQU "branch" (
 
 if "%1" EQU "push" (
     cm branch %2
-    zapier push
+    npm run zapier-push
 )
 
-GOTO end
-
-:end
+if "%1" EQU "test" (
+    npm run zapier-dev
+    zapier test
+)

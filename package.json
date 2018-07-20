@@ -8,7 +8,12 @@
     "license": "CC-BY-NC-ND-4.0",
     "main": "src/index.js",
     "scripts": {
-        "test": "mocha \"src/test\" --recursive"
+        "zapier-build": "tsc",
+        "zapier-dev": "tsc --watch",
+        "zapier-push": "npm run zapier-build && zapier push",
+        "prepare": "npm run zapier-build",
+        "pretest": "npm run zapier-build",
+        "test": "mocha --recursive lib/test"
     },
     "engines": {
         "node": "8.10.0",
@@ -21,7 +26,11 @@
         "zapier-platform-core": "7.1.0"
     },
     "devDependencies": {
-        "mocha": "^5.2.0",
-        "should": "^13.2.0"
+        "@types/mocha": "5.2.0",
+        "@types/node": "10.1.2",
+        "@types/should": "13.0.0",
+        "mocha": "5.1.0",
+        "should": "13.2.1",
+        "typescript": "2.8.3"
     }
 }
