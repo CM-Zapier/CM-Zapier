@@ -2,7 +2,6 @@ String.prototype.matches = function (regex) {
     return regex.test(this)
 }
 
-
 String.prototype.replaceAll = function (search, replacement) {
     return this.replace(new RegExp(search, 'g'), replacement)
 }

@@ -1,5 +1,7 @@
+declare function require(path: string): any
+
 import Voice from "./Voice"
-import phoneNumberFormatter from "../phoneNumberFormatter"
+const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
 
 export default class VoiceMessage {
     public callees: string[]

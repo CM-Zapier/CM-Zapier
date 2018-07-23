@@ -1,37 +1,38 @@
-const validator = require("email-validator")
+declare function require(path: string): any
+
+import * as validator from "email-validator"
 const phoneNumberFormatter = require("../phoneNumberFormatter")
 
-class Contact {
-    setName(firstName, insertion, lastName) {        
+export default class Contact {
+    public firstName: string | undefined
+    public insertion: string | undefined
+    public lastName: string | undefined
+    public phoneNumber: string | undefined
+    public email: string | undefined
+    public customValues: {fieldId: number, value: string}[] | undefined
+
+    public setName(firstName: string | undefined, insertion: string | undefined, lastName: string | undefined) {        
         this.firstName = firstName
         this.insertion = insertion
         this.lastName = lastName
     }
 
-    setFullName(fullName) {
-        if (!fullName || typeof fullName != "string") return
-        
+    public setFullName(fullName: string) {
         this.setName(undefined, undefined, fullName)
     }
 
-    setTelephoneNumber(telephoneNumber) {
-        if (!telephoneNumber || typeof telephoneNumber != "string") return 
-        
+    public setTelephoneNumber(telephoneNumber: string) {        
         this.phoneNumber = phoneNumberFormatter(telephoneNumber.trim())
     }
 
-    setEmail(email) {
-        if (!email || typeof email != "string") return
-        
+    public setEmail(email: string) {
         if (!validator.validate(email))
             throw new Error("The email address you supplied is not valid")
 
         this.email = email
     }
 
-    __addCustomValue(id, value) {
-        if (!id || typeof id != "number" || !value || typeof value != "string") return
-        
+    private addCustomValue(id: number, value: string) {
         this.customValues = this.customValues ? this.customValues : []
         const obj = {
             fieldId: id,
@@ -42,20 +43,14 @@ class Contact {
         else this.customValues[index] = obj
     }
 
-    setCompany(company) {
-        if (!company || typeof company != "string") return
-
-        this.__addCustomValue(6, company)
+    public setCompany(company: string) {
+        this.addCustomValue(6, company)
     }
 
-    addCustomField(number, value) {
-        if (!number || typeof number != "number" || !value || typeof value != "string") return
-
+    public addCustomField(number: number, value: string) {
         if (number < 1 || number > 10)
             throw new Error("Custom field numbers must be in the 1 to 10 range.")
 
-        this.__addCustomValue(number + 6, value)
+        this.addCustomValue(number + 6, value)
     }
 }
-
-module.exports = Contact
