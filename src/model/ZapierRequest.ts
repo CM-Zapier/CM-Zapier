@@ -1,10 +1,10 @@
-type httpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+import { HttpMethod, HttpRequestOptions } from "zapier-platform-core"
 
-export default class ZapierRequest {
-	public body: string | undefined
-	public headers: any | undefined
+export default class ZapierRequest implements HttpRequestOptions {
+	public readonly body?: string
+	public headers?: { [name: string]: string }
 
-	constructor(public url: string, public method: httpMethod = "GET", body: null | object | string = null){
+	public constructor(public url: string, public method: HttpMethod = "GET", body?: object | string){
 		if(body) this.body = typeof body === "object" ? JSON.stringify(body) : body
 		
 		if(body && typeof body === "object") this.headers = {
