@@ -1,7 +1,8 @@
-declare function require(path: String): any
-
 import { zObject } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
+
+declare function require(path: string): any
+require('json5/lib/register')
 const config = require("../config.json5")
 
 const testAuthenticationValidity = async (z: zObject): Promise<object> => {
