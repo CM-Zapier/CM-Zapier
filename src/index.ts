@@ -1,16 +1,21 @@
-const textMessage = require('./creates/textMessage')
-const voiceMessage = require('./creates/voiceMessage')
+import * as zapier from "zapier-platform-core"
+import textMessage from './creates/textMessage'
+import voiceMessage from './creates/voiceMessage'
+import authentication from "./auth/authentication"
+import addAuthToHeaders from "./auth/addAuthToHeaders"
+
+declare function require(path: string): any
 const addContact = require('./creates/contact')
 const numberVerifier = require('./searches/numberVerifier')
 const voiceLanguages = require('./triggers/voiceLanguages')
 
-const App = {
+export default {
     version: require('../package.json').version,
-    platformVersion: require('zapier-platform-core').version,
+    platformVersion: zapier.version,
 
-    authentication: require('./auth/authentication'),
+    authentication: authentication,
 
-    beforeRequest: [ require("./auth/addAuthToHeaders.js") ],
+    beforeRequest: [ addAuthToHeaders ],
     afterResponse: [],
 
     resources: {},
@@ -26,5 +31,3 @@ const App = {
         [addContact.key]: addContact
     }
 }
-
-module.exports = App
