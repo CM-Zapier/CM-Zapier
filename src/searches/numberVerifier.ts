@@ -1,11 +1,11 @@
+import 'json5/lib/register'
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
+import errorHandler from "../ErrorHandlerCM"
+import phoneNumberFormatter from "../phoneNumberFormatter"
 
 declare function require(path: string): any
-require('json5/lib/register')
 const config = require('../config.json5')
-const errorHandler: (statusCode: number, responseBody: string) => void = require("../ErrorHandlerCM")
-const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
     const requestType = bundle.inputData.type

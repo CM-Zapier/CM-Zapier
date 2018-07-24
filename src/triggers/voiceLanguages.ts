@@ -1,8 +1,6 @@
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
-
-declare function require(path: string): any
-const errorHandler = require("../ErrorHandlerCM")
+import errorHandler from "../ErrorHandlerCM"
 
 const fetchList = async (z: zObject, bundle: Bundle): Promise<{id: string, name: string}[]> => {
     const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))

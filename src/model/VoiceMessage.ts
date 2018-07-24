@@ -1,8 +1,6 @@
 import Voice from "./Voice"
 import Message from "./Message"
-
-declare function require(path: string): any
-const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
+import phoneNumberFormatter from "../phoneNumberFormatter"
 
 export default class VoiceMessage implements Message {
     private callees: string[] = []

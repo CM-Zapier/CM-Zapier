@@ -5,9 +5,9 @@ import numberVerifier from "./searches/numberVerifier"
 import voiceLanguages from "./triggers/voiceLanguages"
 import authentication from "./auth/authentication"
 import addAuthToHeaders from "./auth/addAuthToHeaders"
+import addContact from "./creates/contact"
 
 declare function require(path: string): any
-const addContact = require('./creates/contact')
 
 export default {
     version: require('../package.json').version,

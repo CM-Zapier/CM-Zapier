@@ -1,7 +1,5 @@
 import * as validator from "email-validator"
-
-declare function require(path: string): any
-const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
+import phoneNumberFormatter from "../phoneNumberFormatter"
 
 export default class Contact {
     private firstName?: string

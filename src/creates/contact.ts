@@ -1,15 +1,17 @@
-require('json5/lib/register')
+import 'json5/lib/register'
+import { zObject, Bundle } from "zapier-platform-core"
+import ZapierRequest from "../model/ZapierRequest"
+import Contact from "../model/Contact"
+import errorHandler from "../ErrorHandlerCM"
+
+declare function require(path: string): any
 const config = require('../config.json5')
 
-const ZapierRequest = require("../model/ZapierRequest")
-const errorHandler = require("../ErrorHandlerCM")
-const Contact = require("../model/Contact")
-
-const makeRequest = async (z, bundle) => {
+const makeRequest = async (z: zObject, bundle: Bundle) => {
     const contact = new Contact()
     if(bundle.inputData.nameType == "full") contact.setFullName(bundle.inputData.fullName)
     else contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
-    contact.setEmail(bundle.inputData.email)
+    contact.setEmailAddress(bundle.inputData.email)
     contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
     contact.setCompany(bundle.inputData.company)
  
@@ -27,7 +29,7 @@ const makeRequest = async (z, bundle) => {
     responseContent.createdAt = responseContent.createdOnUtc.split(".")[0] + "Z"
     delete responseContent.createdOnUtc
     if(responseContent.customValues){
-        responseContent.customValues.forEach(item => {
+        (responseContent.customValues as {fieldId: number, value: string}[]).forEach(item => {
             if(item.fieldId === 6) responseContent.company = item.value
             else responseContent[`customField_${item.fieldId - 6}`] = item.value
         })
@@ -37,7 +39,7 @@ const makeRequest = async (z, bundle) => {
     return responseContent
 }
 
-module.exports = {
+export default {
 	key: 'contact',
 	noun: 'Contact',
 	
@@ -58,12 +60,12 @@ module.exports = {
 				required: true,
                 placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
                 altersDynamicFields: true
-			}, async (z, bundle) => {
+			}, async (z: zObject, bundle: Bundle) => {
                 const accountID = bundle.inputData.accountID
-                const groupList = {}
+                const groupList: { [id: string]: string } = {}
                 if(accountID){
                     const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${accountID}/groups`))
-                    JSON.parse(response.content).forEach(group => {
+                    JSON.parse(response.content).forEach((group: any) => {
                         groupList[group.id] = group.name
                     })
                 }
@@ -88,7 +90,7 @@ module.exports = {
                     full: 'Full name only' 
                 },
                 altersDynamicFields: true
-            }, (z, bundle) => {
+            }, (z: zObject, bundle: Bundle) => {
                 const fields = bundle.inputData.nameType == "full" ? [
                     {
                         key: "fullName",
@@ -140,7 +142,7 @@ module.exports = {
                         required: false, 
                         dict: true
                     }
-                ])
+                ] as any[])
 
                 return [{
                     key: "contact_fields",
