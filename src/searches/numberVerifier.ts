@@ -1,12 +1,15 @@
+import { zObject, Bundle } from "zapier-platform-core"
+import ZapierRequest from "../model/ZapierRequest"
+
+declare function require(path: string): any
 require('json5/lib/register')
 const config = require('../config.json5')
-const ZapierRequest = require("../model/ZapierRequest")
-const errorHandler = require("../ErrorHandlerCM")
-const phoneNumberFormatter = require("../phoneNumberFormatter")
+const errorHandler: (statusCode: number, responseBody: string) => void = require("../ErrorHandlerCM")
+const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
 
-const makeRequest = async (z, bundle) => {
+const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
     const requestType = bundle.inputData.type
-    if(!["validation", "lookup"].includes(requestType)) 
+    if(["validation", "lookup"].indexOf(requestType) == -1) 
         throw new Error(`Invalid request type. Was '${requestType}', but expected 'validation' or 'lookup'.`)
 
     const requestData = {
@@ -38,7 +41,7 @@ const makeRequest = async (z, bundle) => {
     return [ result ]
 }
 
-module.exports = {
+export default {
     key: 'numberVerifier',
     noun: 'Verification',
     

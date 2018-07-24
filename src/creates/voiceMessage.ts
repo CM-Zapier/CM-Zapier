@@ -2,6 +2,7 @@ import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
 import Voice from "../model/Voice"
 import VoiceMessage from "../model/VoiceMessage"
+import VoiceLanguages from "../triggers/voiceLanguages"
 import { ZapierField, ZapierGroup, ZapierInputField } from "../model/ZapierFields"
 
 declare function require(path: string): any
@@ -40,7 +41,7 @@ const messageContent = new ZapierInputField.Builder("messageContent", "Text", "t
 
 const voiceLanguage = new ZapierInputField.Builder("language", "Language")
     .setDescription(`The language of the message.\nThere are several languages and dialects available.`)
-    .connectDropdownToTrigger("voiceLanguages", "id", "name")
+    .connectDropdownToTrigger(VoiceLanguages.key, "id", "name")
     .build()
 
 const voiceGender = new ZapierInputField.Builder("gender", "Gender")
