@@ -1,36 +1,60 @@
-declare function require(path: string): any
-
 import * as validator from "email-validator"
-const phoneNumberFormatter = require("../phoneNumberFormatter")
+
+declare function require(path: string): any
+const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneNumberFormatter")
 
 export default class Contact {
-    public firstName: string | undefined
-    public insertion: string | undefined
-    public lastName: string | undefined
-    public phoneNumber: string | undefined
-    public email: string | undefined
-    public customValues: {fieldId: number, value: string}[] | undefined
+    private firstName?: string
+    private insertion?: string
+    private lastName?: string
+    private phoneNumber?: string
+    private email?: string
+    private customValues?: { fieldId: number, value: string }[]
 
-    public setName(firstName: string | undefined, insertion: string | undefined, lastName: string | undefined) {        
+    // --- Name ---
+
+    public getName(): { firstName?: string, insertion?: string, lastName?: string } {
+        return {
+            firstName: this.firstName,
+            insertion: this.insertion,
+            lastName: this.lastName
+        }
+    }
+
+    public setName(firstName?: string, insertion?: string, lastName?: string) {        
         this.firstName = firstName
         this.insertion = insertion
         this.lastName = lastName
     }
-
+ 
     public setFullName(fullName: string) {
         this.setName(undefined, undefined, fullName)
+    }
+
+    // --- Telephone number ---
+
+    public getTelephoneNumber(): string | undefined {
+        return this.phoneNumber
     }
 
     public setTelephoneNumber(telephoneNumber: string) {        
         this.phoneNumber = phoneNumberFormatter(telephoneNumber.trim())
     }
 
-    public setEmail(email: string) {
+    // --- Email address ---
+
+    public getEmailAddress(): string | undefined {
+        return this.email
+    }
+
+    public setEmailAddress(email: string) {
         if (!validator.validate(email))
             throw new Error("The email address you supplied is not valid")
 
         this.email = email
     }
+
+    // --- Custom values ---
 
     private addCustomValue(id: number, value: string) {
         this.customValues = this.customValues ? this.customValues : []
@@ -43,8 +67,17 @@ export default class Contact {
         else this.customValues[index] = obj
     }
 
+    public getCompany(): string | undefined {
+        return this.getCustomField(0)
+    }
+
     public setCompany(company: string) {
         this.addCustomValue(6, company)
+    }
+
+    public getCustomField(index: number): string | undefined {
+        const i = (this.customValues || []).findIndex(item => item.fieldId === index + 6)
+        return i == -1 ? undefined : (this.customValues || [])[i].value
     }
 
     public addCustomField(number: number, value: string) {

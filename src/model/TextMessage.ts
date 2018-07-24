@@ -1,4 +1,5 @@
 import * as moment from "moment"
+import Message from "./Message"
 
 type DateTime = moment.Moment
 
@@ -9,7 +10,7 @@ const phoneNumberFormatter: (phoneNumber: string) => string = require("../phoneN
 
 type MessageChannel = "push" | "sms"
 
-export default class TextMessage {
+export default class TextMessage implements Message {
     private to: { number: string }[] = []
     private from!: string
     private body!: { type?: "AUTO", content: string }
@@ -27,10 +28,10 @@ export default class TextMessage {
     public constructor(sender: string, receivers: string[], body: string){
         this.setSender(sender)
         this.addReceivers(...receivers)
-        this.setBody(body)
+        this.setMessage(body)
     }
 
-    // -- Sender ---
+    // --- Sender ---
 
     public getSender(): string {
         return this.from
@@ -71,7 +72,7 @@ export default class TextMessage {
 
     // --- Body ---
 
-    public getBody(): string {
+    public getMessage(): string {
         return this.body.content
     }
 
@@ -79,7 +80,7 @@ export default class TextMessage {
         return this.body.type != undefined
     }
 
-    public setBody(content: string, autoEncoding: boolean = true){
+    public setMessage(content: string, autoEncoding: boolean = true){
         this.body = {
             type: autoEncoding ? "AUTO" : undefined,
             content: content
@@ -92,11 +93,11 @@ export default class TextMessage {
         return this.allowedChannels || []
     }
 
-    public usesSMS(): boolean{
+    public usesSMS(): boolean {
         return this.getChannels().indexOf("sms") != -1
     }
 
-    public usesPush(): boolean{
+    public usesPush(): boolean {
         return this.getChannels().indexOf("push") != -1
     }
 
