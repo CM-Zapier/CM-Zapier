@@ -1,13 +1,15 @@
+import { zObject, Bundle } from "zapier-platform-core"
+import ZapierRequest from "../model/ZapierRequest"
+import Voice from "../model/Voice"
+import VoiceMessage from "../model/VoiceMessage"
+import { ZapierField, ZapierGroup, ZapierInputField } from "../model/ZapierFields"
+
+declare function require(path: string): any
 require('json5/lib/register')
 const config = require('../config.json5')
+const errorHandler: (statusCode: number, responseBody: string) => void = require("../ErrorHandlerCM")
 
-const ZapierRequest = require("../model/ZapierRequest")
-const VoiceMessage = require("../model/VoiceMessage")
-const Voice = require("../model/Voice")
-const errorHandler = require("../ErrorHandlerCM")
-const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierFields")
-
-const makeRequest = async (z, bundle) => {
+const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to
     toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
@@ -23,7 +25,7 @@ const makeRequest = async (z, bundle) => {
     }
 }
 
-module.exports = {
+export default {
 	key: 'voiceMessage',
 	noun: 'Voice',
 	
@@ -79,12 +81,7 @@ module.exports = {
                 ]
             }
 		],
-		outputFields: [
-            {
-                key: "result",
-                label: "Result"
-            }
-        ],
+		outputFields: [ new ZapierField("result", "Result") ],
 		perform: makeRequest,
 		sample: {
             result: "success"

@@ -1,12 +1,14 @@
+import { zObject, Bundle } from "zapier-platform-core"
+import ZapierRequest from "../model/ZapierRequest"
+import TextMessage from "../model/TextMessage"
+import { ZapierField, ZapierInputField } from "../model/ZapierFields"
+
+declare function require(path: string): any
 require('json5/lib/register')
 const config = require('../config.json5')
+const errorHandler: (statusCode: number, responseBody: string) => void = require("../ErrorHandlerCM")
 
-const ZapierRequest = require("../model/ZapierRequest")
-const TextMessage = require("../model/TextMessage")
-const errorHandler = require("../ErrorHandlerCM")
-const { ZapierField, ZapierGroup, ZapierInputField } = require("../model/ZapierFields")
-
-const makeRequest = async (z, bundle) => {
+const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to
     toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
@@ -65,7 +67,7 @@ const appKey = new ZapierInputField.Builder("appKey", "App Key")
     .build()
 
 // Show only the app key field when the user selected "push" in message type.
-const shouldIncludeAppKey = (z, bundle) => bundle.inputData.messageType && bundle.inputData.messageType.includes("push") ? [ appKey ] : []
+const shouldIncludeAppKey = (z: zObject, bundle: Bundle) => bundle.inputData.messageType && bundle.inputData.messageType.includes("push") ? [ appKey ] : []
 
 const validityTime = new ZapierInputField.Builder("validityTime", "Validity Time", "datetime")
     .setDescription(`Cancels the message if not sent within the set validity time.\n\nNote: Must be within the next 48 hours.`)
@@ -77,7 +79,7 @@ const reference = new ZapierInputField.Builder("reference", "Reference", undefin
     .setPlaceholder("None")
     .build()
 
-module.exports = {
+export default {
     key: 'textMessage',
     noun: 'Message',
     
@@ -90,7 +92,7 @@ module.exports = {
     
     operation: {
         inputFields: [messageType, from, to, messageContent, shouldIncludeAppKey, validityTime, reference],
-        outputFields: [new ZapierField("result", "Result")],
+        outputFields: [ new ZapierField("result", "Result") ],
         perform: makeRequest,
         sample: {
             result: "success"
