@@ -25,7 +25,7 @@ export class ZapierGroup extends ZapierField {
     }
 }
 
-type ZapierInputType = "string" | "text" | "datetime" | "number"
+type ZapierInputType = "string" | "text" | "datetime" | "integer"
 
 export class ZapierInputField extends ZapierField {
     private choices?: { [key: string]: string }
@@ -34,6 +34,7 @@ export class ZapierInputField extends ZapierField {
     private placeholder?: string
     private list?: boolean
     private altersDynamicFields?: boolean
+    private dynamic?: string
     
     public constructor (key: string, label: string, private type: ZapierInputType = "string", private required: boolean = true) {
         super(key, label)
@@ -43,6 +44,10 @@ export class ZapierInputField extends ZapierField {
         this.choices = this.choices ? this.choices : {}
         this.choices[key] = value
         if(defaultChoice) this.default = value
+    }
+
+    connectDropdownToTrigger(triggerKey: string, param1: string, param2: string){
+        this.dynamic = `${triggerKey}.${param1}.${param2}`
     }
 
     setDefault(text: string){
@@ -67,6 +72,11 @@ export class ZapierInputField extends ZapierField {
 
     static get Builder() {
         return class Builder extends ZapierInputField {
+            connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): Builder {
+                super.connectDropdownToTrigger(triggerKey, param1, param2)
+                return this
+            }
+
             addDropdownItem(key: string, value: string, defaultChoice?: boolean): Builder {
                 super.addDropdownItem(key, value, defaultChoice)
                 return this
