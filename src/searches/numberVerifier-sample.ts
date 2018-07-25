@@ -1,4 +1,4 @@
-{
+export default {
     id: 1,
     carrier: "Lycamobile",
     country_code: 31,

@@ -1,12 +1,9 @@
-import 'json5/lib/register'
 import * as moment from "moment"
 import Message from "./Message"
 import phoneNumberFormatter from "../phoneNumberFormatter"
+import config from "../config"
 
 type DateTime = moment.Moment
-
-declare function require(path: string): any
-const config = require('../config.json5')
 
 type MessageChannel = "push" | "sms"
 

@@ -1,4 +1,4 @@
-{
+export default {
     // Maximal amount of digits/characters a from field is allowed to contain. 
     textFromField: {
         maxDigits: 16,

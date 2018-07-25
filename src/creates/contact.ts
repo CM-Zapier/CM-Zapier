@@ -1,11 +1,10 @@
-import 'json5/lib/register'
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
 import Contact from "../model/Contact"
 import errorHandler from "../ErrorHandlerCM"
-
-declare function require(path: string): any
-const config = require('../config.json5')
+import outputFields from "./contact-outputFields"
+import sample from "./contact-sample"
+import config from "../config"
 
 const makeRequest = async (z: zObject, bundle: Bundle) => {
     const contact = new Contact()
@@ -151,8 +150,8 @@ export default {
                 }]
             }
 		],
-		outputFields: require("./contact-outputFields.json5"),
+		outputFields: outputFields,
 		perform: makeRequest,
-		sample: require("./contact-sample.json5")
+		sample: sample
 	}
 }

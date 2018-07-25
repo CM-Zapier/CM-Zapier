@@ -1,6 +1,6 @@
 {
     "name": "cm-zapier",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
     "repository": "https://github.com/CMTelecom/CM-Zapier",
     "homepage": "https://www.cm.com/",
@@ -9,11 +9,11 @@
     "main": "src/index.js",
     "scripts": {
         "zapier-build": "tsc",
-        "zapier-dev": "tsc --watch",
+        "zapier-dev": "tsc",
         "zapier-push": "npm run zapier-build && zapier push",
         "prepare": "npm run zapier-build",
         "pretest": "npm run zapier-build",
-        "test": "mocha --recursive lib/test"
+        "test": "mocha --recursive out/test"
     },
     "engines": {
         "node": "8.10.0",
@@ -21,7 +21,6 @@
     },
     "dependencies": {
         "email-validator": "^2.0.4",
-        "json5": "^1.0.1",
         "moment": "^2.22.2",
         "zapier-platform-core": "7.1.0"
     },
@@ -31,6 +30,6 @@
         "@types/should": "13.0.0",
         "mocha": "5.1.0",
         "should": "13.2.1",
-        "typescript": "2.8.3"
+        "typescript": "2.9.2"
     }
 }

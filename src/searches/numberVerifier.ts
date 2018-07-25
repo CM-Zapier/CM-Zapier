@@ -1,11 +1,10 @@
-import 'json5/lib/register'
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
 import errorHandler from "../ErrorHandlerCM"
 import phoneNumberFormatter from "../phoneNumberFormatter"
-
-declare function require(path: string): any
-const config = require('../config.json5')
+import outputFields from "./numberVerifier-outputFields"
+import sample from "./numberVerifier-sample"
+import config from "../config"
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
     const requestType = bundle.inputData.type
@@ -74,7 +73,7 @@ export default {
             }      
         ],
         perform: makeRequest,
-        sample: require("./numberVerifier-sample.json5"),
-        outputFields: require("./numberVerifier-outputFields.json5")
+        sample: sample,
+        outputFields: outputFields
     }
 }

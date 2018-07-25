@@ -2,8 +2,9 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "outDir": "./lib",
-        "rootDir": "./src",
+        "moduleResolution": "node",
+        "outDir": "./out/",
+        "rootDir": "./src/",
         "resolveJsonModule": true,
         "strict": true
     }

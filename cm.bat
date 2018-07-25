@@ -23,3 +23,5 @@ if "%1" EQU "test" (
     npm run zapier-dev
     zapier test
 )
+
+:end

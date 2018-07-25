@@ -1,4 +1,4 @@
-[
+export default [
     {
         key: "createdAt",
         label: "Created at"

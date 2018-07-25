@@ -1,9 +1,6 @@
-import 'json5/lib/register'
 import { zObject } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
-
-declare function require(path: string): any
-const config = require("../config.json5")
+import config from "../config"
 
 const testAuthenticationValidity = async (z: zObject): Promise<object> => {
 	const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/echo/v1.0/sso2"))

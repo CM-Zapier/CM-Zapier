@@ -1,12 +1,9 @@
-import 'json5/lib/register'
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
 import TextMessage from "../model/TextMessage"
 import { ZapierField, ZapierInputField } from "../model/ZapierFields"
 import errorHandler from "../ErrorHandlerCM"
-
-declare function require(path: string): any
-const config = require('../config.json5')
+import config from "../config"
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to

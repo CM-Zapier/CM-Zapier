@@ -1,4 +1,4 @@
-[
+export default [
     {
         key: 'id',
         label: 'ID'

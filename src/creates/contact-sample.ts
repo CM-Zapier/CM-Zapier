@@ -1,4 +1,4 @@
-{
+export default {
     createdAt: "2018-07-18T13:17:37Z",
     customValues: [
         {
