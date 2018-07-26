@@ -7,8 +7,6 @@ import authentication from "./auth/authentication"
 import addAuthToHeaders from "./auth/addAuthToHeaders"
 import addContact from "./creates/contact"
 
-declare function require(path: string): any
-
 export default {
     version: require('../package.json').version,
     platformVersion: zapier.version,
