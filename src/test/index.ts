@@ -110,7 +110,7 @@ describe("Models", () => {
         try{
             new VoiceMessage(testObject.caller, testObject.callees, testObject.prompt, new Voice(testObject.voice.language, testObject.voice.gender, testObject.voice.number))
         } catch (error) {
-
+            error.message.should.containEql("The specified phone number is not a valid phone number, it contains invalid characters")
         }
     })
     
@@ -133,5 +133,24 @@ describe("Models", () => {
         } catch (error) {
             error.message.should.containEql("The specified phone number is not a valid phone number, it contains invalid characters")
         }
+    })
+})
+
+import VoiceLanguages from "../triggers/voiceLanguages"
+
+describe("Triggers",  () => {
+    it("Voice Languages should return a list of languages", async () => {
+        const bundle = {
+            authData: {
+                productToken: "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+            }
+        }
+        
+        const response = await appTester(App.triggers[VoiceLanguages.key].operation.perform, bundle)
+
+        response.forEach((item) => {
+            item.should.have.property("id")
+            item.should.have.property("name")
+        })
     })
 })
