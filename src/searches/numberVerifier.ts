@@ -59,7 +59,6 @@ export default {
                 helpText: 'The type of request to make.\n\nLookUp returns the same data as validate, plus some additional data (like roaming information).\nLookUp can cost more depending by country.',
                 type: 'string',
                 required: true,
-                default: 'Validate',
                 choices: { 
                     validation: 'Validate', 
                     lookup: 'LookUp' 
