@@ -17,7 +17,7 @@ export default class ZapierRequest implements HttpRequestOptions {
 	}
 
 	public addHeader(key: string, value: string){
-		this.headers = this.headers ? this.headers : {}
+		this.headers = this.headers || {}
 		this.headers[key] = value
 	}
 }

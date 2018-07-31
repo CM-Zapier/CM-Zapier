@@ -13,7 +13,7 @@ export class ZapierGroup extends ZapierField {
 
     public static get Builder() {
         return class Builder extends ZapierGroup {
-            public addChild(child: ZapierInputField | object): Builder {
+            public addChild(child: ZapierInputField | object): this {
                 super.addChild(child)
                 return this
             }
@@ -41,7 +41,7 @@ export class ZapierInputField extends ZapierField {
     }
 
     addDropdownItem(key: string, value: string, defaultChoice = false){
-        this.choices = this.choices ? this.choices : {}
+        this.choices = this.choices || {}
         this.choices[key] = value
         if(defaultChoice) this.default = value
     }
@@ -72,37 +72,37 @@ export class ZapierInputField extends ZapierField {
 
     static get Builder() {
         return class Builder extends ZapierInputField {
-            connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): Builder {
+            connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): this {
                 super.connectDropdownToTrigger(triggerKey, param1, param2)
                 return this
             }
 
-            addDropdownItem(key: string, value: string, defaultChoice?: boolean): Builder {
+            addDropdownItem(key: string, value: string, defaultChoice?: boolean): this {
                 super.addDropdownItem(key, value, defaultChoice)
                 return this
             }
         
-            setDefault(text: string): Builder {
+            setDefault(text: string): this {
                 super.setDefault(text)
                 return this
             }
         
-            setDescription(text: string): Builder {
+            setDescription(text: string): this {
                 super.setDescription(text)
                 return this
             }
         
-            setPlaceholder(text: string): Builder {
+            setPlaceholder(text: string): this {
                 super.setPlaceholder(text)
                 return this
             }
         
-            asList(): Builder {
+            asList(): this {
                 super.asList()
                 return this
             }
         
-            modifiesDynamicFields(): Builder {
+            modifiesDynamicFields(): this {
                 super.modifiesDynamicFields()
                 return this
             }

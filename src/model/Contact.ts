@@ -55,7 +55,7 @@ export default class Contact {
     // --- Custom values ---
 
     private addCustomValue(id: number, value: string) {
-        this.customValues = this.customValues ? this.customValues : []
+        this.customValues = this.customValues || []
         const obj = {
             fieldId: id,
             value: value
