@@ -1,3 +1,4 @@
+import * as moment from "moment"
 import { zObject, Bundle } from "zapier-platform-core"
 import ZapierRequest from "../model/ZapierRequest"
 import TextMessage from "../model/TextMessage"
@@ -16,7 +17,7 @@ const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
-    messageObject.setValidityTime(bundle.inputData.validityTime)
+    messageObject.setValidityTime(moment(bundle.inputData.validityTime))
     
     const requestData = {
         Messages: {
@@ -54,7 +55,7 @@ const to = new ZapierInputField.Builder("to", "To")
     .asList()
     .build()
 
-const messageContent = new ZapierInputField.Builder("messageContent", "Body")
+const messageContent = new ZapierInputField.Builder("messageContent", "Body", "text")
     .setDescription(`The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`)
     .build()
 
