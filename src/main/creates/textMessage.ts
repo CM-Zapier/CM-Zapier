@@ -1,10 +1,11 @@
 import * as moment from "moment"
+import "../../../lib/utils/main/index"
 import { zObject, Bundle } from "zapier-platform-core"
-import ZapierRequest from "../model/ZapierRequest"
-import TextMessage from "../model/TextMessage"
-import { ZapierField, ZapierInputField } from "../model/ZapierFields"
-import errorHandler from "../ErrorHandlerCM"
-import config from "../config"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import TextMessage from "../../../lib/CM/main/model/TextMessage"
+import { ZapierField, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
+import errorHandler from "../../../lib/CM/main/errorHandler"
+import config from "../../../lib/CM/main/config"
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to
@@ -28,7 +29,7 @@ const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
         }
     }
     
-    const response = await z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
+    const response = await z.request(new ZapierHttpRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
     
     errorHandler(response.status, response.content)
     
@@ -90,7 +91,7 @@ export default {
     
     operation: {
         inputFields: [messageType, from, to, messageContent, shouldIncludeAppKey, validityTime, reference],
-        outputFields: [ new ZapierField("result", "Result") ],
+        outputFields: [ (new ZapierField("result", "Result") as any) ],
         perform: makeRequest,
         sample: {
             result: "success"

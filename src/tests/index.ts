@@ -1,6 +1,6 @@
 import "should"
 import { createAppTester } from "zapier-platform-core"
-import App from "../index"
+import App from "../main/index"
 
 const appTester = createAppTester(App)
 

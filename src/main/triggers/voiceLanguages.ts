@@ -1,9 +1,9 @@
 import { zObject, Bundle } from "zapier-platform-core"
-import ZapierRequest from "../model/ZapierRequest"
-import errorHandler from "../ErrorHandlerCM"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import errorHandler from "../../../lib/CM/main/errorHandler"
 
 const fetchList = async (z: zObject, bundle: Bundle): Promise<{id: string, name: string}[]> => {
-    const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+    const response = await z.request(new ZapierHttpRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
 
     errorHandler(response.status, response.content)
     

@@ -1,42 +1,54 @@
-import { zObject, Bundle } from "zapier-platform-core"
-import ZapierRequest from "../model/ZapierRequest"
-import Contact from "../model/Contact"
-import errorHandler from "../ErrorHandlerCM"
+import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
+// import ZapierRequest from "../model/ZapierRequest"
+import Contact from "../../../lib/CM/main/model/Contact"
+import errorHandler from "../../../lib/CM/main/errorHandler"
 import outputFields from "./contact-outputFields"
 import sample from "./contact-sample"
-import config from "../config"
+import config from "../../../lib/CM/main/config"
+import "../../../lib/utils/main/index"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHTTPRequest"
 
-const makeRequest = async (z: zObject, bundle: Bundle) => {
-    const contact = new Contact()
-    if(bundle.inputData.nameType == "full") contact.setFullName(bundle.inputData.fullName)
-    else contact.setName(bundle.inputData.firstName, bundle.inputData.insertion, bundle.inputData.lastName)
-    contact.setEmailAddress(bundle.inputData.email)
-    contact.setTelephoneNumber(bundle.inputData.telephoneNumber)
-    contact.setCompany(bundle.inputData.company)
- 
-    const customFields = bundle.inputData.customFields || []
-    Object.keys(customFields).forEach(key => {
-        contact.addCustomField(parseInt(key), customFields[key])
-    })
-    
-    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${bundle.inputData.accountID}/groups/${bundle.inputData.groupID}/contacts`, "POST", contact))
-    
-    errorHandler(response.status, response.content)
+class ContactRequest extends ZapierRequest {
+    protected url: string = `https://api.cmtelecom.com/addressbook/v2/accounts/${this.bundle.inputData.accountID}/groups/${this.bundle.inputData.groupID}/contacts`
+    protected method: HttpMethod = "POST"
 
-    const responseContent = JSON.parse(response.content)
-    responseContent.fullName = [responseContent.firstName, responseContent.insertion, responseContent.lastName].filter(item => item && item !== "").join(" ")
-    responseContent.createdAt = responseContent.createdOnUtc.split(".")[0] + "Z"
-    delete responseContent.createdOnUtc
-    if(responseContent.customValues){
-        (responseContent.customValues as {fieldId: number, value: string}[]).forEach(item => {
-            if(item.fieldId === 6) responseContent.company = item.value
-            else responseContent[`customField_${item.fieldId - 6}`] = item.value
-        })
-        delete responseContent.customValues
+    constructor(z: zObject, bundle: Bundle){
+        super(z, bundle, errorHandler)
     }
+
+    protected createInput(): Contact {
+        const contact = new Contact()
+        if(this.bundle.inputData.nameType == "full") contact.setFullName(this.bundle.inputData.fullName)
+        else contact.setName(this.bundle.inputData.firstName, this.bundle.inputData.insertion, this.bundle.inputData.lastName)
+        contact.setEmailAddress(this.bundle.inputData.email)
+        contact.setTelephoneNumber(this.bundle.inputData.telephoneNumber)
+        contact.setCompany(this.bundle.inputData.company)
+     
+        const customFields = this.bundle.inputData.customFields || []
+        Object.keys(customFields).forEach(key => {
+            contact.addCustomField(parseInt(key), customFields[key])
+        })
     
-    return responseContent
+        return contact
+    }
+
+    protected mapOutput(response: json): json {
+        response.fullName = [response.firstName, response.insertion, response.lastName].filter(item => item && item !== "").join(" ")
+        response.createdAt = response.createdOnUtc.split(".")[0] + "Z"
+        delete response.createdOnUtc
+        if(response.customValues){
+            (response.customValues as {fieldId: number, value: string}[]).forEach(item => {
+                if(item.fieldId === 6) response.company = item.value
+                else response[`customField_${item.fieldId - 6}`] = item.value
+            })
+            delete response.customValues
+        }
+        return response
+    }
 }
+
+const makeRequest = (z: zObject, bundle: Bundle) => new ContactRequest(z, bundle).startFlow()
 
 export default {
 	key: 'contact',
@@ -63,7 +75,7 @@ export default {
                 const accountID = bundle.inputData.accountID
                 const groupList: { [id: string]: string } = {}
                 if(accountID){
-                    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${accountID}/groups`))
+                    const response = await z.request(new ZapierHttpRequest(`https://api.cmtelecom.com/addressbook/v2/accounts/${accountID}/groups`))
                     JSON.parse(response.content).forEach((group: any) => {
                         groupList[group.id] = group.name
                     })

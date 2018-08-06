@@ -1,11 +1,11 @@
 import { zObject, Bundle } from "zapier-platform-core"
-import ZapierRequest from "../model/ZapierRequest"
-import Voice from "../model/Voice"
-import VoiceMessage from "../model/VoiceMessage"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import Voice from "../../../lib/CM/main/model/Voice"
+import VoiceMessage from "../../../lib/CM/main/model/VoiceMessage"
 import VoiceLanguages from "../triggers/voiceLanguages"
-import { ZapierField, ZapierGroup, ZapierInputField } from "../model/ZapierFields"
-import errorHandler from "../ErrorHandlerCM"
-import config from "../config"
+import { ZapierField, ZapierGroup, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
+import errorHandler from "../../../lib/CM/main/errorHandler"
+import config from "../../../lib/CM/main/config"
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to
@@ -14,7 +14,7 @@ const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     const voice = new Voice(bundle.inputData.language, bundle.inputData.gender, bundle.inputData.number)
     const voiceMessage = new VoiceMessage(bundle.inputData.from, toNumbersList, bundle.inputData.messageContent, voice)
     
-    const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
+    const response = await z.request(new ZapierHttpRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
     
     errorHandler(response.status, response.content)
     

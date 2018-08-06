@@ -8,7 +8,7 @@ import addAuthToHeaders from "./auth/addAuthToHeaders"
 import addContact from "./creates/contact"
 
 export default {
-    version: require('../package.json').version,
+    version: require('../../../package.json').version,
     platformVersion: zapier.version,
 
     authentication: authentication,

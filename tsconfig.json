@@ -3,9 +3,17 @@
         "target": "es6",
         "module": "commonjs",
         "moduleResolution": "node",
-        "outDir": "./out/",
-        "rootDir": "./src/",
         "resolveJsonModule": true,
-        "strict": true
-    }
+        "strict": true,
+        "outDir": "./build",
+        "rootDir": "./"
+    }, "references": [
+        { "path": "./src/main/" },
+        { "path": "./src/tests/" },
+        { "path": "./lib/CM/tests/" },
+        { "path": "./lib/utils/tests/" },
+        { "path": "./lib/Zapier/tests/" }
+    ], "exclude": [
+        "*"
+    ]
 }

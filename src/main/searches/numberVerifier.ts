@@ -1,10 +1,10 @@
 import { zObject, Bundle } from "zapier-platform-core"
-import ZapierRequest from "../model/ZapierRequest"
-import errorHandler from "../ErrorHandlerCM"
-import phoneNumberFormatter from "../phoneNumberFormatter"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import errorHandler from "../../../lib/CM/main/errorHandler"
+import phoneNumberFormatter from "../../../lib/utils/main/phoneNumberFormatter"
 import outputFields from "./numberVerifier-outputFields"
 import sample from "./numberVerifier-sample"
-import config from "../config"
+import config from "../../../lib/CM/main/config"
 
 const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
     const requestType = bundle.inputData.type
@@ -15,7 +15,7 @@ const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
         phonenumber: phoneNumberFormatter(bundle.inputData.phoneNumber)
     }
     
-    const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", requestData))
+    const response = await z.request(new ZapierHttpRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", requestData))
 
     let responseObject
     try {

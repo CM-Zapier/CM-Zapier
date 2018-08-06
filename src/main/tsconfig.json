@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "strict": true,
+        "outDir": "../../build/src/main",
+        "composite": true
+    }, "references": [
+        { "path": "../../lib/utils/main/" },
+        { "path": "../../lib/CM/main/" },
+        { "path": "../../lib/Zapier/main/" }
+    ]
+}

@@ -1,1 +1,1 @@
-module.exports = require("./out").default;
+module.exports = require("./build/src/main/").default;

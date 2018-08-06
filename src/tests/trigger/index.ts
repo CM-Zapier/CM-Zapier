@@ -1,10 +1,10 @@
 import "should"
 import { createAppTester } from "zapier-platform-core"
-import App from "../../index"
+import App from "../../main/index"
 
 const appTester = createAppTester(App)
 
-import VoiceLanguages from "../../triggers/voiceLanguages"
+import VoiceLanguages from "../../main/triggers/voiceLanguages"
 
 describe("Triggers",  () => {
     it("Voice Languages should return a list of languages", async () => {
