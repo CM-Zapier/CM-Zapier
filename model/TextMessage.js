@@ -23,7 +23,7 @@ class TextMessage {
 
         if (isFromAPhoneNumber && from.length > config.textFromField.maxDigits) {
             throw new Error(`From length is more than maximally allowed (${config.textFromField.maxDigits} digits)`)
-        } else if (from.length > config.textFromField.maxChars) {
+        } else if (!isFromAPhoneNumber && from.length > config.textFromField.maxChars) {
             throw new Error(`From length is more than maximally allowed (${config.textFromField.maxChars} alphanumerical characters)`)
         }
         
