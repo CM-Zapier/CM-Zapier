@@ -22,7 +22,7 @@
     "dependencies": {
         "email-validator": "^2.0.4",
         "moment": "^2.22.2",
-        "zapier-platform-core": "7.1.0"
+        "zapier-platform-core": "7.2.0"
     },
     "devDependencies": {
         "@types/mocha": "5.2.5",
