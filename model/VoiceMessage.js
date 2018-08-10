@@ -9,7 +9,7 @@ class VoiceMessage {
         this.caller = phoneNumberFormatter(from.trim())
         
         // Message body
-        this.prompt = body
+        this.prompt = body.trim()
 
         // Voice
         this.voice = voice
