@@ -6,7 +6,7 @@
     "homepage": "https://www.cm.com/",
     "author": "CM.com",
     "license": "CC-BY-NC-ND-4.0",
-    "main": "src/index.js",
+    "main": "src/main/index.js",
     "scripts": {
         "zapier-build": "tsc",
         "zapier-dev": "tsc",
