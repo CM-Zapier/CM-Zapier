@@ -141,8 +141,5 @@ build
 docs
 .environment
 
-# TypeScript
-lib
-
 # VSCode
 .vscode

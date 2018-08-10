@@ -1,4 +1,5 @@
 import * as zapier from "zapier-platform-core"
+import "../../lib/utils/main/index"
 import textMessage from "./creates/textMessage"
 import voiceMessage from "./creates/voiceMessage"
 import numberVerifier from "./searches/numberVerifier"

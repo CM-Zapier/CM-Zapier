@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "strict": true,
+        "outDir": "../../../build/lib/utils/tests",
+        "composite": true
+    }, "references": [
+        { "path": "../main/" }
+    ]
+}
