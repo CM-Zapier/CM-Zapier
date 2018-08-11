@@ -39,6 +39,7 @@ const messageContent = new ZapierInputField.Builder("messageContent", "Text", "t
 const voiceLanguage = new ZapierInputField.Builder("language", "Language")
     .setDescription(`The language of the message.\nThere are several languages and dialects available.`)
     .connectDropdownToTrigger(VoiceLanguages.key, "id", "name")
+    .setDefault("en-GB")
     .build()
 
 const voiceGender = new ZapierInputField.Builder("gender", "Gender")

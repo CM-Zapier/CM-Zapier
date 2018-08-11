@@ -43,7 +43,7 @@ export class ZapierInputField extends ZapierField {
     public addDropdownItem(key: string, value: string, defaultChoice = false){
         this.choices = this.choices || {}
         this.choices[key] = value
-        if(defaultChoice) this.default = value
+        if(defaultChoice) this.default = key
     }
 
     public connectDropdownToTrigger(triggerKey: string, param1: string, param2: string){
