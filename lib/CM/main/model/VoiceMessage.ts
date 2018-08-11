@@ -42,7 +42,7 @@ export default class VoiceMessage implements Message {
     }
 
     public setMessage(content: string) {
-        this.prompt = content
+        this.prompt = content.trim()
     }
 
     // --- Voice ---

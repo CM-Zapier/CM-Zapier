@@ -11,7 +11,7 @@ const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
     let toNumbersList = bundle.inputData.to
     toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
-    const voice = new Voice(bundle.inputData.language, bundle.inputData.gender, bundle.inputData.number)
+    const voice = new Voice(bundle.inputData.language, bundle.inputData.gender, bundle.inputData.number - 0)
     const voiceMessage = new VoiceMessage(bundle.inputData.from, toNumbersList, bundle.inputData.messageContent, voice)
     
     const response = await z.request(new ZapierHttpRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
