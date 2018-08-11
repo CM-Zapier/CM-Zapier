@@ -35,6 +35,7 @@ export class ZapierInputField extends ZapierField {
     public list?: boolean
     public altersDynamicFields?: boolean
     public dynamic?: string
+    public dict?: boolean
     
     public constructor (key: string, label: string, public type: ZapierInputType = "string", public required: boolean = true) {
         super(key, label)
@@ -68,6 +69,10 @@ export class ZapierInputField extends ZapierField {
 
     public modifiesDynamicFields(){
         this.altersDynamicFields = true
+    }
+
+    public asKeyValueList(){
+        this.dict = true
     }
 
     static get Builder() {
@@ -104,6 +109,11 @@ export class ZapierInputField extends ZapierField {
         
             public modifiesDynamicFields(): this {
                 super.modifiesDynamicFields()
+                return this
+            }
+
+            public asKeyValueList(): this {
+                super.asKeyValueList()
                 return this
             }
 
