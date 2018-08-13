@@ -1,44 +1,59 @@
-import { zObject, Bundle } from "zapier-platform-core"
+import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
 import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
 import errorHandler from "../../../lib/CM/main/errorHandler"
 import phoneNumberFormatter from "../../../lib/utils/main/phoneNumberFormatter"
 import outputFields from "./numberVerifier-outputFields"
 import sample from "./numberVerifier-sample"
 import config from "../../../lib/CM/main/config"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 
-const makeRequest = async (z: zObject, bundle: Bundle): Promise<object[]> => {
-    const requestType = bundle.inputData.type
-    if(["validation", "lookup"].indexOf(requestType) == -1) 
-        throw new Error(`Invalid request type. Was '${requestType}', but expected 'validation' or 'lookup'.`)
+// --- Request to CM API ---
 
-    const requestData = {
-        phonenumber: phoneNumberFormatter(bundle.inputData.phoneNumber)
+class VoiceLanguageRequest extends ZapierRequest {
+    private requestType = this.bundle.inputData.type
+    protected url: string = `https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages`
+    protected method: HttpMethod = "GET"
+
+    constructor(z: zObject, bundle: Bundle){
+        super(z, bundle, (statusCode, responseBody) => {
+            let responseObject
+            try {
+                responseObject = JSON.parse(responseBody)
+            } catch (error) {
+                responseObject = {}
+            }
+            if(this.requestType == "lookup" && statusCode == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
+                throw new Error("Your account doesn't have enough rights to use this feature")
+            
+            errorHandler(statusCode, responseBody)
+        })
     }
-    
-    const response = await z.request(new ZapierHttpRequest(`https://api.cmtelecom.com/v1.1/number${requestType}`, "POST", requestData))
 
-    let responseObject
-    try {
-        responseObject = JSON.parse(response.content)
-    } catch (error) {
-        responseObject = {}
+    protected createInput(): json {
+        if(["validation", "lookup"].indexOf(this.requestType) == -1) 
+            throw new Error(`Invalid request type. Was '${this.requestType}', but expected 'validation' or 'lookup'.`)
+
+        return {
+            phonenumber: phoneNumberFormatter(this.bundle.inputData.phoneNumber)
+        }
     }
-    if(requestType == "lookup" && response.status == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
-        throw new Error("Your account doesn't have enough rights to use this feature")
-    
-    errorHandler(response.status, response.content)
 
-    const result = JSON.parse(response.content)
-    result.id = 1
-    const type = result.type
-    Object.keys(type).forEach((key) => {
-        result[key] = type[key]
-    })
-    delete result.type
+    protected mapOutput(response: json): json[] {
+        response.id = 1
+        const type = response.type
+        Object.keys(type).forEach((key) => {
+            response[key] = type[key]
+        })
+        delete response.type
 
-    // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
-    return [ result ]
+        // Zapier users can select data returned here to use in a action, so don't return sensitive data here.
+        return [ response ]
+    }
 }
+
+const makeRequest = (z: zObject, bundle: Bundle) => new VoiceLanguageRequest(z, bundle).startFlow()
+
+// --- Export ---
 
 export default {
     key: 'numberVerifier',
