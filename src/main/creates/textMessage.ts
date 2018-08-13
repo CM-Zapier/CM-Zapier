@@ -1,43 +1,56 @@
 import * as moment from "moment"
 import "../../../lib/utils/main/index"
-import { zObject, Bundle } from "zapier-platform-core"
+import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 import Link from "../../../lib/Zapier/main/Link"
-import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
 import TextMessage from "../../../lib/CM/main/model/TextMessage"
 import { ZapierField, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
 import errorHandler from "../../../lib/CM/main/errorHandler"
 import config from "../../../lib/CM/main/config"
 
-const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
-    let toNumbersList = bundle.inputData.to
-    toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
-    
-    const messageObject = new TextMessage(bundle.inputData.from, toNumbersList, bundle.inputData.messageContent)
-    
-    if(bundle.inputData.messageType.includes("sms")) messageObject.setUseSMS()
-    if(bundle.inputData.messageType.includes("push")) messageObject.setUsePush(bundle.inputData.appKey)
-    
-    if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
+// --- Request to CM API ---
 
-    messageObject.setValidityTime(moment(bundle.inputData.validityTime))
+class MessageReuqest extends ZapierRequest {
+    protected url: string = `https://gw.cmtelecom.com/v1.0/message`
+    protected method: HttpMethod = "POST"
+
+    constructor(z: zObject, bundle: Bundle){
+        super(z, bundle, errorHandler)
+    }
+
+    protected createInput(): json {
+        let toNumbersList = this.bundle.inputData.to
+        toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
-    const requestData = {
-        Messages: {
-            Authentication: {
-                ProductToken: bundle.authData.productToken
-            },
-            Msg: [messageObject]
+        const messageObject = new TextMessage(this.bundle.inputData.from, toNumbersList, this.bundle.inputData.messageContent)
+    
+        if(this.bundle.inputData.messageType.includes("sms")) messageObject.setUseSMS()
+        if(this.bundle.inputData.messageType.includes("push")) messageObject.setUsePush(this.bundle.inputData.appKey)
+    
+        if(this.bundle.inputData.reference) messageObject.setReference(this.bundle.inputData.reference.trim())
+
+        messageObject.setValidityTime(moment(this.bundle.inputData.validityTime))
+    
+        return {
+            Messages: {
+                Authentication: {
+                    ProductToken: this.bundle.authData.productToken
+                },
+                Msg: [messageObject]
+            }
         }
     }
-    
-    const response = await z.request(new ZapierHttpRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
-    
-    errorHandler(response.status, response.content)
-    
-    return {
-        result: "success"
+
+    protected mapOutput(response: json): json {
+        return {
+            result: "success"
+        }
     }
 }
+
+const makeRequest = (z: zObject, bundle: Bundle) => new MessageReuqest(z, bundle).startFlow()
+
+// --- Inputfields ---
 
 const messageType = new ZapierInputField.Builder("messageType", "Message Type")
     .setDescription(`The type of message.\n\n"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn't have the app installed.`)
