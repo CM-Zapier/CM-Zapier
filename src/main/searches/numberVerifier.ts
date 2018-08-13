@@ -1,5 +1,4 @@
 import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
-import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
 import errorHandler from "../../../lib/CM/main/errorHandler"
 import phoneNumberFormatter from "../../../lib/utils/main/phoneNumberFormatter"
 import outputFields from "./numberVerifier-outputFields"
@@ -12,7 +11,7 @@ import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 class VoiceLanguageRequest extends ZapierRequest {
     private requestType = this.bundle.inputData.type
     protected url: string = `https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages`
-    protected method: HttpMethod = "GET"
+    protected method: HttpMethod = "POST"
 
     constructor(z: zObject, bundle: Bundle){
         super(z, bundle, (statusCode, responseBody) => {

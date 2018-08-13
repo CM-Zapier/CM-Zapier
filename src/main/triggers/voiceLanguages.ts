@@ -6,7 +6,6 @@ import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 
 class VoiceLanguageRequest extends ZapierRequest {
     protected url: string = `https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages`
-    protected method: HttpMethod = "GET"
 
     constructor(z: zObject, bundle: Bundle){
         super(z, bundle, errorHandler)
