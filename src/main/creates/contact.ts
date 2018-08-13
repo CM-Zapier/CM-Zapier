@@ -9,6 +9,8 @@ import { ZapierGroup, ZapierInputField } from "../../../lib/Zapier/main/ZapierFi
 import Link from "../../../lib/Zapier/main/Link"
 import "../../../lib/utils/main/index"
 
+// --- Request to CM API ---
+
 class ContactRequest extends ZapierRequest {
     protected url: string = `https://api.cmtelecom.com/addressbook/v2/accounts/${this.bundle.inputData.accountID}/groups/${this.bundle.inputData.groupID}/contacts`
     protected method: HttpMethod = "POST"
@@ -50,17 +52,7 @@ class ContactRequest extends ZapierRequest {
 
 const makeRequest = (z: zObject, bundle: Bundle) => new ContactRequest(z, bundle).startFlow()
 
-const result = new ResultGenerator()
-    .add("createdAt", "Created at", "2018-07-12T13:37:38Z")
-    .add("email", "Email", "john.doe@example.com")
-    .add("firstName", "First name", "John")
-    .add("insertion", "insertion", "test")
-    .add("lastName", "Last name", "Doe")
-    .add("fullName", "Full name", "John test Doe")
-    .add("phoneCountry", "Phone number (country code)", "NL")
-    .add("phoneNumber", "Phone number", "+31612345678")
-    .add("id", "ID", "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
-    .add("groupId", "Group ID", "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+// --- Inputfields ---
 
 const accountID = new ZapierInputField.Builder("accountID", "Account Token")
     .setDescription(`Your account token. You can find this token in the url when you visit the ${new Link("CM AdressBook", config.links.addressbook)}, behind the country/language code.`)
@@ -118,6 +110,22 @@ const contactFields = (z: zObject, bundle: Bundle) => {
 
     return [ contactField.add(email).add(telephoneNumber).add(company).add(customFields).build() ]
 }
+
+// --- Outputfields & Sample ---
+
+const result = new ResultGenerator()
+    .add("createdAt", "Created at", "2018-07-12T13:37:38Z")
+    .add("email", "Email", "john.doe@example.com")
+    .add("firstName", "First name", "John")
+    .add("insertion", "insertion", "test")
+    .add("lastName", "Last name", "Doe")
+    .add("fullName", "Full name", "John test Doe")
+    .add("phoneCountry", "Phone number (country code)", "NL")
+    .add("phoneNumber", "Phone number", "+31612345678")
+    .add("id", "ID", "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+    .add("groupId", "Group ID", "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+
+// --- Export ---
 
 export default {
 	key: 'contact',
