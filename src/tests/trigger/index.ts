@@ -16,7 +16,7 @@ describe("Triggers",  () => {
         
         const response = await appTester(App.triggers[VoiceLanguages.key].operation.perform, bundle)
 
-        response.forEach((item) => {
+        response.forEach((item: json) => {
             item.should.have.property("id")
             item.should.have.property("name")
         })
