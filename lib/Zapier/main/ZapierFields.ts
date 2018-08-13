@@ -7,14 +7,14 @@ export class ZapierGroup extends ZapierField {
         super(key, label)
     }
 
-    public addChild(child: ZapierInputField | object){
+    public add(...child: (ZapierInputField | object)[]){
         this.children.push(child)
     }
 
     public static get Builder() {
         return class Builder extends ZapierGroup {
-            public addChild(child: ZapierInputField | object): this {
-                super.addChild(child)
+            public add(...child: (ZapierInputField | object)[]): this {
+                super.add(child)
                 return this
             }
 

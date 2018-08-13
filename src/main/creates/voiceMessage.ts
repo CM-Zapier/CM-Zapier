@@ -67,7 +67,7 @@ export default {
 	},
 	
 	operation: {
-		inputFields: [ from, to, messageContent, voiceGroup.addChild(voiceLanguage).addChild(voiceGender).addChild(voiceNumber).build() ],
+		inputFields: [ from, to, messageContent, voiceGroup.add(voiceLanguage).add(voiceGender).add(voiceNumber).build() ],
 		outputFields: [ new ZapierField("result", "Result") ],
 		perform: makeRequest,
 		sample: {
