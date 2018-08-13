@@ -8,7 +8,7 @@ export default abstract class ZapierRequest {
 
     constructor(protected readonly z: zObject, protected readonly bundle: Bundle, private readonly errorHandler: (statusCode: number, responseBody: string) => void = (a, b) => {}){}
 
-    public async startFlow(): Promise<json> {
+    public async startFlow(): Promise<json | any[]> {
         const input = this.createInput()
         const response = await this.makeRequest(input)
         this.errorHandler(response.status, response.content)
@@ -22,5 +22,5 @@ export default abstract class ZapierRequest {
 
     protected abstract createInput(): any
 
-    protected abstract mapOutput(response: json): json
+    protected abstract mapOutput(response: json): json | any[]
 }
