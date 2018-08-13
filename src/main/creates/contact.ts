@@ -111,7 +111,7 @@ const contactFields = (z: zObject, bundle: Bundle) => {
     return [ contactField.add(email).add(telephoneNumber).add(company).add(customFields).build() ]
 }
 
-// --- Outputfields & Sample ---
+// --- OutputFields & Sample ---
 
 const result = new ResultGenerator()
     .add("createdAt", "Created at", "2018-07-12T13:37:38Z")

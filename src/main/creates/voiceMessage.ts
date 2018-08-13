@@ -1,5 +1,5 @@
-import { zObject, Bundle } from "zapier-platform-core"
-import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 import Voice from "../../../lib/CM/main/model/Voice"
 import VoiceMessage from "../../../lib/CM/main/model/VoiceMessage"
 import VoiceLanguages from "../triggers/voiceLanguages"
@@ -7,21 +7,34 @@ import { ZapierField, ZapierGroup, ZapierInputField } from "../../../lib/Zapier/
 import errorHandler from "../../../lib/CM/main/errorHandler"
 import config from "../../../lib/CM/main/config"
 
-const makeRequest = async (z: zObject, bundle: Bundle): Promise<object> => {
-    let toNumbersList = bundle.inputData.to
-    toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
+// --- Request to CM API ---
+
+class MessageReuqest extends ZapierRequest {
+    protected url: string = `https://gw.cmtelecom.com/v1.0/message`
+    protected method: HttpMethod = "POST"
+
+    constructor(z: zObject, bundle: Bundle){
+        super(z, bundle, errorHandler)
+    }
+
+    protected createInput(): VoiceMessage {
+        let toNumbersList = this.bundle.inputData.to
+        toNumbersList = toNumbersList.length == 1 && toNumbersList[0].includes(",") ? toNumbersList[0].split(",") : toNumbersList
     
-    const voice = new Voice(bundle.inputData.language, bundle.inputData.gender, bundle.inputData.number - 0)
-    const voiceMessage = new VoiceMessage(bundle.inputData.from, toNumbersList, bundle.inputData.messageContent, voice)
-    
-    const response = await z.request(new ZapierHttpRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
-    
-    errorHandler(response.status, response.content)
-    
-    return {
-        result: "success"
+        const voice = new Voice(this.bundle.inputData.language, this.bundle.inputData.gender, this.bundle.inputData.number - 0)
+        return new VoiceMessage(this.bundle.inputData.from, toNumbersList, this.bundle.inputData.messageContent, voice)
+    }
+
+    protected mapOutput(response: json): json {
+        return {
+            result: "success"
+        }
     }
 }
+
+const makeRequest = (z: zObject, bundle: Bundle) => new MessageReuqest(z, bundle).startFlow()
+
+// --- Inputfields ---
 
 const from = new ZapierInputField.Builder("from", "From")
     .setDescription(`The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`)
@@ -54,6 +67,8 @@ const voiceNumber = new ZapierInputField.Builder("number", "Number", "integer")
     .build()
 
 const voiceGroup = new ZapierGroup.Builder("voice_options", "Voice Options")
+
+// --- Export ---
 
 export default {
 	key: 'voiceMessage',
