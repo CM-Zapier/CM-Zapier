@@ -1,6 +1,7 @@
 import * as moment from "moment"
 import "../../../lib/utils/main/index"
 import { zObject, Bundle } from "zapier-platform-core"
+import Link from "../../../lib/Zapier/main/Link"
 import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
 import TextMessage from "../../../lib/CM/main/model/TextMessage"
 import { ZapierField, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
@@ -47,21 +48,21 @@ const messageType = new ZapierInputField.Builder("messageType", "Message Type")
     .build()
 
 const from = new ZapierInputField.Builder("from", "From")
-    .setDescription(`The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`)
+    .setDescription(`The sender of the message, which can be a name or a ${new Link("phone number (with country code)", config.links.helpDocs.phoneNumberFormat)}.\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`)
     .build()
 
 const to = new ZapierInputField.Builder("to", "To")
-    .setDescription(`Please provide the [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`)
+    .setDescription(`Please provide the ${new Link("recipient numbers (with country code)", config.links.helpDocs.phoneNumberFormat)} to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`)
     .setPlaceholder("+1224589XXXX, +91976056XXXX")
     .asList()
     .build()
 
 const messageContent = new ZapierInputField.Builder("messageContent", "Body", "text")
-    .setDescription(`The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`)
+    .setDescription(`The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in ${new Link("this list", config.links.helpDocs.specialCharacters)}).`)
     .build()
 
 const appKey = new ZapierInputField.Builder("appKey", "App Key")
-    .setDescription(`An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the [app manager](${config.links.appkey}).`)
+    .setDescription(`An app key is a unique key that belongs to a certain app.\nThe app key will be generated in the ${new Link("app manager", config.links.appkey)}.`)
     .setPlaceholder("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
     .build()
 
