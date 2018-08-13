@@ -1,6 +1,6 @@
 {
     "name": "cm-zapier",
-    "version": "1.0.20",
+    "version": "1.0.21",
     "description": "CM is a mobile messaging, voice, authentication and payment platform that enables you to engage with your target audience by mobile communication.",
     "repository": "https://github.com/CMTelecom/CM-Zapier",
     "homepage": "https://www.cm.com/",
@@ -8,8 +8,8 @@
     "license": "CC-BY-NC-ND-4.0",
     "main": "src/main/index.js",
     "scripts": {
-        "zapier-build": "tsc",
-        "zapier-dev": "tsc",
+        "zapier-build": "tsc -b --verbose",
+        "zapier-dev": "tsc -b --verbose",
         "zapier-push": "npm run zapier-build && zapier push",
         "prepare": "npm run zapier-build",
         "pretest": "npm run zapier-build",

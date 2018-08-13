@@ -106,7 +106,7 @@ export default {
     },
     
     operation: {
-        inputFields: [messageType, from, to, messageContent, shouldIncludeAppKey, validityTime, reference],
+        inputFields: [ messageType, from, to, messageContent, shouldIncludeAppKey, validityTime, reference ] as any[],
         outputFields: [ (new ZapierField("result", "Result") as any) ],
         perform: makeRequest,
         sample: {
