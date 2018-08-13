@@ -1,21 +1,35 @@
-import { zObject, Bundle } from "zapier-platform-core"
-import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
 import errorHandler from "../../../lib/CM/main/errorHandler"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 
-const fetchList = async (z: zObject, bundle: Bundle): Promise<{id: string, name: string}[]> => {
-    const response = await z.request(new ZapierHttpRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+// --- Request to CM API ---
 
-    errorHandler(response.status, response.content)
-    
-    const responseContent = JSON.parse(response.content)
-    const languageList = Object.keys(responseContent).map(key => {
-        return {
-            id: key, 
-            name: responseContent[key]
-        }
-    }).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
-    return languageList
+class VoiceLanguageRequest extends ZapierRequest {
+    protected url: string = `https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages`
+    protected method: HttpMethod = "GET"
+
+    constructor(z: zObject, bundle: Bundle){
+        super(z, bundle, errorHandler)
+    }
+
+    protected createInput(): undefined {
+        return undefined
+    }
+
+    protected mapOutput(response: json): {id: string, name: string}[] {
+        const languageList = Object.keys(response).map(key => {
+            return {
+                id: key, 
+                name: response[key]
+            }
+        }).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0)
+        return languageList
+    }
 }
+
+const fetchList = (z: zObject, bundle: Bundle) => new VoiceLanguageRequest(z, bundle).startFlow()
+
+// --- Export ---
 
 export default {
     key: "voiceLanguages",
