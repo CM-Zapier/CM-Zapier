@@ -108,7 +108,7 @@ const contactFields = (z: zObject, bundle: Bundle) => {
         .asKeyValueList()
         .build()
 
-    return [ contactField.add(email).add(telephoneNumber).add(company).add(customFields).build() ]
+    return [ contactField.addChildren(email, telephoneNumber, company, customFields).build() ]
 }
 
 // --- OutputFields & Sample ---

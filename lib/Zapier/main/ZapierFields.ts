@@ -7,25 +7,29 @@ export class ZapierGroup extends ZapierField {
         super(key, label)
     }
 
-    public add(...child: (ZapierInputField | object)[]){
-        this.children.push(child)
+    public addChildren(...children: (ZapierInputField | object)[]){
+        this.children.push(...children)
+    }
+
+    public get cls(): this {
+        return this
     }
 
     public static get Builder() {
         return class Builder extends ZapierGroup {
-            public add(...child: (ZapierInputField | object)[]): this {
-                super.add(child)
+            public addChildren(...children: (ZapierInputField | object)[]): this {
+                super.addChildren(...children)
                 return this
             }
 
             public build(): ZapierGroup {
-                return this
+                return super.cls
             }
         }
     }
 }
 
-type ZapierInputType = "string" | "text" | "datetime" | "integer" | "number"
+type ZapierInputType = "string" | "text" | "datetime" | "integer" | "number" | "boolean" | "file" | "password" | "copy"
 
 export class ZapierInputField extends ZapierField {
     public choices?: { [key: string]: string }
@@ -75,6 +79,10 @@ export class ZapierInputField extends ZapierField {
         this.dict = true
     }
 
+    public get cls(): this {
+        return this
+    }
+
     static get Builder() {
         return class Builder extends ZapierInputField {
             public connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): this {
@@ -118,7 +126,7 @@ export class ZapierInputField extends ZapierField {
             }
 
             public build(): ZapierInputField {
-                return this
+                return super.cls
             }
         }
     }
