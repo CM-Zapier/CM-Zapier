@@ -13,7 +13,7 @@ describe("Authentication", () => {
         }
         
         try {
-            const response = await appTester(App.authentication.test, bundle)
+            await appTester(App.authentication.test, bundle)
         } catch (e) {
             e.message.should.containEql("The Product Token you supplied is invalid")
         }

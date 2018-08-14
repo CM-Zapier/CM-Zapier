@@ -1,14 +1,16 @@
 @echo off
 
 if "%1" EQU "install" (
-    echo "Part 1 of 4: Installing TypeScript..."
+    echo "Part 1 of 5: Installing TypeScript..."
     npm install -g typescript
-    echo "Part 2 of 4: Installing the Zapier CLI..."
+    echo "Part 2 of 5: Installing the Zapier CLI..."
     npm install -g zapier-platform-cli
-    echo "Part 3 of 4: Logging in..."
+    echo "Part 3 of 5: Logging in..."
     zapier login
-    echo "Part 4 of 4: Installing project dependencies..."
+    echo "Part 4 of 5: Installing project dependencies..."
     npm install
+    echo "Part 5 of 5: Building project..."
+    project build
     echo "Done"
 )
 

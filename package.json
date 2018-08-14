@@ -8,12 +8,7 @@
     "license": "CC-BY-NC-ND-4.0",
     "main": "src/main/index.js",
     "scripts": {
-        "zapier-build": "tsc -b --verbose",
-        "zapier-dev": "tsc -b --verbose",
-        "zapier-push": "npm run zapier-build && zapier push",
-        "prepare": "npm run zapier-build",
-        "pretest": "npm run zapier-build",
-        "test": "mocha --recursive build/src/tests && mocha --recursive build/lib/CM/tests && mocha --recursive build/lib/utils/tests && mocha --recursive build/lib/Zapier/tests"
+        "test": "echo ~~~~~~~ lib - utils ~~~~~~ && mocha --recursive build/lib/utils/tests && echo ~~~~~~~~ lib - CM ~~~~~~~~ && mocha --recursive build/lib/CM/tests && echo ~~~~~~ lib - Zapier ~~~~~~ && mocha --recursive build/lib/Zapier/tests && echo ~~~~~~~~~~~ src ~~~~~~~~~~ && mocha --recursive build/src/tests"
     },
     "engines": {
         "node": "8.10.0",
