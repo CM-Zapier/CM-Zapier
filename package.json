@@ -8,7 +8,7 @@
     "license": "CC-BY-NC-ND-4.0",
     "main": "src/main/index.js",
     "scripts": {
-        "test": "echo ~~~~~~~ lib - utils ~~~~~~ && mocha --recursive build/lib/utils/tests && echo ~~~~~~~~ lib - CM ~~~~~~~~ && mocha --recursive build/lib/CM/tests && echo ~~~~~~ lib - Zapier ~~~~~~ && mocha --recursive build/lib/Zapier/tests && echo ~~~~~~~~~~~ src ~~~~~~~~~~ && mocha --recursive build/src/tests"
+        "test": "echo ────────── lib: utils ───────── && mocha --recursive build/lib/utils/tests && echo ─────────── lib: CM ─────────── && mocha --recursive build/lib/CM/tests && echo ───────── lib: Zapier ───────── && mocha --recursive build/lib/Zapier/tests && echo ───────────── src ───────────── && mocha --recursive build/src/tests"
     },
     "engines": {
         "node": "8.10.0",
