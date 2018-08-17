@@ -22,7 +22,7 @@ const makeRequest = async (z, bundle) => {
         responseObject = {}
     }
     if(requestType == "lookup" && response.status == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
-        throw new Error("Your account doesn't have enough rights to use this feature. Please contact [cmsupport@cm.nl](mailto:cmsupport@cm.nl) to request extra permissions on your account.")
+        throw new Error("Your account doesn't have enough rights to use this feature. Please contact cmsupport@cm.nl to request extra permissions on your account.")
     
     errorHandler(response.status, response.content)
 
