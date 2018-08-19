@@ -27,7 +27,7 @@ if "%1" EQU "branch" (
 )
 
 if "%1" EQU "build" (
-    if "%2" EQU "clean" ( 
+    if "%2" EQU "--clean" ( 
         tsc -b --verbose --force
     ) else (
         tsc -b --verbose
