@@ -8,7 +8,11 @@
     "license": "CC-BY-NC-ND-4.0",
     "main": "src/main/index.js",
     "scripts": {
-        "test": "echo ────────── lib: utils ───────── && mocha --recursive build/lib/utils/tests && echo ─────────── lib: CM ─────────── && mocha --recursive build/lib/CM/tests && echo ───────── lib: Zapier ───────── && mocha --recursive build/lib/Zapier/tests && echo ───────────── src ───────────── && mocha --recursive build/src/tests"
+        "test-lib-utils": "echo ────────── lib: utils ───────── && mocha --recursive build/lib/utils/tests",
+        "test-lib-CM": "echo ─────────── lib: CM ─────────── && mocha --recursive build/lib/CM/tests",
+        "test-lib-Zapier": "echo ───────── lib: Zapier ───────── && mocha --recursive build/lib/Zapier/tests",
+        "test-app": "echo ───────────── src ───────────── && mocha --recursive build/src/tests",
+        "test": "npm run test-lib-utils --silent && npm run test-lib-CM --silent && npm run test-lib-Zapier --silent && npm run test-app --silent"
     },
     "engines": {
         "node": "8.10.0",
@@ -17,11 +21,13 @@
     "dependencies": {
         "email-validator": "^2.0.4",
         "moment": "^2.22.2",
+        "signale": "^1.2.1",
         "zapier-platform-core": "7.2.0"
     },
     "devDependencies": {
         "@types/mocha": "5.2.5",
-        "@types/node": "10.5.7",
+        "@types/node": "10.7.1",
+        "@types/signale": "^1.2.0",
         "mocha": "5.2.0",
         "should": "13.2.3",
         "typescript": "3.0.1"

@@ -46,5 +46,17 @@ if "%1" EQU "push" (
 
 if "%1" EQU "test" (
     project build
-    zapier test
+    if "%2" EQU "libs" ( 
+        npm run test-lib-utils --silent
+        npm run test-lib-CM --silent
+        npm run test-lib-Zapier --silent
+    ) else if "%2" EQU "lib-utils" ( 
+        npm run test-lib-utils --silent
+    ) else if "%2" EQU "lib-CM" (
+        npm run test-lib-CM --silent
+    ) else if "%2" EQU "lib-Zapier" (
+        npm run test-lib-Zapier --silent
+    ) else (
+        zapier test
+    )
 )

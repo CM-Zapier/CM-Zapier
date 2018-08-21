@@ -1,9 +1,19 @@
 import "should"
 import * as moment from "moment"
+import * as signale from "signale"
+
+signale.config({
+    displayFilename: true,
+    displayTimestamp: false,
+    displayDate: false
+})
 
 describe("Index", () => {
+    before(() => {
+        signale.success("Current datetime: " + moment().format('LLLL'))
+    })
+
     it("Tests should run", () => {
-        console.log("Current datetime: " + moment().format('LLLL'));
         (true).should.be.true
     })
 })

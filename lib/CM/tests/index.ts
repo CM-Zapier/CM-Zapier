@@ -9,7 +9,7 @@ function objectEquals(object1: any, object2: any): boolean {
         Object.keys(object1).every((item) => typeof object1[item] == typeof object2[item] && (typeof object1[item] == "object" ? objectEquals(object1[item], object2[item]) : object1[item] === object2[item]))
 }
 
-describe("Models", () => {    
+describe("Models", () => {
     it("Voice should return correct object", () => {
         const testObject = {
             language: "en-GB",
