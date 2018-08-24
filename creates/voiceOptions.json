@@ -1,0 +1,67 @@
+{
+    "cy-GB": {
+        "Female": 1
+    }, "da-DK": {
+        "Female": 1,
+        "Male": 1
+    }, "de-DE": {
+        "Female": 2,
+        "Male": 1
+    }, "en-AU": {
+        "Female": 1,
+        "Male": 1
+    }, "en-GB": {
+        "Female": 2,
+        "Male": 2
+    }, "en-IN": {
+        "Female": 1
+    }, "en-US": {
+        "Female": 5,
+        "Male": 2
+    }, "es-ES": {
+        "Female": 1,
+        "Male": 1
+    }, "es-US": {
+        "Female": 2,
+        "Male": 1
+    }, "fr-CA": {
+        "Female": 1
+    }, "fr-FR": {
+        "Female": 1,
+        "Male": 1
+    }, "is-IS": {
+        "Female": 1,
+        "Male": 1
+    }, "it-IT": {
+        "Female": 1,
+        "Male": 1
+    }, "ja-JP": {
+        "Female": 1,
+        "Male": 1
+    }, "ko-KR": {
+        "Female": 1
+    }, "nb-NO": {
+        "Female": 1
+    }, "nl-NL": {
+        "Female": 1,
+        "Male": 1
+    }, "pl-PL": {
+        "Female": 2,
+        "Male": 2
+    }, "pt-BR": {
+        "Female": 1,
+        "Male": 1
+    }, "pt-PT": {
+        "Female": 1,
+        "Male": 1
+    }, "ro-RO": {
+        "Female": 1
+    }, "ru-RU": {
+        "Female": 1,
+        "Male": 1
+    }, "sv-SE": {
+        "Female": 1
+    }, "tr-TR": {
+        "Female": 1
+    }
+}

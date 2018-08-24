@@ -4,6 +4,7 @@ const ZapierRequest = require("../model/ZapierRequest")
 const VoiceMessage = require("../model/VoiceMessage")
 const Voice = require("../model/Voice")
 const errorHandler = require("../ErrorHandlerCM")
+const voiceOptions = require("./voiceOptions.json")
 
 const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
@@ -20,6 +21,8 @@ const makeRequest = async (z, bundle) => {
         result: "success"
     }
 }
+
+let languageCache = null
 
 module.exports = {
 	key: 'voiceMessage',
@@ -54,38 +57,58 @@ module.exports = {
 				type: 'text',
 				required: true
 			}, async (z, bundle) => {
-                const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
-                const languageList = JSON.parse(response.content)
+                if(!languageCache){
+                    const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+                    languageCache = JSON.parse(response.content)
+                }
 
                 return [
                     {
                         key: 'language',
                         label: 'Voice language',
-                        helpText: `The language of the message.\nThere are ${Object.keys(languageList).length} languages and dialects available.`,
+                        helpText: `Change the language and dialect for the voice.`,
                         type: 'string',
                         required: true,
                         default: "en-GB",
-                        choices: languageList
+                        choices: languageCache,
+                        altersDynamicFields: true
                     }
                 ]
-            }, {
-                key: 'gender',
-                label: 'Voice gender',
-                helpText: `The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](${config.links.helpDocs.voiceGenders}).`,
-                type: 'string',
-                required: true,
-                default: 'Female',
-                choices: { 
-                    Female: 'Female', 
-                    Male: 'Male' 
-                }
-            }, {
-                key: 'number',
-                label: 'Voice number',
-                helpText: `The number of the voice to use, [check this list for the supported numbers](${config.links.helpDocs.voiceNumbers}).`,
-                type: 'integer',
-                required: true,
-                default: '1'
+            }, (z, bundle) => {
+                const options = voiceOptions[bundle.inputData.language || "en-GB"]
+                const genderChoices = {}
+                Object.keys(options).forEach((gender) => {
+                    genderChoices[gender] = gender
+                })
+
+                return [
+                    {
+                        key: 'gender',
+                        label: 'Voice gender',
+                        helpText: `Change the gender of the outputted voice.`,
+                        type: 'string',
+                        required: true,
+                        default: Object.keys(genderChoices)[0],
+                        choices: genderChoices,
+                        altersDynamicFields: true
+                    }
+                ]
+            }, (z, bundle) => {
+                const numberOfVoices = voiceOptions[bundle.inputData.language || "en-GB"][bundle.inputData.gender || "Female"] || 1
+                const numberChoices = {}
+                for(var i = 1; i <= numberOfVoices; i++) numberChoices[i] = i
+                
+                return [
+                    {
+                        key: 'number',
+                        label: 'Voice number',
+                        helpText: `Change the recorded voice for the selected language and gender.`,
+                        type: 'integer',
+                        required: true,
+                        default: "1",
+                        choices: numberChoices
+                    }
+                ]
             }
 		],
 		outputFields: [
