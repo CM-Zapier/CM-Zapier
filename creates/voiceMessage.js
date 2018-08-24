@@ -16,9 +16,13 @@ const makeRequest = async (z, bundle) => {
     const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voiceapi/v2/Notification", "POST", voiceMessage))
     
     errorHandler(response.status, response.content)
+
+    const result = JSON.parse(response.content)
     
     return {
-        result: "success"
+        type: result[0].type,
+        caller: result[0].caller,
+        callees: result.map(item => item.callee)
     }
 }
 
@@ -114,13 +118,21 @@ module.exports = {
 		],
 		outputFields: [
             {
-                key: "result",
-                label: "Result"
+                key: "type",
+                label: "Type"
+            }, {
+                key: "caller",
+                label: "Caller"
+            }, {
+                key: "callees",
+                label: "Callees"
             }
         ],
 		perform: makeRequest,
 		sample: {
-            result: "success"
+            type: "call-queued",
+            caller: "+31600000000",
+            callees: ["+31600000000"]
         }
 	}
 }
