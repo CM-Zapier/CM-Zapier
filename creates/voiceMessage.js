@@ -40,7 +40,8 @@ module.exports = {
 			{
 				key: 'from',
 				label: 'From',
-				helpText: `The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`,
+                helpText: `The sender of the message, which must be a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).`,
+                placeholder: `+31 (6) 00000000`,
 				type: 'string',
 				required: true
 			}, {

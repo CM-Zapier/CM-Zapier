@@ -7,7 +7,7 @@ module.exports = (statusCode, responseBody) => {
         response = JSON.parse(responseBody)
     } catch (error){
         if(statusCode == 401) throw new Error("Your account doesn't have enough rights to use this feature. Please contact cmsupport@cm.nl to request extra permissions on your account.")
-        else throw new Error("The response we got is incomplete or corrupted. Please check your internet connection and try again later.")
+        else throw new Error("The response we got from CM is unfortunately invalid. Please try again later.")
     }
     
     var errorMessages = [] // A list of error messages
