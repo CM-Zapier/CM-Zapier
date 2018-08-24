@@ -49,7 +49,7 @@ module.exports = {
     
     display: {
         label: 'Send Text (SMS/Push) Message',
-        description: 'Send an SMS or Push message to one or multiple people.',
+        description: 'Sends an SMS or Push message to one or multiple people.',
         hidden: false,
         important: true
     },
@@ -59,7 +59,7 @@ module.exports = {
             {
                 key: 'messageType',
                 label: 'Message Type',
-                helpText: 'The type of message.\n\n"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn\'t have the app installed.',
+                helpText: '"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn\'t have the app installed.',
                 type: 'string',
                 required: true,
                 default: 'SMS only',
@@ -86,7 +86,7 @@ module.exports = {
             }, {
                 key: 'messageContent',
                 label: 'Body',
-                helpText: `The content of the message.\n\nNote: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`,
+                helpText: `Note: The maximum length is 1200 characters, or 500 characters when using special characters (like emoji and characters that are not in [this list](${config.links.helpDocs.specialCharacters})).`,
                 type: 'text',
                 required: true
             }, (z, bundle) => { // Show only the app key field when the user selected "push" in message type.
@@ -100,18 +100,16 @@ module.exports = {
                 }] : []
             }, {
                 key: 'validityTime',
-                label: 'Validity Time',
-                helpText: 'Cancels the message if not sent within the set validity time.\n\nNote: Must be within the next 48 hours.',
+                label: 'Valid until',
+                helpText: 'Cancels the message if not sent within the set time.\n\nNote: Must be within the next 48 hours.',
                 type: 'datetime',
                 required: true,
                 default: config.validityTime.def
             }, {
                 key: 'reference',
                 label: 'Reference',
-                helpText: 'Please set the reference.',
                 type: 'string',
-                required: false,
-                placeholder: 'None'
+                required: false
             }
         ],
         outputFields: [

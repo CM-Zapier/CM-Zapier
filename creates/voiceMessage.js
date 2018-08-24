@@ -27,7 +27,7 @@ module.exports = {
 	
 	display: {
 		label: 'Send Voice (Text to Speech) Message',
-		description: 'Send a voice message to one or multiple people. A speech engine will tell the text message you gave in the selected language, dialect and gender. The recipient will receive the message as a call.',
+		description: 'Sends a voice message to one or multiple people. The recipient will receive the message as a call.',
 		hidden: false,
 		important: true
 	},
@@ -57,39 +57,35 @@ module.exports = {
                 const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
                 const languageList = JSON.parse(response.content)
 
-                return [{
-                    key: "voice_options",
-                    label: "Voice options",
-                    children: [
-                        {
-                            key: 'language',
-                            label: 'Language',
-                            helpText: `The language of the message.\nThere are ${Object.keys(languageList).length} languages and dialects available.`,
-                            type: 'string',
-                            required: true,
-                            default: "en-GB",
-                            choices: languageList
-                        }, {
-                            key: 'gender',
-                            label: 'Gender',
-                            helpText: `The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](${config.links.helpDocs.voiceGenders}).`,
-                            type: 'string',
-                            required: true,
-                            default: 'Female',
-                            choices: { 
-                                Female: 'Female', 
-                                Male: 'Male' 
-                            }
-                        }, {
-                            key: 'number',
-                            label: 'Number',
-                            helpText: `The number of the voice to use, [check this list for the supported numbers](${config.links.helpDocs.voiceNumbers}).`,
-                            type: 'integer',
-                            required: true,
-                            default: '1'
-                        }
-                    ]
-                }]
+                return [
+                    {
+                        key: 'language',
+                        label: 'Voice language',
+                        helpText: `The language of the message.\nThere are ${Object.keys(languageList).length} languages and dialects available.`,
+                        type: 'string',
+                        required: true,
+                        default: "en-GB",
+                        choices: languageList
+                    }
+                ]
+            }, {
+                key: 'gender',
+                label: 'Voice gender',
+                helpText: `The voice of the generated message.\n\nNote: not all voices support all genders, [check this list for the supported genders](${config.links.helpDocs.voiceGenders}).`,
+                type: 'string',
+                required: true,
+                default: 'Female',
+                choices: { 
+                    Female: 'Female', 
+                    Male: 'Male' 
+                }
+            }, {
+                key: 'number',
+                label: 'Voice number',
+                helpText: `The number of the voice to use, [check this list for the supported numbers](${config.links.helpDocs.voiceNumbers}).`,
+                type: 'integer',
+                required: true,
+                default: '1'
             }
 		],
 		outputFields: [
