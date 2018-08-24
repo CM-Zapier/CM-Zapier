@@ -52,6 +52,7 @@ module.exports = {
 				key: 'to',
 				label: 'To',
 				helpText: `The [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
+                placeholder: `+31 (6) 00000000, +1 000-000-0000`,
 				type: 'string',
 				required: true,
                 list: true
