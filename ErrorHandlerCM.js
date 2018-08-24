@@ -16,7 +16,7 @@ module.exports = (statusCode, responseBody) => {
     } else if (response.messages !== undefined && response.messages.length > 0) { // If the error has multiple messages in an array.
         errorMessages = response.messages
             .filter((item) => item.messageDetails !== null) // Filter all success messages from the list
-            .map((item) => `Message ${response.messages.indexOf(item) + 1} (to "${item.to}"): ${item.messageDetails}` + (item.errorCode ? ` (error code ${item.errorCode} + ")` : "")) // Convert all error messages from json to text.
+            .map((item) => `Message ${response.messages.indexOf(item) + 1} (to "${item.to}"): ${item.messageDetails.includes("Maximum number of parts exceeded") ? "Character count in body is more than allowed" : item.messageDetails}` + (item.errorCode ? ` (error code ${item.errorCode} + ")` : "")) // Convert all error messages from json to text.
     }
     
     if (errorMessages.length === 0) { // If no error messages where found, use details and errorCode.
