@@ -37,9 +37,14 @@ const makeRequest = async (z, bundle) => {
     const response = await z.request(new ZapierRequest("https://gw.cmtelecom.com/v1.0/message", "POST", requestData))
     
     errorHandler(response.status, response.content)
-    
+
+    const result = JSON.parse(response.content)
+
     return {
-        result: "success"
+        to: result.messages.map(item => item.to),
+        details: result.details,
+        reference: result.messages[0].reference || "None",
+        messageParts: result.messages[0].parts
     }
 }
 
@@ -63,7 +68,7 @@ module.exports = {
                 type: 'string',
                 required: true,
                 default: 'SMS only',
-                choices: { 
+                choices: {
                     sms: 'SMS only', 
                     push_sms: 'Push or SMS', 
                     push: 'Push only' 
@@ -114,13 +119,25 @@ module.exports = {
         ],
         outputFields: [
             {
-                key: "result",
-                label: "Result"
+                key: "to",
+                label: "To"
+            }, {
+                key: "details",
+                label: "Details"
+            }, {
+                key: "reference",
+                label: "Reference"
+            }, {
+                key: "messageParts",
+                label: "Message parts"
             }
         ],
         perform: makeRequest,
         sample: {
-            result: "success"
+            to: ["0031600000000"],
+            details: "Created 1 message(s)",
+            reference: "None", 
+            messageParts: 2
         }
     }
 }
