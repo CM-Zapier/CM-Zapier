@@ -22,8 +22,7 @@ module.exports = {
 			label: 'Product Token',
 			helpText: `Enter [the product token you got](${config.links.productToken}) from CM.`,
 			type: 'string',
-			required: true,
-			placeholder: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
+			required: true
 		}
 	],
 	
