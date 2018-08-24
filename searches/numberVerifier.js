@@ -44,7 +44,7 @@ module.exports = {
     
     display: {
         label: 'Number Verifier',
-        description: 'Validate if a phone number is valid and use the result (like formatting options, number type, carrier) in a next step. Please make sure your CM.com account has enough rights to use this action.',
+        description: 'Validates if a phone number is valid and use the result (like formatting options, number type, carrier) in a next step. Please make sure your CM.com account has enough rights to use this action.',
         hidden: false,
         important: true
     },
