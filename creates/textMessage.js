@@ -113,6 +113,7 @@ module.exports = {
             }, {
                 key: 'reference',
                 label: 'Reference',
+                helpText: `Setting a reference allows you to link [status reports](${config.links.helpDocs.statusReports}).`,
                 type: 'string',
                 required: false
             }
