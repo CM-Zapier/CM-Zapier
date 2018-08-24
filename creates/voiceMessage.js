@@ -53,7 +53,7 @@ module.exports = {
 			}, {
 				key: 'messageContent',
 				label: 'Text',
-				helpText: 'The content of the message. The speech engine will tell this message.\n\nNote: emoji don\'t work, you can\'t use emoji in spoken language.',
+				helpText: 'The content of the message, the speech engine will tell this message.\n\nNote: emoji don\'t work, you can\'t use emoji in spoken language.',
 				type: 'text',
 				required: true
 			}, async (z, bundle) => {

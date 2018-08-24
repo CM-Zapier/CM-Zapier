@@ -58,7 +58,7 @@ module.exports = {
         inputFields: [
             {
                 key: 'messageType',
-                label: 'Message Type',
+                label: 'Message type',
                 helpText: '"SMS only" will send an SMS message.\n"Push" will sent a message over the internet to an app.\n"Push or SMS" will sent a push message, or an SMS message if the recipient doesn\'t have the app installed.',
                 type: 'string',
                 required: true,
