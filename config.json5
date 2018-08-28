@@ -5,8 +5,6 @@
         maxChars: 11
     },
     validityTime: {
-        // Default
-        def: "In 48 hours",
         min: 1, // minutes
         max: 2880 // minutes
     },

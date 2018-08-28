@@ -108,8 +108,7 @@ module.exports = {
                 label: 'Valid until',
                 helpText: 'Cancels the message if not sent within the set time.\n\nNote: Must be within the next 48 hours.',
                 type: 'datetime',
-                required: true,
-                default: config.validityTime.def
+                required: true
             }, {
                 key: 'reference',
                 label: 'Reference',
