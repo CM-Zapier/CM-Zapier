@@ -17,7 +17,7 @@
     "dependencies": {
         "json5": "^1.0.1",
         "moment": "^2.22.2",
-        "zapier-platform-core": "7.0.0"
+        "zapier-platform-core": "7.2.0"
     },
     "devDependencies": {
         "mocha": "^5.2.0",
