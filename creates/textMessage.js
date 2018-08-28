@@ -40,12 +40,16 @@ const makeRequest = async (z, bundle) => {
 
     const result = JSON.parse(response.content)
 
-    return {
+    const output = {
         to: result.messages.map(item => item.to),
         details: result.details,
         reference: result.messages[0].reference || "None",
         messageParts: result.messages[0].parts
     }
+
+    delete output["details_message"]
+
+    return
 }
 
 module.exports = {
