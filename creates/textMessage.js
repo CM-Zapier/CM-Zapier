@@ -80,7 +80,7 @@ module.exports = {
             }, {
                 key: 'from',
                 label: 'From',
-                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers. Sender restrictions may apply depending on the recipient country, see [this help document](https://help.cmtelecom.com/en/text/sms-faq/is-it-possible-to-set-my-own-sender-name-sender-id) or [this one](https://help.cmtelecom.com/en/text/countries) for more information`,
+                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers. Sender restrictions may apply depending on the recipient country, see [this help document](${config.links.helpDocs.smsSenderRestrictions}) or [this one](${config.links.helpDocs.countryRestrictions}) for more information`,
                 type: 'string',
                 required: true
             }, {
