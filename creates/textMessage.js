@@ -42,14 +42,13 @@ const makeRequest = async (z, bundle) => {
 
     const output = {
         to: result.messages.map(item => item.to),
-        details: result.details,
+        createdMessages: result.details.match(/\d+/)[0],
         reference: result.messages[0].reference || "None",
-        messageParts: result.messages[0].parts
+        messageParts: result.messages[0].parts,
+        body: messageObject.body.content
     }
 
-    delete output["details_message"]
-
-    return
+    return output
 }
 
 module.exports = {
@@ -81,7 +80,7 @@ module.exports = {
             }, {
                 key: 'from',
                 label: 'From',
-                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers.`,
+                helpText: `The sender of the message, which can be a name or a [phone number (with country code)](${config.links.helpDocs.phoneNumberFormat}).\n\nNote: The maximum length is ${config.textFromField.maxChars} characters or ${config.textFromField.maxDigits} numbers. Sender restrictions may apply depending on the recipient country, see [this help document](https://help.cmtelecom.com/en/text/sms-faq/is-it-possible-to-set-my-own-sender-name-sender-id) or [this one](https://help.cmtelecom.com/en/text/countries) for more information`,
                 type: 'string',
                 required: true
             }, {
@@ -126,22 +125,26 @@ module.exports = {
                 key: "to",
                 label: "To"
             }, {
-                key: "details",
-                label: "Details"
+                key: "createdMessages",
+                label: "Messages created"
             }, {
                 key: "reference",
                 label: "Reference"
             }, {
                 key: "messageParts",
                 label: "Message parts"
+            }, {
+                key: "body",
+                label: "Body"
             }
         ],
         perform: makeRequest,
         sample: {
             to: ["0031600000000"],
-            details: "Created 1 message(s)",
+            createdMessages: 1,
             reference: "None", 
-            messageParts: 2
+            messageParts: 1,
+            body: "This is a test message."
         }
     }
 }
