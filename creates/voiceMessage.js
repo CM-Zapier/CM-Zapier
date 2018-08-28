@@ -108,7 +108,7 @@ module.exports = {
                     {
                         key: 'number',
                         label: 'Voice number',
-                        helpText: `Change the recorded voice for the selected language and gender.`,
+                        helpText: `Some voice language and voice gender combinations have multiple options. Select the number of the voice you'd like to use.`,
                         type: 'integer',
                         required: true,
                         default: "1",
