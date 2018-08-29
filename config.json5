@@ -17,7 +17,7 @@
             countryRestrictions: "https://help.cmtelecom.com/en/text/countries"
         },
         appkey: "https://appmanager.cmtelecom.com/",
-        productToken: "https://gateway.cmtelecom.com/"
+        productToken: "https://gateway.cmtelecom.com/", 
+        voiceTest: "https://voicecampaigns.cmtelecom.com"
     }
-    
 }

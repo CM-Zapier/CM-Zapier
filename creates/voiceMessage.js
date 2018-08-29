@@ -28,6 +28,30 @@ const makeRequest = async (z, bundle) => {
 
 let languageCache = null
 
+async function getLanguageList(z){ // Check if cached version exists
+    if(!languageCache){
+        // Retreive data from API
+        const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
+        // Cache the response
+        languageCache = JSON.parse(response.content)
+    }
+
+    return languageCache // Return the cache
+}
+
+const languageOptionCache = {}
+
+async function getLanguageOptions(z, languageCode){
+    if(!languageOptionCache[languageCode]){ // Check if cached version exists
+        // Retreive data from API
+        const response = await z.request(new ZapierRequest(`https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages/${languageCode}`))
+        // Cache the response
+        languageOptionCache[languageCode] = JSON.parse(response.content)
+    }
+
+    return languageOptionCache[languageCode] // Return the cache
+}
+
 module.exports = {
 	key: 'voiceMessage',
 	noun: 'Voice',
@@ -63,10 +87,7 @@ module.exports = {
 				type: 'text',
 				required: true
 			}, async (z, bundle) => {
-                if(!languageCache){
-                    const response = await z.request(new ZapierRequest("https://api.cmtelecom.com/voicesendapi/v1.0/tts/languages"))
-                    languageCache = JSON.parse(response.content)
-                }
+                const languageList = await getLanguageList(z)
 
                 return [
                     {
@@ -76,14 +97,15 @@ module.exports = {
                         type: 'string',
                         required: true,
                         default: "en-GB",
-                        choices: languageCache,
+                        choices: languageList,
                         altersDynamicFields: true
                     }
                 ]
-            }, (z, bundle) => {
-                const options = voiceOptions[bundle.inputData.language || "en-GB"]
+            }, async (z, bundle) => {
+                const languageOptions = await getLanguageOptions(z, bundle.inputData.language || "en-GB")
+
                 const genderChoices = {}
-                Object.keys(options).forEach((gender) => {
+                languageOptions.map(options => options.gender).forEach(gender => {
                     genderChoices[gender] = gender
                 })
 
@@ -99,20 +121,23 @@ module.exports = {
                         altersDynamicFields: true
                     }
                 ]
-            }, (z, bundle) => {
-                const numberOfVoices = voiceOptions[bundle.inputData.language || "en-GB"][bundle.inputData.gender || "Female"] || 1
-                const numberChoices = {}
-                for(var i = 1; i <= numberOfVoices; i++) numberChoices[i] = i
+            }, async (z, bundle) => {
+                const languageOptions = await getLanguageOptions(z, bundle.inputData.language || "en-GB")
+
+                const voiceOptions = {}
+                languageOptions.filter(item => item.gender === (bundle.inputData.gender || "Female")).forEach(item => {
+                    voiceOptions[item.voiceNumber] = `${item.voiceNumber} (${item.displayName})`
+                })
                 
                 return [
                     {
                         key: 'number',
                         label: 'Voice number',
-                        helpText: `Some voice language and voice gender combinations have multiple options. Select the number of the voice you'd like to use.`,
+                        helpText: `Some voice language and voice gender combinations have multiple options. Select the number of the voice you'd like to use. To test the different voice options, open [this webpage](${config.links.voiceTest}), click on the plus and select "Text To Speech message". Enter a message, select the voice you want to hear and then hit the play button.`,
                         type: 'integer',
                         required: true,
                         default: "1",
-                        choices: numberChoices
+                        choices: voiceOptions
                     }
                 ]
             }
