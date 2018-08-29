@@ -43,7 +43,7 @@ module.exports = {
     noun: 'Verification',
     
     display: {
-        label: 'Number Verifier',
+        label: 'Lookup or Validate Phone Number',
         description: 'Searches for information (like formatting options, number type or carrier) of a phone number.',
         hidden: false,
         important: true
