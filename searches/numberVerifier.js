@@ -21,8 +21,11 @@ const makeRequest = async (z, bundle) => {
     } catch (error) {
         responseObject = {}
     }
+
     if(requestType == "lookup" && response.status == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
         throw new Error("Your account doesn't have enough rights to use this feature. Please contact cmsupport@cm.nl to request extra permissions on your account.")
+    else if (responseObject.message && !responseObject.valid_number)
+        throw new Error(responseObject.message)
     
     errorHandler(response.status, response.content)
 
