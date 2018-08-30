@@ -56,7 +56,7 @@ module.exports = {
 	noun: 'Voice',
 	
 	display: {
-		label: 'Send Voice (Text to Speech) Message',
+		label: 'Send Voice (Text to Speech) Call',
 		description: 'Sends a voice message to one or multiple people. The recipient will receive the message as a call.',
 		hidden: false,
 		important: true
