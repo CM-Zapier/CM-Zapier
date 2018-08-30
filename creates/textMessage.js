@@ -17,7 +17,7 @@ const makeRequest = async (z, bundle) => {
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
-    const validityTime = moment(bundle.inputData.validityTime || "In 48 hours")
+    const validityTime = moment().add(parseInt(bundle.inputData.validityTime || 48), "hours")
     if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
         throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
     else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
@@ -108,8 +108,8 @@ module.exports = {
             }, {
                 key: 'validityTime',
                 label: 'Valid until',
-                helpText: 'Cancels the message if not sent within the set time.\n\nNote: Must be within the next 48 hours.',
-                type: 'datetime',
+                helpText: 'Cancels the message if not sent within the set time. Value is in hours from the time the Zap runs.\n\nNote: Must be within the next 48 hours.',
+                type: 'integer',
                 required: false
             }, {
                 key: 'reference',
