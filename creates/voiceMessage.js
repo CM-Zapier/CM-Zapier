@@ -4,7 +4,6 @@ const ZapierRequest = require("../model/ZapierRequest")
 const VoiceMessage = require("../model/VoiceMessage")
 const Voice = require("../model/Voice")
 const errorHandler = require("../ErrorHandlerCM")
-const voiceOptions = require("./voiceOptions.json")
 
 const makeRequest = async (z, bundle) => {
     let toNumbersList = bundle.inputData.to
