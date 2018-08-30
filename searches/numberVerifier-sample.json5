@@ -11,21 +11,19 @@
     timezone: [ 
         "Europe/Amsterdam"
     ],
-    type: { 
-        mobile: true,
-        fixed_line: false,
-        fixed_line_or_mobile: false,
-        voip: false,
-        toll_free: false,
-        premium_rate: false,
-        standard_rate: false,
-        shared_cost: false,
-        personal: false,
-        pager: false,
-        voicemail: false,
-        shortcode: false, 
-        emergency: false,
-        unknown: false
-    },
+    mobile: true,
+    fixed_line: false,
+    fixed_line_or_mobile: false,
+    voip: false,
+    toll_free: false,
+    premium_rate: false,
+    standard_rate: false,
+    shared_cost: false,
+    personal: false,
+    pager: false,
+    voicemail: false,
+    shortcode: false, 
+    emergency: false,
+    unknown: false
     valid_number: true
 }
