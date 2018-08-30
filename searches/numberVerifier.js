@@ -66,7 +66,6 @@ module.exports = {
                 key: 'phoneNumber',
                 label: 'Phone Number',
                 helpText: `The phone number where you want to get the information of.\n\nNote: [The phone number must include the country code](${config.links.helpDocs.phoneNumberFormat}).`,
-                placeholder: `+31 (6) 00000000`,
                 type: 'string',
                 required: true
             }      
