@@ -24,6 +24,6 @@
     voicemail: false,
     shortcode: false, 
     emergency: false,
-    unknown: false
+    unknown: false,
     valid_number: true
 }

@@ -19,7 +19,11 @@ const makeRequest = async (z, bundle) => {
     try {
         responseObject = JSON.parse(response.content)
     } catch (error) {
-        responseObject = {}
+        try {
+            responseObject = JSON.parse(response.content.substring(response.content.indexOf("{")))
+        } catch (error) {
+            responseObject = {}
+        }
     }
 
     if(requestType == "lookup" && response.status == 503 && responseObject.message == "Unable to process the request" && Object.keys(responseObject.length == 1))
