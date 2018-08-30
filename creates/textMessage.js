@@ -17,7 +17,7 @@ const makeRequest = async (z, bundle) => {
     
     if(bundle.inputData.reference) messageObject.setReference(bundle.inputData.reference.trim())
 
-    const validityTime = moment(bundle.inputData.validityTime)
+    const validityTime = moment(bundle.inputData.validityTime || "In 48 hours")
     if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
         throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
     else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
@@ -89,7 +89,6 @@ module.exports = {
                 helpText: `The [recipient numbers (with country code)](${config.links.helpDocs.phoneNumberFormat}) to whom you want to send the message.\n\nYou can use the list functionality, or put all your numbers into the first field seperated by a comma.`,
                 type: 'string',
                 required: true,
-                placeholder: '+31 (6) 00000000, +1 000-000-0000',
                 list: true
             }, {
                 key: 'messageContent',
@@ -111,7 +110,7 @@ module.exports = {
                 label: 'Valid until',
                 helpText: 'Cancels the message if not sent within the set time.\n\nNote: Must be within the next 48 hours.',
                 type: 'datetime',
-                required: true
+                required: false
             }, {
                 key: 'reference',
                 label: 'Reference',
