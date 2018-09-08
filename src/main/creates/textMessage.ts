@@ -4,7 +4,7 @@ import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
 // Zapier lib
 import Link from "../../../lib/Zapier/main/Link"
 import ResultGenerator from "../../../lib/Zapier/main/ResultGenerator"
-import { ZapierField, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
+import { ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
 import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 
 // CM lib

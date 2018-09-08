@@ -27,8 +27,9 @@ This will also build the project.
 ### 3.3. Selecting a branch (zapier app)
 CM uses a regular app (release branch) and a backup app (backup branch) on Zapier.  
 Switch to release: `.\project branch release`  
+Switch to developer edition: `.\project branch dev`  
 Switch to backup: `.\project branch backup`
 
 ### 3.4. Publising to Zapier
 Use `.\project push`. This will build the app and publish the app using the current branch.  
-Use `.\project push release` or `.\project push backup` to select a custom branch.
+Use `.\project push release`, `.\project push dev` or `.\project push backup` to select a custom branch.
