@@ -16,8 +16,10 @@ if "%1" EQU "install" (
 
 if "%1" EQU "branch" (
     if "%2" NEQ "release" ( 
-        if "%2" NEQ "backup" (
-            goto:eof
+        if "%2" NEQ "dev" ( 
+            if "%2" NEQ "backup" (
+                goto:eof
+            )
         ) 
     )
 
