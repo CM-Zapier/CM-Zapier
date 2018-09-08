@@ -13,10 +13,8 @@ const testAuthenticationValidity = async (z: zObject): Promise<object> => {
 	return {}
 }
 
-const productTokenField = new ZapierInputField.Builder("productToken", "Product Token")
+const productTokenField = new ZapierInputField("productToken", "Product Token")
 	.setDescription(`Enter ${new Link("the product token you got", config.links.productToken)} from CM.`)
-	.setPlaceholder("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
-	.build()
 
 export default {
 	type: 'custom',

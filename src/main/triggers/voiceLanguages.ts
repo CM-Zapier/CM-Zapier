@@ -1,4 +1,4 @@
-import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
+import { zObject, Bundle } from "zapier-platform-core"
 import errorHandler from "../../../lib/CM/main/errorHandler"
 import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
 
@@ -26,8 +26,6 @@ class VoiceLanguageRequest extends ZapierRequest {
     }
 }
 
-const fetchList = (z: zObject, bundle: Bundle) => new VoiceLanguageRequest(z, bundle).startFlow()
-
 // --- Export ---
 
 export default {
@@ -41,7 +39,7 @@ export default {
     },
     
     operation: {
-        perform: fetchList,
-        canPaginate: false
+        canPaginate: false,
+        perform: (z: zObject, bundle: Bundle) => new VoiceLanguageRequest(z, bundle).startFlow()
     }
 }

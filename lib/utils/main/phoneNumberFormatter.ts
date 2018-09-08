@@ -16,8 +16,8 @@ String.prototype.replaceAll = function (search: string, replacement: string): st
 export default (phoneNumber: string): string => {
     phoneNumber = phoneNumber.replace("(", "").replace(")", "").replaceAll(" ", "").replaceAll("-", "")
 
-    if (!phoneNumber.matches(/(|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
-        throw new Error("The specified phone number is not a valid phone number, it contains invalid characters")
+    if (!phoneNumber.matches(/(0|\+)[0-9]+/) || phoneNumber.matches(/[A-z]+/))
+        throw new Error("The specified phone number is not a valid phone number. Examples of valid formats: +31 (6) 00000000, +31600000000, +1 000-000-0000 or 0031600000000.")
 
     return phoneNumber
 }

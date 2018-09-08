@@ -21,7 +21,7 @@ Clean build: `.\project build --clean`
 ~~Compile the project: `.\project compile`~~ (deprecated)
 
 ### 3.2. Running tests
-`.\project test`  
+`.\project test`, `.\project test libs`, `.\project test lib-utils`, `.\project test lib-CM`, `.\project test lib-Zapier`
 This will also build the project.
 
 ### 3.3. Selecting a branch (zapier app)

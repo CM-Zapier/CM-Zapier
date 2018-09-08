@@ -22,5 +22,5 @@ export default abstract class ZapierRequest {
 
     protected abstract createInput(): any
 
-    protected abstract mapOutput(response: json): json | any[]
+    protected abstract mapOutput(response: json | any[]): json | any[]
 }

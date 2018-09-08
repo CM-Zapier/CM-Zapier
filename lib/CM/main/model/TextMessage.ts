@@ -143,14 +143,14 @@ export default class TextMessage implements Message {
     }
 
     public getValidityTime(): DateTime {
-        return this.validity ? this.convertCMdateToMoment(this.validity) : moment().add(config.validityTime.max, "minutes")
+        return this.validity ? this.convertCMdateToMoment(this.validity) : moment().add(config.validityTime.default, "minutes")
     }
 
     public setValidityTime(validityTime: DateTime){
-        if(!validityTime.isSameOrBefore(moment().add(config.validityTime.max, "minutes"))) 
-            throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.max, "minutes").calendar()})`)
-        else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.min, "minutes"))) 
-            throw new Error(`Validity time (${validityTime.calendar()}) is earlier than minimally allowed (${moment().add(config.validityTime.min, "minutes").calendar()})`)
+        if(!validityTime.isSameOrBefore(moment().add(config.validityTime.maximum, "minutes"))) 
+            throw new Error(`Validity time (${validityTime.calendar()}) is later than maximally allowed (${moment().add(config.validityTime.maximum, "minutes").calendar()})`)
+        else if (!validityTime.isSameOrAfter(moment().add(config.validityTime.minimum, "minutes"))) 
+            throw new Error(`Validity time (${validityTime.calendar()}) is earlier than minimally allowed (${moment().add(config.validityTime.minimum, "minutes").calendar()})`)
             
         this.validity = this.convertMomentToCMdate(validityTime)
     }

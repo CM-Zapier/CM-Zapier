@@ -6,8 +6,8 @@ export default (statusCode: number, responseBody: string): void => {
     try {
         response = JSON.parse(responseBody) as { [name: string]: any }
     } catch (error){
-        if(statusCode == 401) throw new Error("Your account doesn't have enough rights to use this feature. Please contact [cmsupport@cm.nl](mailto:cmsupport@cm.nl) to request extra permissions on your account.")
-        else throw new Error("The response we got is incomplete or corrupted. Please check your internet connection and try again later.")
+        if(statusCode == 401) throw new Error("Your account doesn't have enough rights to use this feature. Please contact cmsupport@cm.nl to request extra permissions on your account.")
+        else throw new Error(`The response received from CM is unfortunately invalid. This could be due to a temporary outage. Please try again later. (Status code: ${statusCode})`)
     }
     
     var errorMessages: string[] = [] // A list of error messages

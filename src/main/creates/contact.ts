@@ -1,12 +1,19 @@
+// Zapier
 import { zObject, Bundle, HttpMethod } from "zapier-platform-core"
+
+// Zapier lib
+import Link from "../../../lib/Zapier/main/Link"
+import ResultGenerator from "../../../lib/Zapier/main/ResultGenerator"
+import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHttpRequest"
+import { ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
+import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
+
+// CM lib
+import config from "../../../lib/CM/main/config"
 import Contact from "../../../lib/CM/main/model/Contact"
 import errorHandler from "../../../lib/CM/main/errorHandler"
-import config from "../../../lib/CM/main/config"
-import ZapierRequest from "../../../lib/Zapier/main/ZapierRequest"
-import ZapierHttpRequest from "../../../lib/Zapier/main/ZapierHTTPRequest"
-import ResultGenerator from "../../../lib/Zapier/main/ResultGenerator"
-import { ZapierGroup, ZapierInputField } from "../../../lib/Zapier/main/ZapierFields"
-import Link from "../../../lib/Zapier/main/Link"
+
+// Other
 import "../../../lib/utils/main/index"
 
 // --- Request to CM API ---
@@ -37,8 +44,10 @@ class ContactRequest extends ZapierRequest {
 
     protected mapOutput(response: json): json {
         response.fullName = [response.firstName, response.insertion, response.lastName].filter(item => item && item !== "").join(" ")
+
         response.createdAt = response.createdOnUtc.split(".")[0] + "Z"
         delete response.createdOnUtc
+
         if(response.customValues){
             (response.customValues as {fieldId: number, value: string}[]).forEach(item => {
                 if(item.fieldId === 6) response.company = item.value
@@ -46,24 +55,21 @@ class ContactRequest extends ZapierRequest {
             })
             delete response.customValues
         }
+
         return response
     }
 }
 
-const makeRequest = (z: zObject, bundle: Bundle) => new ContactRequest(z, bundle).startFlow()
-
 // --- Inputfields ---
 
-const accountID = new ZapierInputField.Builder("accountID", "Account Token")
+const accountID = new ZapierInputField("accountID", "Account Token")
     .setDescription(`Your account token. You can find this token in the url when you visit the ${new Link("CM AdressBook", config.links.addressbook)}, behind the country/language code.`)
-    .setPlaceholder(`XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`)
     .modifiesDynamicFields()
-    .build()
 
 const groupID = async (z: zObject, bundle: Bundle) => {
     const accountID = bundle.inputData.accountID
 
-    const groupField = new ZapierInputField.Builder("groupID", "Group")
+    const groupField = new ZapierInputField("groupID", "Group")
         .setDescription(`The group to add the contact to. Needs the Account Token to show groups. If you don't see any groups, hit the 'Refresh Fields' button on the bottom of this page.`)
     
     if(accountID){
@@ -79,37 +85,35 @@ const groupID = async (z: zObject, bundle: Bundle) => {
         groupList.forEach(it => groupField.addDropdownItem(it.id, it.name))
     }
 
-    return [ groupField.build() ]
+    return [ groupField ]
 }
 
-const nameType = new ZapierInputField.Builder("nameType", "Name Type")
+const nameType = new ZapierInputField("nameType", "Name Type")
     .setDescription(`The type of the name to input.\n\nYou can choose between 3 fields for the first name, insertion and last name (recommended), or 1 field for the entire name.`)
     .addDropdownItem("splitted", "First name, insertion & last name (recommended)", true)
     .addDropdownItem("full", "Full name only")
     .modifiesDynamicFields()
-    .build()
 
-const contactFields = (z: zObject, bundle: Bundle) => {
-    const fullName = new ZapierInputField.Builder("fullName", "Name", undefined, false).build()
+const nameFields = (z: zObject, bundle: Bundle) => {
+    const fullName = new ZapierInputField("fullName", "Name", undefined, false)
 
-    const firstName = new ZapierInputField.Builder("firstName", "First name", undefined, false).build()
-    const insertion = new ZapierInputField.Builder("insertion", "Insertion", undefined, false).build()
-    const lastName = new ZapierInputField.Builder("lastName", "Last name", undefined, false).build()
-    
-    const contactField = new ZapierGroup.Builder("contact_fields", "Contact Fields", bundle.inputData.nameType == "full" ? [ fullName ] : [ firstName, insertion, lastName ])
+    const firstName = new ZapierInputField("firstName", "First name", undefined, false)
+    const insertion = new ZapierInputField("insertion", "Insertion", undefined, false)
+    const lastName = new ZapierInputField("lastName", "Last name", undefined, false)
 
-    const email = new ZapierInputField.Builder("email", "Email", undefined, false).build()
-    const telephoneNumber = new ZapierInputField.Builder("telephoneNumber", "Phone", undefined, false)
-        .setDescription(`Must be a ${new Link("valid phone number (with country code)", config.links.helpDocs.phoneNumberFormat)}`)
-        .build()
-    const company = new ZapierInputField.Builder("company", "Company", undefined, false).build()
-    const customFields = new ZapierInputField.Builder("customFields", "Custom fields", undefined, false)
-        .setDescription(`Enter the custom field number on the left, the content on the right.\n\nNote: custom fields support numbers 1 to 10.`)
-        .asKeyValueList()
-        .build()
-
-    return [ contactField.addChildren(email, telephoneNumber, company, customFields).build() ]
+    return bundle.inputData.nameType == "full" ? [ fullName ] : [ firstName, insertion, lastName ]
 }
+
+const email = new ZapierInputField("email", "Email", undefined, false)
+
+const telephoneNumber = new ZapierInputField("telephoneNumber", "Phone", undefined, false)
+    .setDescription(`Must be a ${new Link("valid phone number (with country code)", config.links.helpDocs.phoneNumberFormat)}`)
+
+const company = new ZapierInputField("company", "Company", undefined, false)
+
+const customFields = new ZapierInputField("customFields", "Custom fields", undefined, false)
+    .setDescription(`Enter the custom field number on the left, the content on the right.\n\nNote: custom fields support numbers 1 to 10.`)
+    .asKeyValueList()
 
 // --- OutputFields & Sample ---
 
@@ -117,9 +121,9 @@ const result = new ResultGenerator()
     .add("createdAt", "Created at", "2018-07-12T13:37:38Z")
     .add("email", "Email", "john.doe@example.com")
     .add("firstName", "First name", "John")
-    .add("insertion", "insertion", "test")
+    .add("insertion", "insertion", "")
     .add("lastName", "Last name", "Doe")
-    .add("fullName", "Full name", "John test Doe")
+    .add("fullName", "Full name", "John Doe")
     .add("phoneCountry", "Phone number (country code)", "NL")
     .add("phoneNumber", "Phone number", "+31612345678")
     .add("id", "ID", "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
@@ -133,15 +137,15 @@ export default {
 	
 	display: {
 		label: 'Add Contact to Group',
-		description: 'Add a contact to a group on the CM Adressbook.',
+		description: 'Adds a contact to a group on the CM Adressbook.',
 		hidden: false,
 		important: false
 	},
 	
 	operation: {
-		inputFields: [ accountID, groupID, nameType, contactFields ],
+		inputFields: [ accountID, groupID, nameType, nameFields, email, telephoneNumber, company, customFields ],
 		outputFields: result.getOutputFields(),
-		perform: makeRequest,
-		sample: result.getSample()
+        sample: result.getSample(),
+        perform: (z: zObject, bundle: Bundle) => new ContactRequest(z, bundle).startFlow()
 	}
 }

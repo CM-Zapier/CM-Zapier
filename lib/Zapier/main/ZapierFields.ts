@@ -2,132 +2,61 @@ export class ZapierField {
     public constructor(public key: string, public label: string) {}
 }
 
-export class ZapierGroup extends ZapierField {
-    public constructor(key: string, label: string, public readonly children: (ZapierInputField | object)[] = []){
-        super(key, label)
-    }
-
-    public addChildren(...children: (ZapierInputField | object)[]){
-        this.children.push(...children)
-    }
-
-    public get cls(): this {
-        return this
-    }
-
-    public static get Builder() {
-        return class Builder extends ZapierGroup {
-            public addChildren(...children: (ZapierInputField | object)[]): this {
-                super.addChildren(...children)
-                return this
-            }
-
-            public build(): ZapierGroup {
-                return super.cls
-            }
-        }
-    }
-}
-
 type ZapierInputType = "string" | "text" | "datetime" | "integer" | "number" | "boolean" | "file" | "password" | "copy"
 
 export class ZapierInputField extends ZapierField {
-    public choices?: { [key: string]: string }
-    public default?: string
-    public helpText?: string
-    public placeholder?: string
-    public list?: boolean
-    public altersDynamicFields?: boolean
-    public dynamic?: string
-    public dict?: boolean
+    private choices?: { [key: string]: string }
+    private default?: string
+    private helpText?: string
+    private placeholder?: string
+    private list?: boolean
+    private altersDynamicFields?: boolean
+    private dynamic?: string
+    private dict?: boolean
     
-    public constructor (key: string, label: string, public type: ZapierInputType = "string", public required: boolean = true) {
+    public constructor (key: string, label: string, private type: ZapierInputType = "string", private required: boolean = true) {
         super(key, label)
     }
 
-    public addDropdownItem(key: string, value: string, defaultChoice = false){
+    public addDropdownItem(key: string, value: string, defaultChoice = false): this {
         this.choices = this.choices || {}
         this.choices[key] = value
         if(defaultChoice) this.default = key
-    }
-
-    public connectDropdownToTrigger(triggerKey: string, param1: string, param2: string){
-        this.dynamic = `${triggerKey}.${param1}.${param2}`
-    }
-
-    public setDefault(text: string){
-        this.default = text
-    }
-
-    public setDescription(text: string){
-        this.helpText = text
-    }
-
-    public setPlaceholder(text: string){
-        this.placeholder = text
-    }
-
-    public asList(){
-        this.list = true
-    }
-
-    public modifiesDynamicFields(){
-        this.altersDynamicFields = true
-    }
-
-    public asKeyValueList(){
-        this.dict = true
-    }
-
-    public get cls(): this {
         return this
     }
 
-    static get Builder() {
-        return class Builder extends ZapierInputField {
-            public connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): this {
-                super.connectDropdownToTrigger(triggerKey, param1, param2)
-                return this
-            }
+    public connectDropdownToTrigger(triggerKey: string, param1: string, param2: string): this {
+        this.dynamic = `${triggerKey}.${param1}.${param2}`
+        return this
+    }
 
-            public addDropdownItem(key: string, value: string, defaultChoice?: boolean): this {
-                super.addDropdownItem(key, value, defaultChoice)
-                return this
-            }
-        
-            public setDefault(text: string): this {
-                super.setDefault(text)
-                return this
-            }
-        
-            public setDescription(text: string): this {
-                super.setDescription(text)
-                return this
-            }
-        
-            public setPlaceholder(text: string): this {
-                super.setPlaceholder(text)
-                return this
-            }
-        
-            public asList(): this {
-                super.asList()
-                return this
-            }
-        
-            public modifiesDynamicFields(): this {
-                super.modifiesDynamicFields()
-                return this
-            }
+    public setDefault(text: string): this {
+        this.default = text
+        return this
+    }
 
-            public asKeyValueList(): this {
-                super.asKeyValueList()
-                return this
-            }
+    public setDescription(text: string): this {
+        this.helpText = text
+        return this
+    }
 
-            public build(): ZapierInputField {
-                return super.cls
-            }
-        }
+    /* public setPlaceholder(text: string): this {
+        this.placeholder = text
+        return this
+    } */
+
+    public asList(): this {
+        this.list = true
+        return this
+    }
+
+    public modifiesDynamicFields(): this {
+        this.altersDynamicFields = true
+        return this
+    }
+
+    public asKeyValueList(): this {
+        this.dict = true
+        return this
     }
 }
